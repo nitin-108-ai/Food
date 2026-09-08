@@ -1,0 +1,1075 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Restaurant | Foody</title>
+<meta name="description" content="Browse the full menu and order from this restaurant on Foody.">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+/* ============ RESET & TOKENS ============ */
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --color-yellow:#FFC107; --color-orange:#FF9800; --color-green:#2E7D32; --color-red:#D32F2F;
+  --color-black:#111111; --color-dark:#181818; --color-white:#FFFFFF;
+  --color-background:#F7F7F7; --color-light-gray:#F1F1F1; --color-border:#E2E2E2;
+  --color-text:#222222; --color-muted:#777777;
+  --gradient-primary:linear-gradient(135deg,#FFC107 0%,#FF9800 100%);
+  --shadow-sm:0 2px 8px rgba(0,0,0,.06); --shadow-md:0 6px 20px rgba(0,0,0,.10); --shadow-lg:0 14px 40px rgba(0,0,0,.16);
+  --radius-sm:8px; --radius-md:14px; --radius-lg:20px;
+  --header-h:66px; --sidebar-w:280px;
+  --font:'Poppins',system-ui,-apple-system,Segoe UI,sans-serif;
+}
+html{scroll-behavior:smooth}
+body{font-family:var(--font);background:var(--color-background);color:var(--color-text);overflow-x:hidden;line-height:1.55;font-size:15px}
+img{display:block;max-width:100%}
+a{text-decoration:none;color:inherit}
+button{font-family:inherit;cursor:pointer;border:none;background:none}
+ul{list-style:none}
+::-webkit-scrollbar{height:8px;width:8px}
+::-webkit-scrollbar-thumb{background:#ccc;border-radius:8px}
+.container{width:min(1220px,92%);margin-inline:auto}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;font-weight:600;border-radius:var(--radius-sm);padding:11px 22px;font-size:.9rem;transition:.25s;white-space:nowrap}
+.btn-primary{background:var(--gradient-primary);color:var(--color-black);box-shadow:0 6px 16px rgba(255,152,0,.35)}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 10px 22px rgba(255,152,0,.45)}
+.btn-outline{border:2px solid var(--color-border);color:var(--color-text);background:#fff}
+.btn-outline:hover{border-color:var(--color-orange);color:var(--color-orange)}
+.btn-danger{background:var(--color-red);color:#fff}
+.btn-danger:hover{background:#b71c1c}
+.btn[disabled]{opacity:.55;cursor:not-allowed;transform:none!important}
+
+/* ============ HEADER ============ */
+.header{position:sticky;top:0;z-index:900;background:var(--color-black);color:#fff;box-shadow:0 2px 14px rgba(0,0,0,.35)}
+.header-inner{display:flex;align-items:center;gap:14px;height:var(--header-h)}
+.icon-btn{width:40px;height:40px;border-radius:10px;display:grid;place-items:center;color:#fff;font-size:1.05rem;position:relative;transition:.2s;background:rgba(255,255,255,.08)}
+.icon-btn:hover{background:var(--color-yellow);color:var(--color-black)}
+.logo{display:flex;align-items:center;gap:9px;font-size:1.4rem;font-weight:800;letter-spacing:.5px}
+.logo-badge{width:38px;height:38px;border-radius:12px;background:var(--gradient-primary);display:grid;place-items:center;color:var(--color-black);font-size:1.05rem;box-shadow:0 4px 12px rgba(255,193,7,.4)}
+.logo span{color:#fff}.logo b{color:var(--color-yellow);font-weight:800}
+.location-btn{display:flex;align-items:center;gap:7px;color:#eee;font-size:.82rem;padding:8px 10px;border-radius:10px;transition:.2s;max-width:150px}
+.location-btn:hover{background:rgba(255,255,255,.08)}
+.location-btn i.fa-location-dot{color:var(--color-yellow)}
+.location-btn .loc-name{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:600}
+.location-btn i.fa-chevron-down{font-size:.6rem;color:#999}
+.header-search{flex:1;max-width:430px;display:flex;align-items:center;background:#fff;border-radius:var(--radius-sm);overflow:hidden;border:2px solid transparent;transition:.2s}
+.header-search:focus-within{border-color:var(--color-yellow)}
+.header-search i{padding:0 4px 0 14px;color:var(--color-muted)}
+.header-search input{flex:1;border:none;outline:none;padding:10px;font-family:inherit;font-size:.87rem;min-width:0}
+.header-search button{background:var(--gradient-primary);color:var(--color-black);font-weight:700;font-size:.8rem;padding:10px 16px;height:100%}
+.top-nav{display:flex;gap:4px;margin-left:auto}
+.top-nav a{color:#ddd;font-size:.87rem;font-weight:600;padding:9px 13px;border-radius:9px;transition:.2s;display:flex;align-items:center;gap:7px}
+.top-nav a i{font-size:.85rem}
+.top-nav a:hover{color:var(--color-yellow);background:rgba(255,255,255,.07)}
+.top-nav a.active{color:var(--color-yellow)}
+.header-actions{display:flex;align-items:center;gap:8px}
+.cart-link{position:relative}
+.cart-badge{position:absolute;top:-4px;right:-4px;min-width:19px;height:19px;padding:0 4px;border-radius:20px;background:var(--color-red);color:#fff;font-size:.68rem;font-weight:700;display:grid;place-items:center;border:2px solid var(--color-black)}
+.cart-badge.hidden{display:none}
+.badge-dot{position:absolute;top:2px;right:2px;width:9px;height:9px;border-radius:50%;background:var(--color-red);border:2px solid var(--color-black)}
+.badge-dot.hidden{display:none}
+.dropdown-wrap{position:relative}
+.dropdown-panel{position:absolute;top:calc(100% + 10px);right:0;background:#fff;color:var(--color-text);border-radius:var(--radius-md);box-shadow:var(--shadow-lg);width:300px;opacity:0;visibility:hidden;transform:translateY(8px);transition:.22s;z-index:950;overflow:hidden}
+.dropdown-panel.open{opacity:1;visibility:visible;transform:translateY(0)}
+.dd-head{display:flex;justify-content:space-between;align-items:center;padding:13px 16px;border-bottom:1px solid var(--color-border);font-weight:700;font-size:.9rem}
+.dd-head button{color:var(--color-orange);font-size:.75rem;font-weight:600}
+.notif-item{display:flex;gap:11px;padding:13px 16px;border-bottom:1px solid var(--color-light-gray);font-size:.8rem;transition:.15s}
+.notif-item:last-child{border-bottom:none}
+.notif-item:hover{background:var(--color-light-gray)}
+.notif-item .n-ico{width:34px;height:34px;flex:none;border-radius:10px;display:grid;place-items:center;font-size:.85rem}
+.n-ico.orange{background:#FFF3E0;color:var(--color-orange)}
+.n-ico.green{background:#E8F5E9;color:var(--color-green)}
+.n-ico.red{background:#FFEBEE;color:var(--color-red)}
+.notif-item .n-time{color:var(--color-muted);font-size:.7rem;margin-top:2px}
+.notif-empty{padding:26px;text-align:center;color:var(--color-muted);font-size:.83rem}
+.city-list{max-height:300px;overflow:auto;padding:6px}
+.city-list button{display:flex;align-items:center;gap:10px;width:100%;text-align:left;padding:10px 12px;border-radius:8px;font-size:.86rem;transition:.15s}
+.city-list button:hover{background:var(--color-light-gray)}
+.city-list button.active{background:#FFF8E1;color:#a56b00;font-weight:600}
+.city-list button i{color:var(--color-orange)}
+.subnav{display:none;background:var(--color-dark);border-top:1px solid rgba(255,255,255,.08);overflow-x:auto;scrollbar-width:none}
+.subnav::-webkit-scrollbar{display:none}
+.subnav a{flex:none;color:#ccc;font-size:.83rem;font-weight:600;padding:10px 16px;display:flex;align-items:center;gap:7px}
+.subnav a.active{color:var(--color-yellow)}
+
+/* ============ SIDEBAR ============ */
+.sidebar-overlay{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:980;opacity:0;visibility:hidden;transition:.3s;backdrop-filter:blur(2px)}
+.sidebar-overlay.open{opacity:1;visibility:visible}
+.sidebar{position:fixed;top:0;left:0;bottom:0;width:var(--sidebar-w);max-width:85vw;background:#fff;z-index:990;transform:translateX(-102%);transition:transform .32s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column;box-shadow:var(--shadow-lg)}
+.sidebar.open{transform:translateX(0)}
+.sidebar-head{display:flex;align-items:center;justify-content:space-between;padding:16px 18px;background:var(--color-black);color:#fff}
+.sidebar-head .logo{font-size:1.2rem}
+.sidebar-close{width:36px;height:36px;border-radius:9px;display:grid;place-items:center;color:#fff;background:rgba(255,255,255,.1);transition:.2s}
+.sidebar-close:hover{background:var(--color-red)}
+.sidebar-user{display:flex;align-items:center;gap:12px;padding:18px;border-bottom:1px solid var(--color-border);background:var(--color-light-gray)}
+.avatar{width:46px;height:46px;border-radius:50%;background:var(--gradient-primary);color:var(--color-black);display:grid;place-items:center;font-weight:800;font-size:1.1rem;flex:none}
+.sidebar-user .u-name{font-weight:700;font-size:.92rem;line-height:1.2}
+.sidebar-user .u-sub{font-size:.75rem;color:var(--color-muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:160px}
+.sidebar-user .login-mini{margin-left:auto;background:var(--color-black);color:#fff;font-size:.72rem;font-weight:700;padding:8px 12px;border-radius:8px;transition:.2s}
+.sidebar-user .login-mini:hover{background:var(--color-orange)}
+.sidebar-nav{flex:1;overflow-y:auto;padding:12px}
+.sidebar-nav a{display:flex;align-items:center;gap:13px;padding:12px 14px;border-radius:var(--radius-sm);font-size:.9rem;font-weight:600;margin-bottom:3px;transition:.2s;position:relative}
+.sidebar-nav a i{width:22px;text-align:center;color:var(--color-muted);font-size:1rem;transition:.2s}
+.sidebar-nav a:hover{background:#FFF8E1;color:#b26a00;transform:translateX(3px)}
+.sidebar-nav a:hover i{color:var(--color-orange)}
+.sidebar-nav a.active{background:var(--gradient-primary);color:var(--color-black)}
+.sidebar-nav a.active i{color:var(--color-black)}
+.sidebar-nav a.active::before{content:'';position:absolute;left:-12px;top:20%;bottom:20%;width:4px;border-radius:4px;background:var(--color-orange)}
+.sidebar-divider{height:1px;background:var(--color-border);margin:10px 6px}
+.sidebar-foot{padding:14px;border-top:1px solid var(--color-border)}
+.logout-btn{width:100%;display:flex;align-items:center;gap:13px;padding:12px 14px;border-radius:var(--radius-sm);font-size:.9rem;font-weight:600;color:var(--color-red);transition:.2s}
+.logout-btn:hover{background:#FFEBEE}
+
+/* ============ RESTAURANT HERO ============ */
+.rest-hero{position:relative}
+.hero-cover{position:relative;height:300px;overflow:hidden;background:var(--color-dark)}
+.hero-cover img{width:100%;height:100%;object-fit:cover;opacity:.75}
+.hero-cover::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(17,17,17,.25) 0%,rgba(17,17,17,.72) 100%)}
+.hero-cover .cover-tag{position:absolute;top:18px;left:max(4%,calc((100% - 1220px)/2));z-index:2}
+.breadcrumb{display:inline-flex;align-items:center;gap:8px;background:rgba(0,0,0,.45);backdrop-filter:blur(4px);color:#eee;font-size:.78rem;font-weight:600;padding:8px 14px;border-radius:30px}
+.breadcrumb a:hover{color:var(--color-yellow)}
+.breadcrumb i{font-size:.6rem;color:#999}
+.info-wrap{position:relative;z-index:3;margin-top:-88px;padding-bottom:10px}
+.info-card{background:#fff;border-radius:var(--radius-lg);box-shadow:var(--shadow-lg);padding:24px;border:1px solid var(--color-border)}
+.info-top{display:flex;gap:18px;align-items:flex-start;flex-wrap:wrap}
+.rest-logo{width:84px;height:84px;flex:none;border-radius:var(--radius-md);background:var(--gradient-primary);display:grid;place-items:center;font-size:1.7rem;font-weight:800;color:var(--color-black);box-shadow:0 8px 20px rgba(255,152,0,.35);border:4px solid #fff;outline:1px solid var(--color-border)}
+.info-main{flex:1;min-width:220px}
+.title-row{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.title-row h1{font-size:clamp(1.3rem,2.6vw,1.7rem);font-weight:800;color:var(--color-black)}
+.open-badge{font-size:.7rem;font-weight:700;padding:5px 12px;border-radius:20px;color:#fff;letter-spacing:.4px}
+.open-badge.open{background:var(--color-green)}
+.open-badge.closed{background:var(--color-red)}
+.cuisines{color:var(--color-muted);font-size:.88rem;font-weight:500;margin-top:3px}
+.addr-line{color:var(--color-muted);font-size:.8rem;margin-top:6px;display:flex;gap:16px;flex-wrap:wrap}
+.addr-line span{display:inline-flex;gap:6px;align-items:center}
+.addr-line i{color:var(--color-orange)}
+.info-wish{width:46px;height:46px;border-radius:12px;border:2px solid var(--color-border);display:grid;place-items:center;font-size:1.1rem;color:#999;transition:.25s;flex:none}
+.info-wish:hover{border-color:var(--color-red);color:var(--color-red);transform:scale(1.06)}
+.info-wish.active{color:var(--color-red);border-color:#ffcdd2;background:#FFF5F5;animation:pop .35s}
+@keyframes pop{0%{transform:scale(.7)}60%{transform:scale(1.2)}100%{transform:scale(1)}}
+.info-stats{display:flex;gap:12px;margin-top:18px;flex-wrap:wrap}
+.stat-pill{display:flex;align-items:center;gap:9px;background:var(--color-light-gray);border:1px solid var(--color-border);padding:9px 14px;border-radius:12px;font-size:.82rem;font-weight:600}
+.stat-pill i{color:var(--color-orange)}
+.stat-pill.rate{background:#E8F5E9;border-color:#c8e6c9;color:var(--color-green)}
+.stat-pill.rate i{color:var(--color-green)}
+.stat-pill small{color:var(--color-muted);font-weight:500}
+.stat-pill.free{color:var(--color-green)}
+.info-desc{margin-top:14px;font-size:.87rem;color:var(--color-muted);max-width:820px}
+.closed-banner{display:flex;gap:10px;align-items:flex-start;background:#FFEBEE;border:1px solid #ffcdd2;color:#b71c1c;border-radius:var(--radius-sm);padding:11px 14px;font-size:.82rem;font-weight:600;margin-top:14px}
+.closed-banner i{margin-top:2px}
+
+/* hero skeleton */
+.hero-skel .sk-cover{height:300px;border-radius:0}
+.hero-skel .sk-card{margin:-80px auto 0;position:relative;z-index:3;background:#fff;border-radius:var(--radius-lg);box-shadow:var(--shadow-md);padding:24px;display:flex;gap:18px}
+.hero-skel .sk-logo{width:84px;height:84px;flex:none;border-radius:var(--radius-md)}
+.hero-skel .sk-lines{flex:1}
+.hero-skel .sk-line{height:14px;border-radius:7px;margin-bottom:12px}
+
+/* ============ MENU TOOLBAR ============ */
+.menu-toolbar{position:sticky;top:var(--header-h);z-index:800;background:var(--color-background);padding:14px 0 12px;border-bottom:1px solid var(--color-border);margin-bottom:26px}
+.toolbar-row{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.cat-chips{display:flex;gap:8px;overflow-x:auto;flex:1;padding-bottom:2px;scrollbar-width:none}
+.cat-chips::-webkit-scrollbar{display:none}
+.cat-chip{flex:none;display:inline-flex;align-items:center;gap:7px;background:#fff;border:1.5px solid var(--color-border);padding:8px 15px;border-radius:30px;font-size:.8rem;font-weight:600;color:var(--color-text);transition:.2s}
+.cat-chip i{color:var(--color-orange);font-size:.8rem}
+.cat-chip .cnt{background:var(--color-light-gray);border-radius:12px;font-size:.68rem;padding:1px 7px;color:var(--color-muted)}
+.cat-chip:hover{border-color:var(--color-orange);color:var(--color-orange)}
+.cat-chip.active{background:var(--gradient-primary);border-color:transparent;color:var(--color-black)}
+.cat-chip.active i{color:var(--color-black)}
+.cat-chip.active .cnt{background:rgba(0,0,0,.12);color:var(--color-black)}
+.menu-search{display:flex;align-items:center;background:#fff;border:1.5px solid var(--color-border);border-radius:30px;padding:0 14px;transition:.2s;min-width:210px}
+.menu-search:focus-within{border-color:var(--color-yellow)}
+.menu-search i{color:var(--color-muted);font-size:.82rem}
+.menu-search input{border:none;outline:none;padding:9px 8px;font-family:inherit;font-size:.83rem;background:transparent;width:100%;min-width:0}
+.veg-toggle{display:inline-flex;align-items:center;gap:8px;background:#fff;border:1.5px solid var(--color-border);padding:8px 14px;border-radius:30px;font-size:.8rem;font-weight:700;transition:.2s;color:var(--color-muted)}
+.veg-toggle .v-mark{width:15px;height:15px;border:1.5px solid var(--color-green);border-radius:3px;display:grid;place-items:center}
+.veg-toggle .v-mark::after{content:'';width:7px;height:7px;border-radius:50%;background:var(--color-green)}
+.veg-toggle.active{border-color:var(--color-green);color:var(--color-green);background:#F1F8F1}
+
+/* ============ MENU GRID + CARDS ============ */
+.menu-section{padding-bottom:60px}
+.menu-cat-title{display:flex;align-items:center;gap:10px;font-size:1.12rem;font-weight:700;color:var(--color-black);margin:30px 0 16px}
+.menu-cat-title:first-of-type{margin-top:4px}
+.menu-cat-title i{color:var(--color-orange)}
+.menu-cat-title .m-count{font-size:.74rem;font-weight:600;color:var(--color-muted);background:var(--color-light-gray);padding:2px 9px;border-radius:12px}
+.menu-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(262px,1fr));gap:20px}
+.food-card{background:#fff;border-radius:var(--radius-lg);overflow:hidden;box-shadow:var(--shadow-sm);transition:.28s;display:flex;flex-direction:column;border:1px solid var(--color-border)}
+.food-card:hover{transform:translateY(-6px);box-shadow:var(--shadow-lg);border-color:#ffd782}
+.food-img-wrap{position:relative;height:160px;overflow:hidden;background:var(--color-light-gray);cursor:pointer}
+.food-img-wrap img{width:100%;height:100%;object-fit:cover;transition:.5s}
+.food-card:hover .food-img-wrap img{transform:scale(1.08)}
+.discount-badge{position:absolute;top:10px;left:10px;background:var(--color-red);color:#fff;font-size:.68rem;font-weight:700;padding:4px 9px;border-radius:6px;box-shadow:var(--shadow-sm)}
+.rec-badge{position:absolute;bottom:10px;left:10px;background:rgba(0,0,0,.62);color:var(--color-yellow);font-size:.66rem;font-weight:700;padding:4px 9px;border-radius:6px;display:inline-flex;gap:5px;align-items:center;letter-spacing:.4px}
+.mark-chip{position:absolute;bottom:10px;right:10px}
+.wish-btn{position:absolute;top:10px;right:10px;width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,.92);display:grid;place-items:center;color:#888;font-size:.92rem;transition:.25s;box-shadow:var(--shadow-sm)}
+.wish-btn:hover{transform:scale(1.12);color:var(--color-red)}
+.wish-btn.active{color:var(--color-red);animation:pop .35s}
+.soldout-ribbon{position:absolute;inset:0;background:rgba(0,0,0,.55);display:grid;place-items:center;color:#fff;font-weight:700;font-size:.85rem;letter-spacing:1px}
+.food-body{padding:14px 15px 16px;display:flex;flex-direction:column;flex:1}
+.food-meta{display:flex;align-items:center;gap:12px;font-size:.75rem;color:var(--color-muted);margin-bottom:7px}
+.food-meta .rate{color:#a56b00;background:#FFF8E1;font-weight:700;padding:2px 8px;border-radius:6px;display:inline-flex;gap:4px;align-items:center}
+.food-meta .rate i{color:var(--color-yellow);font-size:.68rem}
+.food-card h3{font-size:.98rem;font-weight:700;margin-bottom:5px;cursor:pointer;transition:.2s}
+.food-card h3:hover{color:var(--color-orange)}
+.food-desc{font-size:.78rem;color:var(--color-muted);display:-webkit-box;-webkit-line-clamp:2;line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.type-badge{display:inline-flex;align-items:center;gap:6px;font-size:.68rem;font-weight:700;letter-spacing:.4px;padding:3px 8px;border-radius:5px;background:#fff}
+.type-badge.veg{color:var(--color-green);border:1px solid rgba(46,125,50,.35)}
+.type-badge.nonveg{color:#A8462D;border:1px solid rgba(168,70,45,.35)}
+.food-mark{width:14px;height:14px;border:1.5px solid var(--color-green);border-radius:3px;display:inline-grid;place-items:center;flex:none;background:#fff}
+.food-mark::after{content:'';width:7px;height:7px;border-radius:50%;background:var(--color-green)}
+.food-mark.nonveg{border-color:#A8462D}
+.food-mark.nonveg::after{content:'';width:0;height:0;border-radius:0;background:transparent;border-left:4.5px solid transparent;border-right:4.5px solid transparent;border-bottom:8px solid #A8462D}
+.allergy-warning{display:flex;align-items:flex-start;gap:8px;background:#FFF3E0;border:1px solid #FFB74D;color:#8a4500;border-radius:var(--radius-sm);padding:8px 10px;font-size:.73rem;font-weight:600;margin-top:10px}
+.allergy-warning i{color:#E65100;margin-top:2px;flex:none}
+.food-foot{margin-top:auto;padding-top:12px;display:flex;align-items:center;justify-content:space-between;gap:8px}
+.price-box{display:flex;flex-direction:column;line-height:1.2}
+.price-box .now{font-weight:800;font-size:1.03rem}
+.price-box .old{font-size:.74rem;color:var(--color-muted);text-decoration:line-through}
+.add-btn{background:var(--gradient-primary);color:var(--color-black);font-weight:700;font-size:.8rem;padding:9px 15px;border-radius:9px;display:inline-flex;align-items:center;gap:7px;transition:.25s;box-shadow:0 4px 12px rgba(255,152,0,.3)}
+.add-btn:hover{transform:translateY(-2px);box-shadow:0 8px 18px rgba(255,152,0,.45)}
+.add-btn.added{background:var(--color-green);color:#fff;box-shadow:0 4px 12px rgba(46,125,50,.3)}
+
+/* ============ STATES / SKELETON ============ */
+.skeleton{position:relative;overflow:hidden;background:#e8e8e8;border-radius:var(--radius-md)}
+.skeleton::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.65),transparent);animation:shimmer 1.3s infinite}
+@keyframes shimmer{from{transform:translateX(-100%)}to{transform:translateX(100%)}}
+.skel-card{border-radius:var(--radius-lg);overflow:hidden;background:#fff;box-shadow:var(--shadow-sm);border:1px solid var(--color-border)}
+.skel-card .s-img{height:160px;border-radius:0}
+.skel-card .s-line{height:12px;margin:12px 14px 0;border-radius:6px}
+.skel-card .s-line.w60{width:60%;margin-bottom:16px}
+.state-block{text-align:center;padding:56px 24px;background:#fff;border:1px dashed var(--color-border);border-radius:var(--radius-lg)}
+.state-block i{font-size:2.5rem;color:#d9b26a;margin-bottom:14px}
+.state-block.err i{color:var(--color-red)}
+.state-block h4{font-size:1.1rem;margin-bottom:6px}
+.state-block p{color:var(--color-muted);font-size:.88rem;margin-bottom:18px;max-width:420px;margin-inline:auto}
+
+/* ============ FOOTER ============ */
+.footer{background:var(--color-black);color:#bbb}
+.footer-grid{display:grid;grid-template-columns:1.4fr 1fr 1fr 1.2fr;gap:34px;padding:54px 0 40px}
+.footer h4{color:#fff;font-size:.95rem;margin-bottom:16px;font-weight:700}
+.footer .about{font-size:.83rem;line-height:1.7;max-width:290px;margin-top:12px}
+.footer-links a{display:block;font-size:.85rem;padding:5px 0;transition:.2s}
+.footer-links a:hover{color:var(--color-yellow);padding-left:5px}
+.footer-contact li{display:flex;gap:11px;font-size:.84rem;margin-bottom:11px;align-items:flex-start}
+.footer-contact i{color:var(--color-yellow);margin-top:3px}
+.socials{display:flex;gap:10px;margin-top:18px}
+.socials a{width:38px;height:38px;border-radius:10px;background:rgba(255,255,255,.08);display:grid;place-items:center;color:#ddd;transition:.25s}
+.socials a:hover{background:var(--gradient-primary);color:var(--color-black);transform:translateY(-3px)}
+.footer-bottom{border-top:1px solid rgba(255,255,255,.1);padding:17px 0;display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;font-size:.78rem;color:#888}
+.footer-bottom b{color:var(--color-yellow)}
+
+/* ============ TOAST + MODAL ============ */
+.toast-zone{position:fixed;bottom:22px;right:22px;z-index:1200;display:flex;flex-direction:column;gap:10px;max-width:min(360px,90vw)}
+.toast{background:#fff;border-radius:var(--radius-md);box-shadow:var(--shadow-lg);padding:13px 16px;display:flex;align-items:flex-start;gap:11px;font-size:.85rem;font-weight:500;min-width:270px;animation:toastIn .3s;border-left:4px solid var(--color-green)}
+.toast i{font-size:1rem;margin-top:2px}
+.toast.success{border-color:var(--color-green)}.toast.success i{color:var(--color-green)}
+.toast.error{border-color:var(--color-red)}.toast.error i{color:var(--color-red)}
+.toast.warning{border-color:var(--color-orange)}.toast.warning i{color:var(--color-orange)}
+.toast.info{border-color:#1976D2}.toast.info i{color:#1976D2}
+.toast .t-close{margin-left:auto;color:#bbb;font-size:.8rem;padding:2px}
+@keyframes toastIn{from{opacity:0;transform:translateX(30px)}to{opacity:1;transform:translateX(0)}}
+.toast.leaving{opacity:0;transform:translateX(30px);transition:.3s}
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:1100;display:grid;place-items:center;padding:18px;opacity:0;visibility:hidden;transition:.25s}
+.modal-overlay.open{opacity:1;visibility:visible}
+.modal{background:#fff;border-radius:var(--radius-lg);max-width:400px;width:100%;padding:30px 26px 24px;text-align:center;transform:scale(.9);transition:.25s;box-shadow:var(--shadow-lg)}
+.modal-overlay.open .modal{transform:scale(1)}
+.modal .m-icon{width:64px;height:64px;border-radius:50%;display:grid;place-items:center;font-size:1.6rem;margin:0 auto 16px}
+.m-icon.warn{background:#FFF3E0;color:#E65100}
+.m-icon.danger{background:#FFEBEE;color:var(--color-red)}
+.modal h3{font-size:1.12rem;margin-bottom:8px}
+.modal p{color:var(--color-muted);font-size:.87rem;margin-bottom:20px}
+.modal .m-actions{display:flex;gap:10px;justify-content:center}
+.modal .m-actions .btn{flex:1}
+
+/* ============ RESPONSIVE ============ */
+@media(max-width:1024px){
+  .hero-cover{height:240px}
+  .info-wrap{margin-top:-70px}
+}
+@media(max-width:900px){
+  .top-nav{display:none}
+  .subnav{display:flex}
+  .footer-grid{grid-template-columns:1fr 1fr}
+}
+@media(max-width:768px){
+  .header-search{display:none}
+  .menu-grid{grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:14px}
+  .menu-search{min-width:0;flex:1}
+}
+@media(max-width:520px){
+  .hero-cover{height:190px}
+  .rest-logo{width:66px;height:66px;font-size:1.3rem}
+  .info-card{padding:18px}
+  .menu-grid{grid-template-columns:1fr}
+  .toolbar-row{gap:8px}
+  .footer-grid{grid-template-columns:1fr;gap:26px;padding:40px 0 30px}
+  .toast-zone{left:14px;right:14px;bottom:14px}
+  .toast{min-width:0;width:100%}
+  .logo span{display:none}
+}
+</style>
+</head>
+<body>
+
+<!-- ================= HEADER ================= -->
+<header class="header">
+  <div class="container header-inner">
+    <button class="icon-btn" id="menuBtn" aria-label="Open menu"><i class="fa-solid fa-bars"></i></button>
+    <a href="index.html" class="logo" aria-label="Foody Home">
+      <span class="logo-badge"><i class="fa-solid fa-utensils"></i></span>
+      <span>Foo<b>dy</b></span>
+    </a>
+    <div class="dropdown-wrap">
+      <button class="location-btn" id="locationBtn" aria-label="Change delivery location">
+        <i class="fa-solid fa-location-dot"></i>
+        <span class="loc-name" id="locationName">Mumbai</span>
+        <i class="fa-solid fa-chevron-down"></i>
+      </button>
+      <div class="dropdown-panel" id="locationPanel">
+        <div class="dd-head"><span><i class="fa-solid fa-location-dot" style="color:var(--color-orange)"></i> Select Location</span></div>
+        <div class="city-list" id="cityList"></div>
+      </div>
+    </div>
+    <form class="header-search" id="headerSearchForm" role="search">
+      <i class="fa-solid fa-magnifying-glass"></i>
+      <input type="search" id="headerSearchInput" placeholder="Search restaurants or dishes..." aria-label="Search">
+      <button type="submit">Search</button>
+    </form>
+    <nav class="top-nav" aria-label="Primary">
+      <a href="index.html"><i class="fa-solid fa-house"></i> Home</a>
+      <a href="restaurants.html" class="active"><i class="fa-solid fa-store"></i> Restaurants</a>
+      <a href="rewards.html"><i class="fa-solid fa-gift"></i> Rewards</a>
+      <a href="support.html"><i class="fa-solid fa-headset"></i> Support</a>
+    </nav>
+    <div class="header-actions">
+      <div class="dropdown-wrap">
+        <button class="icon-btn" id="notifBtn" aria-label="Notifications">
+          <i class="fa-regular fa-bell"></i>
+          <span class="badge-dot" id="notifDot"></span>
+        </button>
+        <div class="dropdown-panel" id="notifPanel">
+          <div class="dd-head"><span>Notifications</span><button id="markReadBtn">Mark all read</button></div>
+          <div id="notifList"></div>
+        </div>
+      </div>
+      <a href="cart.html" class="icon-btn cart-link" aria-label="Cart">
+        <i class="fa-solid fa-cart-shopping"></i>
+        <span class="cart-badge hidden" id="cartBadge">0</span>
+      </a>
+    </div>
+  </div>
+  <nav class="subnav" aria-label="Primary mobile">
+    <a href="index.html"><i class="fa-solid fa-house"></i> Home</a>
+    <a href="restaurants.html" class="active"><i class="fa-solid fa-store"></i> Restaurants</a>
+    <a href="rewards.html"><i class="fa-solid fa-gift"></i> Rewards</a>
+    <a href="support.html"><i class="fa-solid fa-headset"></i> Support</a>
+  </nav>
+</header>
+
+<!-- ================= SIDEBAR ================= -->
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+<aside class="sidebar" id="sidebar" aria-label="User menu">
+  <div class="sidebar-head">
+    <a href="index.html" class="logo"><span class="logo-badge"><i class="fa-solid fa-utensils"></i></span><span>Foo<b>dy</b></span></a>
+    <button class="sidebar-close" id="sidebarClose" aria-label="Close menu"><i class="fa-solid fa-xmark"></i></button>
+  </div>
+  <div class="sidebar-user" id="sidebarUser"></div>
+  <nav class="sidebar-nav">
+    <a href="profile.html"><i class="fa-solid fa-user"></i> Profile</a>
+    <a href="orders.html"><i class="fa-solid fa-bag-shopping"></i> Orders</a>
+    <a href="food-preferences.html"><i class="fa-solid fa-sliders"></i> Food Preferences</a>
+    <a href="food-allergies.html"><i class="fa-solid fa-shield-halved"></i> Food Allergies</a>
+    <a href="wishlist.html"><i class="fa-solid fa-heart"></i> Wishlist</a>
+    <a href="rewards.html"><i class="fa-solid fa-gift"></i> Rewards</a>
+    <a href="support.html"><i class="fa-solid fa-headset"></i> Support</a>
+    <div class="sidebar-divider"></div>
+    <a href="index.html"><i class="fa-solid fa-house"></i> Home</a>
+    <a href="restaurants.html" class="active"><i class="fa-solid fa-store"></i> Restaurants</a>
+    <a href="/games.html">🎮 Play Arcade Games</a>
+  </nav>
+  <div class="sidebar-foot">
+    <button class="logout-btn" id="logoutBtn"><i class="fa-solid fa-right-from-bracket"></i> Logout</button>
+  </div>
+</aside>
+
+<main>
+  <!-- Cover + info (injected) -->
+  <section class="rest-hero" id="restHero">
+    <div class="hero-skel">
+      <div class="skeleton sk-cover"></div>
+      <div class="container"><div class="sk-card">
+        <div class="skeleton sk-logo"></div>
+        <div class="sk-lines">
+          <div class="skeleton sk-line" style="width:42%"></div>
+          <div class="skeleton sk-line" style="width:60%"></div>
+          <div class="skeleton sk-line" style="width:78%"></div>
+        </div>
+      </div></div>
+    </div>
+  </section>
+
+  <!-- Menu -->
+  <section class="menu-section">
+    <div class="container">
+      <div class="menu-toolbar" id="menuToolbar" style="display:none">
+        <div class="toolbar-row">
+          <div class="cat-chips" id="catChips"></div>
+          <div class="menu-search">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input type="search" id="menuSearch" placeholder="Search in menu..." aria-label="Search menu">
+          </div>
+          <button class="veg-toggle" id="vegToggle" type="button" aria-pressed="false">
+            <span class="v-mark"></span> Veg Only
+          </button>
+        </div>
+      </div>
+      <div id="menuArea"></div>
+    </div>
+  </section>
+</main>
+
+<!-- ================= FOOTER ================= -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <a href="index.html" class="logo"><span class="logo-badge"><i class="fa-solid fa-utensils"></i></span><span>Foo<b>dy</b></span></a>
+        <p class="about">Foody connects you with the best restaurants around you. Order your favourite meals and get them delivered hot, fresh and fast.</p>
+        <div class="socials">
+          <a href="#" aria-label="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
+          <a href="#" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+          <a href="#" aria-label="Twitter"><i class="fa-brands fa-twitter"></i></a>
+          <a href="#" aria-label="YouTube"><i class="fa-brands fa-youtube"></i></a>
+        </div>
+      </div>
+      <div>
+        <h4>Quick Links</h4>
+        <div class="footer-links">
+          <a href="restaurants.html">Restaurants</a>
+          <a href="search.html">Search Food</a>
+          <a href="orders.html">My Orders</a>
+          <a href="wishlist.html">Wishlist</a>
+          <a href="rewards.html">Rewards</a>
+        </div>
+      </div>
+      <div>
+        <h4>Top Categories</h4>
+        <div class="footer-links">
+          <a href="search.html?category=Biryani">Biryani</a>
+          <a href="search.html?category=Fast%20Food">Fast Food</a>
+          <a href="search.html?category=South%20Indian">South Indian</a>
+          <a href="search.html?category=Dessert">Desserts</a>
+          <a href="search.html?category=Drinks">Drinks</a>
+        </div>
+      </div>
+      <div>
+        <h4>Contact Us</h4>
+        <ul class="footer-contact">
+          <li><i class="fa-solid fa-location-dot"></i> Foody HQ, Bandra Kurla Complex, Mumbai 400051</li>
+          <li><i class="fa-solid fa-phone"></i> +91 98765 43210</li>
+          <li><i class="fa-solid fa-envelope"></i> support@foody.in</li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 <b>Foody</b>. All rights reserved.</span>
+      <span>Made with <i class="fa-solid fa-heart" style="color:var(--color-red)"></i> for food lovers</span>
+    </div>
+  </div>
+</footer>
+
+<div class="toast-zone" id="toastZone" aria-live="polite"></div>
+<div class="modal-overlay" id="confirmModal" role="dialog" aria-modal="true">
+  <div class="modal">
+    <div class="m-icon warn" id="confirmIcon"><i class="fa-solid fa-triangle-exclamation"></i></div>
+    <h3 id="confirmTitle">Are you sure?</h3>
+    <p id="confirmText"></p>
+    <div class="m-actions">
+      <button class="btn btn-outline" id="confirmCancel">Cancel</button>
+      <button class="btn btn-primary" id="confirmOk">Confirm</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ============================================================
+   FOODY — RESTAURANT DETAIL
+   Cover • Logo • Info • Menu categories • Allergy-aware cards
+============================================================ */
+'use strict';
+const API_BASE_URL = "http://localhost:5000/api/v1";
+const FALLBACK_IMG = "https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=600&q=70";
+function imgErr(el){ el.onerror=null; el.src=FALLBACK_IMG; }
+const u = (id,w=600) => `https://images.unsplash.com/${id}?auto=format&fit=crop&w=${w}&q=72`;
+const R_ID = new URLSearchParams(location.search).get('id') || 'r1';
+
+/* ---------------- DEMO DATA ---------------- */
+const CITIES = ['Mumbai','Delhi','Bengaluru','Hyderabad','Chennai','Kolkata','Pune','Goa','Lucknow','Amritsar'];
+const RESTAURANTS = [
+ {id:'r1', name:'Spice Symphony',        cuisine:'North Indian, Mughlai',      description:'Rich gravies, slow-cooked curries and tandoor classics served the royal way.', address:'Connaught Place, New Delhi',        phone:'+91 98100 11001', image:u('photo-1517248135467-4c7edcad34c4',1200), rating:4.5, delivery_time:'25-30 min', delivery_fee:29, is_active:true},
+ {id:'r2', name:'Dosa Junction',         cuisine:'South Indian',               description:'Crispy dosas, fluffy idlis and strong filter coffee — Chennai on a plate.', address:'T. Nagar, Chennai',                 phone:'+91 98100 11002', image:u('photo-1552566626-52f8b828add9',1200), rating:4.6, delivery_time:'20-25 min', delivery_fee:19, is_active:true},
+ {id:'r3', name:'Biryani Blues',         cuisine:'Biryani, Mughlai',           description:'Authentic Hyderabadi dum biryani layered with saffron and sealed with dough.', address:'Jubilee Hills, Hyderabad',          phone:'+91 98100 11003', image:u('photo-1414235077428-338989a2e8c0',1200), rating:4.8, delivery_time:'30-35 min', delivery_fee:0, is_active:true},
+ {id:'r4', name:'Pizza Roma',            cuisine:'Italian, Pizza',             description:'Wood-fired artisan pizzas with imported Italian cheeses.', address:'Koramangala, Bengaluru',            phone:'+91 98100 11004', image:u('photo-1555396273-367ea4eb4db5',1200), rating:4.4, delivery_time:'25-30 min', delivery_fee:25, is_active:true},
+ {id:'r5', name:'Tokyo Bites',           cuisine:'Japanese, Asian',            description:'Fresh sushi, steaming ramen and donburi bowls.', address:'Indiranagar, Bengaluru',            phone:'+91 98100 11005', image:u('photo-1554118811-1e0d58224f24',1200), rating:4.7, delivery_time:'30-40 min', delivery_fee:49, is_active:true},
+ {id:'r6', name:'Burger Barn',           cuisine:'Fast Food, American',        description:'Smashed burgers, loaded fries and thick shakes.', address:'Bandra West, Mumbai',               phone:'+91 98100 11006', image:u('photo-1466978913421-dad2ebd01d17',1200), rating:4.3, delivery_time:'15-20 min', delivery_fee:15, is_active:true},
+ {id:'r7', name:'Coastal Catch',         cuisine:'Seafood, Goan',              description:'Fresh catch of the day cooked the traditional Goan way.', address:'Panjim, Goa',                       phone:'+91 98100 11007', image:u('photo-1559329007-40df8a9345d8',1200), rating:4.6, delivery_time:'30-35 min', delivery_fee:35, is_active:true},
+ {id:'r8', name:'Sweet Treats',          cuisine:'Desserts, Bengali Sweets',   description:'Melt-in-mouth sweets, sundaes and baked desserts since 1995.', address:'Park Street, Kolkata',              phone:'+91 98100 11008', image:u('photo-1517248135467-4c7edcad34c4',1200), rating:4.5, delivery_time:'20-25 min', delivery_fee:20, is_active:true},
+ {id:'r9', name:'Kolkata Biryani House', cuisine:'Biryani, Bengali',           description:'Legendary Kolkata-style biryani with potato, egg and subtle spices.', address:'Alipore, Kolkata',                  phone:'+91 98100 11009', image:u('photo-1590846406792-0adc7f938f1d',1200), rating:4.7, delivery_time:'35-40 min', delivery_fee:25, is_active:true},
+ {id:'r10',name:'Dragon Wok',            cuisine:'Chinese, Asian',             description:'Street-style Indo-Chinese tossed in a blazing wok.', address:'Sector 18, Noida',                  phone:'+91 98100 11010', image:u('photo-1537047902294-62a40c20a6ae',1200), rating:4.2, delivery_time:'25-30 min', delivery_fee:20, is_active:true},
+ {id:'r11',name:'Kebab Factory',         cuisine:'Kebab, Mughlai',             description:'Charcoal-grilled kebabs and Awadhi classics since 1987.', address:'Hazratganj, Lucknow',               phone:'+91 98100 11011', image:u('photo-1583394838336-acd977736f90',1200), rating:4.6, delivery_time:'30-35 min', delivery_fee:30, is_active:true},
+ {id:'r12',name:'Choco Loco',            cuisine:'Chocolate, Desserts',        description:'Handcrafted chocolate heaven — truffles, mousse and more.', address:'Lower Parel, Mumbai',               phone:'+91 98100 11012', image:u('photo-1600093463592-8e36ae95ef56',1200), rating:4.4, delivery_time:'20-25 min', delivery_fee:25, is_active:true},
+ {id:'r13',name:'The Spanish Fork',      cuisine:'Spanish, European',          description:'Paellas, tapas and mocktail sangria in a warm setting.', address:'Cyber City, Gurugram',              phone:'+91 98100 11013', image:u('photo-1560624052-449f5ddf0c31',1200), rating:4.3, delivery_time:'35-45 min', delivery_fee:40, is_active:false},
+ {id:'r14',name:'Donut Delight',         cuisine:'Donuts, Bakery',             description:'Freshly glazed donuts baked every single morning.', address:'Banjara Hills, Hyderabad',          phone:'+91 98100 11014', image:u('photo-1607627289024-67271e24cbb8',1200), rating:4.5, delivery_time:'15-20 min', delivery_fee:15, is_active:true},
+ {id:'r15',name:'Punjab Grill',          cuisine:'North Indian, Punjabi',      description:'Bold flavours of Punjab — chole, kulche and tandoori grills.', address:'Golden Temple Rd, Amritsar',        phone:'+91 98100 11015', image:u('photo-1590846406792-0adc7f938f1d',1200), rating:4.4, delivery_time:'25-30 min', delivery_fee:22, is_active:true},
+ {id:'r16',name:'Roll Revolution',       cuisine:'Fast Food, Street Food',     description:'Kathi rolls, wraps and street-style coolers.', address:'FC Road, Pune',                     phone:'+91 98100 11016', image:u('photo-1466978913421-dad2ebd01d17',1200), rating:4.1, delivery_time:'15-20 min', delivery_fee:10, is_active:true},
+ {id:'r17',name:'Madras Meals',          cuisine:'South Indian',               description:'Home-style thalis and tiffin favourites.', address:'Besant Nagar, Chennai',             phone:'+91 98100 11017', image:u('photo-1552566626-52f8b828add9',1200), rating:4.4, delivery_time:'20-25 min', delivery_fee:15, is_active:true},
+ {id:'r18',name:'Oven Stories',          cuisine:'Bakery, Desserts, Pizza',    description:'Artisan bakes, cheesecakes and sourdough pizzas.', address:'Hauz Khas, New Delhi',              phone:'+91 98100 11018', image:u('photo-1555396273-367ea4eb4db5',1200), rating:4.2, delivery_time:'25-30 min', delivery_fee:20, is_active:true}
+];
+
+/* menu_category: recommended | starters | main_course | rice | breads | desserts | drinks */
+const FOODS = [
+ {id:'f1', restaurant_id:'r4', menu:'main_course', recommended:true, name:'Margherita Pizza', description:'Classic pizza with mozzarella, fresh tomato & basil.', image:u('photo-1565299624946-b28f40a0ae38'), price:299, discount_price:249, food_type:'VEG', rating:4.5, preparation_time:'25 min', is_available:true, ingredients:['wheat flour','mozzarella cheese','tomato','basil','olive oil']},
+ {id:'f2', restaurant_id:'r4', menu:'main_course', name:'Farmhouse Supreme Pizza', description:'Capsicum, onion, corn, mushroom & extra cheese.', image:u('photo-1513104890138-7c749659a591'), price:429, discount_price:349, food_type:'VEG', rating:4.3, preparation_time:'30 min', is_available:true, ingredients:['wheat flour','cheese','capsicum','onion','corn','mushroom']},
+ {id:'f3', restaurant_id:'r4', menu:'main_course', name:'Chicken Tikka Pizza', description:'Smoky chicken tikka chunks with onion & tikka drizzle.', image:u('photo-1574071318508-1cdbab80d002'), price:469, discount_price:399, food_type:'NON_VEG', rating:4.6, preparation_time:'30 min', is_available:true, ingredients:['wheat flour','chicken','cheese','onion','tikka sauce']},
+ {id:'f4', restaurant_id:'r2', menu:'main_course', recommended:true, name:'Masala Dosa', description:'Golden crispy dosa with spiced potato, sambar & chutneys.', image:u('photo-1668236543090-82eba5ee5976'), price:149, discount_price:119, food_type:'VEG', rating:4.7, preparation_time:'15 min', is_available:true, ingredients:['rice','urad dal','potato','onion','spices']},
+ {id:'f5', restaurant_id:'r2', menu:'starters', name:'Idli Sambar (4 pcs)', description:'Soft steamed idlis dunked in piping hot sambar.', image:u('photo-1589301760014-d929f3979dbc'), price:119, discount_price:99, food_type:'VEG', rating:4.4, preparation_time:'15 min', is_available:true, ingredients:['rice','urad dal','vegetables','tamarind']},
+ {id:'f6', restaurant_id:'r2', menu:'drinks', name:'Filter Coffee', description:'Strong South Indian filter coffee with frothy milk.', image:u('photo-1495474472287-4d71bcdd2085'), price:79, discount_price:null, food_type:'VEG', rating:4.6, preparation_time:'10 min', is_available:true, ingredients:['coffee','milk','sugar']},
+ {id:'f7', restaurant_id:'r1', menu:'main_course', recommended:true, name:'Paneer Butter Masala', description:'Cottage cheese in silky tomato-cashew gravy.', image:u('photo-1631452180519-c014fe946bc7'), price:289, discount_price:239, food_type:'VEG', rating:4.6, preparation_time:'25 min', is_available:true, ingredients:['paneer','butter','cream','tomato','cashew paste']},
+ {id:'f8', restaurant_id:'r1', menu:'main_course', recommended:true, name:'Butter Chicken', description:'Tandoori chicken in rich buttery tomato gravy.', image:u('photo-1565557623262-b51c2513a641'), price:349, discount_price:299, food_type:'NON_VEG', rating:4.7, preparation_time:'30 min', is_available:true, ingredients:['chicken','butter','cream','tomato','cashew paste']},
+ {id:'f9', restaurant_id:'r1', menu:'main_course', name:'Dal Makhani', description:'Slow-cooked black lentils finished with butter & cream.', image:u('photo-1547592180-85f173990554'), price:229, discount_price:199, food_type:'VEG', rating:4.4, preparation_time:'30 min', is_available:true, ingredients:['black lentils','butter','cream','tomato']},
+ {id:'f10',restaurant_id:'r1', menu:'breads', name:'Butter Naan (2 pcs)', description:'Soft tandoor naans brushed with butter.', image:u('photo-1585937421612-70a008356fbe'), price:59, discount_price:49, food_type:'VEG', rating:4.5, preparation_time:'15 min', is_available:true, ingredients:['wheat flour','milk','butter','yeast']},
+ {id:'f11',restaurant_id:'r3', menu:'rice', recommended:true, name:'Hyderabadi Chicken Biryani', description:'Fragrant dum biryani with saffron, mint & fried onion.', image:u('photo-1563379091339-03b21ab4a4f8'), price:329, discount_price:279, food_type:'NON_VEG', rating:4.8, preparation_time:'35 min', is_available:true, ingredients:['basmati rice','chicken','yogurt','saffron','cashew','onion']},
+ {id:'f12',restaurant_id:'r3', menu:'rice', name:'Veg Dum Biryani', description:'Garden vegetables layered with aromatic basmati rice.', image:u('photo-1589302168068-964664d93dc0'), price:259, discount_price:219, food_type:'VEG', rating:4.3, preparation_time:'30 min', is_available:true, ingredients:['basmati rice','vegetables','yogurt','cashew','saffron']},
+ {id:'f13',restaurant_id:'r9', menu:'rice', recommended:true, name:'Kolkata Mutton Biryani', description:'Signature Kolkata biryani with potato & boiled egg.', image:u('photo-1596797038530-2c107229654b'), price:399, discount_price:349, food_type:'NON_VEG', rating:4.7, preparation_time:'40 min', is_available:true, ingredients:['basmati rice','mutton','potato','yogurt','boiled egg']},
+ {id:'f14',restaurant_id:'r5', menu:'main_course', recommended:true, name:'Sushi Platter (8 pcs)', description:'Chef\'s selection of salmon & tuna nigiri and rolls.', image:u('photo-1579584425555-c3ce17fd4351'), price:549, discount_price:479, food_type:'NON_VEG', rating:4.6, preparation_time:'25 min', is_available:true, ingredients:['sushi rice','salmon','tuna','sesame seeds','soy sauce','nori']},
+ {id:'f15',restaurant_id:'r5', menu:'main_course', name:'Chicken Ramen', description:'Rich broth, wheat noodles, soft egg & scallions.', image:u('photo-1569718212165-3a8278d5f624'), price:419, discount_price:null, food_type:'NON_VEG', rating:4.5, preparation_time:'25 min', is_available:true, ingredients:['wheat noodles','chicken broth','egg','soy sauce','scallion']},
+ {id:'f16',restaurant_id:'r6', menu:'main_course', recommended:true, name:'Classic Chicken Burger', description:'Crispy chicken patty, cheese, lettuce & house sauce.', image:u('photo-1568901346375-23c9450c58cd'), price:219, discount_price:179, food_type:'NON_VEG', rating:4.4, preparation_time:'20 min', is_available:true, ingredients:['chicken patty','wheat bun','cheese','lettuce','sesame seeds','egg mayonnaise']},
+ {id:'f17',restaurant_id:'r6', menu:'main_course', name:'Crispy Veg Burger', description:'Golden veggie patty with tangy sauce & crunchy slaw.', image:u('photo-1550547660-d9450f859349'), price:149, discount_price:129, food_type:'VEG', rating:4.2, preparation_time:'15 min', is_available:true, ingredients:['veggie patty','wheat bun','cheese','lettuce','egg mayonnaise']},
+ {id:'f18',restaurant_id:'r6', menu:'starters', name:'Peri Peri Fries', description:'Crackly fries dusted with fiery peri peri spice.', image:u('photo-1573080496219-bb080dd4f877'), price:119, discount_price:99, food_type:'VEG', rating:4.3, preparation_time:'15 min', is_available:true, ingredients:['potato','oil','peri peri spice']},
+ {id:'f19',restaurant_id:'r7', menu:'main_course', recommended:true, name:'Prawn Ghee Roast', description:'Juicy prawns tossed in spicy ghee-roasted masala.', image:u('photo-1565680018434-b513d5e5fd47'), price:459, discount_price:389, food_type:'NON_VEG', rating:4.7, preparation_time:'30 min', is_available:true, ingredients:['prawns','ghee','tomato','onion','spices']},
+ {id:'f20',restaurant_id:'r7', menu:'main_course', name:'Goan Fish Curry', description:'Fresh fish simmered in tangy coconut-based curry.', image:u('photo-1559742811-822873691df8'), price:389, discount_price:329, food_type:'NON_VEG', rating:4.6, preparation_time:'35 min', is_available:true, ingredients:['fish','coconut','kokum','spices','rice']},
+ {id:'f21',restaurant_id:'r9', menu:'main_course', name:'Machher Jhol (Bengali Fish Curry)', description:'Classic Bengali fish curry with potato & mustard notes.', image:u('photo-1519708227418-c8fd9a32b7a2'), price:369, discount_price:319, food_type:'NON_VEG', rating:4.5, preparation_time:'35 min', is_available:true, ingredients:['rohu fish','mustard oil','potato','tomato']},
+ {id:'f22',restaurant_id:'r8', menu:'desserts', name:'Rasgulla (2 pcs)', description:'Spongy chenna dumplings soaked in light syrup.', image:u('photo-1606491956689-2ea866880c84'), price:99, discount_price:79, food_type:'VEG', rating:4.5, preparation_time:'10 min', is_available:true, ingredients:['chenna','sugar','cardamom']},
+ {id:'f23',restaurant_id:'r10',menu:'starters', recommended:true, name:'Chilli Chicken', description:'Crispy chicken tossed with peppers in spicy soy glaze.', image:u('photo-1603133872878-684f208fb84b'), price:279, discount_price:239, food_type:'NON_VEG', rating:4.4, preparation_time:'25 min', is_available:true, ingredients:['chicken','soy sauce','capsicum','corn starch','chilli']},
+ {id:'f24',restaurant_id:'r10',menu:'main_course', name:'Veg Hakka Noodles', description:'Wok-tossed noodles with crunchy vegetables.', image:u('photo-1585032226651-759b368d7246'), price:189, discount_price:159, food_type:'VEG', rating:4.2, preparation_time:'20 min', is_available:true, ingredients:['wheat noodles','cabbage','carrot','soy sauce']},
+ {id:'f25',restaurant_id:'r11',menu:'starters', recommended:true, name:'Mutton Seekh Kebab', description:'Charcoal-grilled minced mutton skewers with mint.', image:u('photo-1599487488170-d11ec9c172f0'), price:319, discount_price:269, food_type:'NON_VEG', rating:4.6, preparation_time:'25 min', is_available:true, ingredients:['mutton','onion','spices','mint']},
+ {id:'f26',restaurant_id:'r11',menu:'starters', name:'Paneer Tikka', description:'Smoky grilled cottage cheese cubes with peppers.', image:u('photo-1529193591184-b1d58069ecdd'), price:259, discount_price:219, food_type:'VEG', rating:4.5, preparation_time:'25 min', is_available:true, ingredients:['paneer','yogurt','spices','capsicum']},
+ {id:'f27',restaurant_id:'r13',menu:'rice', recommended:true, name:'Spanish Seafood Paella', description:'Saffron rice with prawns, mussels & olive oil.', image:u('photo-1534080564583-6be75777b70a'), price:629, discount_price:549, food_type:'NON_VEG', rating:4.7, preparation_time:'40 min', is_available:true, ingredients:['arborio rice','prawns','mussels','saffron','olive oil']},
+ {id:'f28',restaurant_id:'r13',menu:'starters', name:'Patatas Bravas', description:'Crispy potato bites with smoky tomato sauce.', image:u('photo-1512621776951-a57141f2eefd'), price:199, discount_price:null, food_type:'VEG', rating:4.1, preparation_time:'20 min', is_available:false, ingredients:['potato','tomato sauce','olive oil','paprika']},
+ {id:'f29',restaurant_id:'r8', menu:'desserts', recommended:true, name:'Chocolate Brownie Sundae', description:'Warm brownie, ice cream, hot fudge & roasted nuts.', image:u('photo-1563805042-7684c019e1cb'), price:239, discount_price:199, food_type:'VEG', rating:4.7, preparation_time:'15 min', is_available:true, ingredients:['chocolate','flour','butter','egg','vanilla ice cream','almonds']},
+ {id:'f30',restaurant_id:'r12',menu:'desserts', recommended:true, name:'Chocolate Truffle Pastry', description:'Decadent layered pastry with dark chocolate ganache.', image:u('photo-1578985545062-69928b1d9587'), price:189, discount_price:149, food_type:'VEG', rating:4.6, preparation_time:'10 min', is_available:true, ingredients:['dark chocolate','cream','flour','egg','butter']},
+ {id:'f31',restaurant_id:'r14',menu:'desserts', recommended:true, name:'Assorted Glazed Donuts (6 pcs)', description:'Box of six freshly glazed assorted donuts.', image:u('photo-1551024601-bec78aea704b'), price:249, discount_price:199, food_type:'VEG', rating:4.5, preparation_time:'15 min', is_available:true, ingredients:['flour','sugar','milk','egg','butter','chocolate glaze']},
+ {id:'f32',restaurant_id:'r14',menu:'desserts', name:'Chocolate Fudge Donut', description:'Soft donut drenched in rich chocolate fudge.', image:u('photo-1551024506-0bccd828d307'), price:99, discount_price:79, food_type:'VEG', rating:4.4, preparation_time:'10 min', is_available:true, ingredients:['flour','chocolate','milk','egg','sugar']},
+ {id:'f33',restaurant_id:'r7', menu:'drinks', name:'Fresh Lime Soda', description:'Zesty lime with fizzy soda — sweet, salted or mixed.', image:u('photo-1513558161293-cdaf765ed2fd'), price:89, discount_price:69, food_type:'VEG', rating:4.2, preparation_time:'10 min', is_available:true, ingredients:['lime','soda','sugar','mint']},
+ {id:'f34',restaurant_id:'r15',menu:'main_course', recommended:true, name:'Amritsari Chole Kulche', description:'Buttery kulche with spicy chickpea curry.', image:u('photo-1601050690597-df0568f70950'), price:199, discount_price:169, food_type:'VEG', rating:4.6, preparation_time:'25 min', is_available:true, ingredients:['wheat flour','chickpeas','butter','onion','spices']},
+ {id:'f35',restaurant_id:'r15',menu:'starters', recommended:true, name:'Tandoori Chicken', description:'Yogurt-spice marinated chicken grilled in the tandoor.', image:u('photo-1544025162-d76694265947'), price:339, discount_price:289, food_type:'NON_VEG', rating:4.5, preparation_time:'30 min', is_available:true, ingredients:['chicken','yogurt','spices','lemon']},
+ /* --- extended menu items --- */
+ {id:'m1', restaurant_id:'r1', menu:'starters', name:'Paneer Tikka Angara', description:'Char-grilled paneer in smoky red marinade.', image:u('photo-1631452180519-c014fe946bc7'), price:269, discount_price:229, food_type:'VEG', rating:4.5, preparation_time:'25 min', is_available:true, ingredients:['paneer','yogurt','spices']},
+ {id:'m2', restaurant_id:'r1', menu:'starters', name:'Tandoori Chicken Wings', description:'Juicy wings charred in the clay oven.', image:u('photo-1544025162-d76694265947'), price:299, discount_price:259, food_type:'NON_VEG', rating:4.4, preparation_time:'30 min', is_available:true, ingredients:['chicken','yogurt','spices']},
+ {id:'m3', restaurant_id:'r1', menu:'rice', name:'Jeera Rice', description:'Basmati rice tempered with cumin & ghee.', image:u('photo-1596797038530-2c107229654b'), price:149, discount_price:null, food_type:'VEG', rating:4.2, preparation_time:'20 min', is_available:true, ingredients:['basmati rice','cumin','ghee']},
+ {id:'m4', restaurant_id:'r1', menu:'breads', name:'Garlic Naan', description:'Naan topped with garlic & coriander.', image:u('photo-1585937421612-70a008356fbe'), price:79, discount_price:69, food_type:'VEG', rating:4.6, preparation_time:'15 min', is_available:true, ingredients:['wheat flour','milk','butter','garlic']},
+ {id:'m5', restaurant_id:'r1', menu:'breads', name:'Tandoori Roti', description:'Whole wheat roti straight from the tandoor.', image:u('photo-1585937421612-70a008356fbe'), price:39, discount_price:null, food_type:'VEG', rating:4.3, preparation_time:'15 min', is_available:true, ingredients:['whole wheat flour']},
+ {id:'m6', restaurant_id:'r1', menu:'drinks', name:'Sweet Lassi', description:'Chilled creamy lassi topped with malai.', image:u('photo-1546173159-315724a31696'), price:99, discount_price:79, food_type:'VEG', rating:4.5, preparation_time:'10 min', is_available:true, ingredients:['yogurt','milk','sugar']},
+ {id:'m7', restaurant_id:'r1', menu:'drinks', name:'Masala Chaas', description:'Spiced buttermilk with roasted cumin.', image:u('photo-1546173159-315724a31696'), price:79, discount_price:null, food_type:'VEG', rating:4.2, preparation_time:'10 min', is_available:true, ingredients:['buttermilk','spices']},
+ {id:'m8', restaurant_id:'r1', menu:'desserts', name:'Gulab Jamun (2 pcs)', description:'Warm khoya dumplings in rose syrup.', image:u('photo-1606491956689-2ea866880c84'), price:119, discount_price:99, food_type:'VEG', rating:4.6, preparation_time:'10 min', is_available:true, ingredients:['milk solids','sugar','wheat flour']},
+ {id:'m9', restaurant_id:'r2', menu:'starters', name:'Medu Vada (2 pcs)', description:'Crispy lentil donuts with sambar & chutney.', image:u('photo-1589301760014-d929f3979dbc'), price:89, discount_price:null, food_type:'VEG', rating:4.4, preparation_time:'15 min', is_available:true, ingredients:['urad dal','onion','spices']},
+ {id:'m10',restaurant_id:'r2', menu:'starters', name:'Mysore Bonda (4 pcs)', description:'Fluffy fried bondas served with chutney.', image:u('photo-1601050690597-df0568f70950'), price:99, discount_price:null, food_type:'VEG', rating:4.1, preparation_time:'15 min', is_available:true, ingredients:['wheat flour','yogurt','coconut']},
+ {id:'m11',restaurant_id:'r2', menu:'rice', name:'Curd Rice', description:'Tempered yogurt rice with mustard & curry leaves.', image:u('photo-1504674900247-0877df9cc836'), price:129, discount_price:null, food_type:'VEG', rating:4.3, preparation_time:'15 min', is_available:true, ingredients:['rice','yogurt','mustard seeds']},
+ {id:'m12',restaurant_id:'r2', menu:'drinks', name:'Fresh Buttermilk', description:'Light spiced buttermilk, served chilled.', image:u('photo-1546173159-315724a31696'), price:59, discount_price:null, food_type:'VEG', rating:4.2, preparation_time:'10 min', is_available:true, ingredients:['buttermilk','curry leaves']},
+ {id:'m13',restaurant_id:'r2', menu:'desserts', name:'Pal Payasam', description:'Creamy milk kheer with rice & cashew.', image:u('photo-1563805042-7684c019e1cb'), price:129, discount_price:null, food_type:'VEG', rating:4.5, preparation_time:'15 min', is_available:true, ingredients:['milk','rice','sugar','cashew']},
+ {id:'m14',restaurant_id:'r3', menu:'starters', name:'Chicken 65', description:'Fiery deep-fried chicken with curry leaves.', image:u('photo-1603133872878-684f208fb84b'), price:249, discount_price:219, food_type:'NON_VEG', rating:4.6, preparation_time:'20 min', is_available:true, ingredients:['chicken','yogurt','egg','spices']},
+ {id:'m15',restaurant_id:'r3', menu:'desserts', name:'Double Ka Meetha', description:'Hyderabadi bread pudding with saffron & nuts.', image:u('photo-1578985545062-69928b1d9587'), price:139, discount_price:null, food_type:'VEG', rating:4.4, preparation_time:'15 min', is_available:true, ingredients:['bread','milk','sugar','cashew']},
+ {id:'m16',restaurant_id:'r3', menu:'drinks', name:'Kesar Badam Milk', description:'Saffron-almond milk, served warm or chilled.', image:u('photo-1546173159-315724a31696'), price:129, discount_price:null, food_type:'VEG', rating:4.5, preparation_time:'10 min', is_available:true, ingredients:['milk','almonds','saffron']},
+ {id:'m17',restaurant_id:'r4', menu:'starters', name:'Garlic Bread', description:'Toasted garlic butter bread with herbs.', image:u('photo-1573080496219-bb080dd4f877'), price:149, discount_price:null, food_type:'VEG', rating:4.3, preparation_time:'15 min', is_available:true, ingredients:['wheat flour','butter','garlic']},
+ {id:'m18',restaurant_id:'r4', menu:'drinks', name:'Cola Fizz', description:'Chilled fizzy cola with lemon.', image:u('photo-1513558161293-cdaf765ed2fd'), price:79, discount_price:null, food_type:'VEG', rating:4.0, preparation_time:'5 min', is_available:true, ingredients:['carbonated water','sugar','lemon']},
+ {id:'m19',restaurant_id:'r4', menu:'desserts', name:'Tiramisu', description:'Classic Italian coffee-soaked layered dessert.', image:u('photo-1578985545062-69928b1d9587'), price:229, discount_price:null, food_type:'VEG', rating:4.7, preparation_time:'10 min', is_available:true, ingredients:['mascarpone cheese','egg','wheat flour','coffee']},
+ {id:'m20',restaurant_id:'r5', menu:'starters', name:'Chicken Gyoza (6 pcs)', description:'Pan-seared Japanese dumplings with dip.', image:u('photo-1496116218417-1a781b1c41a3'), price:199, discount_price:null, food_type:'NON_VEG', rating:4.5, preparation_time:'20 min', is_available:true, ingredients:['wheat flour','chicken','soy sauce','cabbage']},
+ {id:'m21',restaurant_id:'r5', menu:'drinks', name:'Iced Green Tea', description:'Cold-brewed green tea with honey.', image:u('photo-1546173159-315724a31696'), price:99, discount_price:null, food_type:'VEG', rating:4.1, preparation_time:'10 min', is_available:true, ingredients:['green tea','honey','ice']},
+ {id:'m22',restaurant_id:'r5', menu:'desserts', name:'Mochi Ice Cream', description:'Soft mochi filled with mango ice cream.', image:u('photo-1563805042-7684c019e1cb'), price:179, discount_price:null, food_type:'VEG', rating:4.4, preparation_time:'10 min', is_available:true, ingredients:['rice flour','ice cream','mango']},
+ {id:'m23',restaurant_id:'r6', menu:'drinks', name:'Chocolate Shake', description:'Thick shake with chocolate & ice cream.', image:u('photo-1549007994-cb92caebd54b'), price:129, discount_price:null, food_type:'VEG', rating:4.4, preparation_time:'10 min', is_available:true, ingredients:['milk','chocolate','ice cream']},
+ {id:'m24',restaurant_id:'r6', menu:'desserts', name:'Choco Lava Cake', description:'Molten-centre cake with vanilla scoop.', image:u('photo-1578985545062-69928b1d9587'), price:119, discount_price:99, food_type:'VEG', rating:4.6, preparation_time:'15 min', is_available:true, ingredients:['wheat flour','chocolate','butter','egg']},
+ {id:'m25',restaurant_id:'r7', menu:'starters', name:'Calamari Fritti', description:'Crispy golden-fried squid rings.', image:u('photo-1565680018434-b513d5e5fd47'), price:329, discount_price:null, food_type:'NON_VEG', rating:4.5, preparation_time:'25 min', is_available:true, ingredients:['squid','wheat flour','egg']},
+ {id:'m26',restaurant_id:'r7', menu:'rice', name:'Steamed Rice', description:'Fluffy steamed rice.', image:u('photo-1504674900247-0877df9cc836'), price:99, discount_price:null, food_type:'VEG', rating:4.0, preparation_time:'15 min', is_available:true, ingredients:['rice']},
+ {id:'m27',restaurant_id:'r7', menu:'desserts', name:'Bebinca', description:'Traditional Goan layered dessert.', image:u('photo-1587668178277-295251f900ce'), price:159, discount_price:null, food_type:'VEG', rating:4.6, preparation_time:'10 min', is_available:true, ingredients:['wheat flour','egg','coconut','jaggery']},
+ {id:'m28',restaurant_id:'r8', menu:'drinks', name:'Rose Milk', description:'Chilled milk flavoured with rose syrup.', image:u('photo-1546173159-315724a31696'), price:89, discount_price:null, food_type:'VEG', rating:4.3, preparation_time:'10 min', is_available:true, ingredients:['milk','rose syrup']},
+ {id:'m29',restaurant_id:'r8', menu:'desserts', name:'Kesar Kulfi', description:'Saffron kulfi with pistachio crunch.', image:u('photo-1563805042-7684c019e1cb'), price:99, discount_price:null, food_type:'VEG', rating:4.4, preparation_time:'10 min', is_available:true, ingredients:['milk','saffron','pistachio']},
+ {id:'m30',restaurant_id:'r9', menu:'starters', name:'Bengali Fish Fry', description:'Crispy fried fish with mustard notes.', image:u('photo-1519708227418-c8fd9a32b7a2'), price:299, discount_price:259, food_type:'NON_VEG', rating:4.5, preparation_time:'25 min', is_available:true, ingredients:['fish','mustard oil','spices']},
+ {id:'m31',restaurant_id:'r9', menu:'desserts', name:'Mishti Doi', description:'Sweet caramelised yogurt, Kolkata style.', image:u('photo-1606491956689-2ea866880c84'), price:99, discount_price:null, food_type:'VEG', rating:4.6, preparation_time:'10 min', is_available:true, ingredients:['milk','jaggery']},
+ {id:'m32',restaurant_id:'r10',menu:'starters', name:'Veg Spring Rolls', description:'Crispy rolls stuffed with vegetables.', image:u('photo-1601050690597-df0568f70950'), price:149, discount_price:null, food_type:'VEG', rating:4.2, preparation_time:'20 min', is_available:true, ingredients:['wheat flour','cabbage','carrot']},
+ {id:'m33',restaurant_id:'r10',menu:'rice', name:'Veg Fried Rice', description:'Wok-fried rice with veggies & soy.', image:u('photo-1603133872878-684f208fb84b'), price:179, discount_price:null, food_type:'VEG', rating:4.3, preparation_time:'20 min', is_available:true, ingredients:['rice','soy sauce','vegetables']},
+ {id:'m34',restaurant_id:'r10',menu:'drinks', name:'Lemon Iced Tea', description:'Refreshing iced tea with lemon.', image:u('photo-1513558161293-cdaf765ed2fd'), price:99, discount_price:null, food_type:'VEG', rating:4.1, preparation_time:'10 min', is_available:true, ingredients:['lemon','tea','sugar']},
+ {id:'m35',restaurant_id:'r11',menu:'breads', name:'Sheermal', description:'Saffron-scented Mughlai flatbread.', image:u('photo-1585937421612-70a008356fbe'), price:89, discount_price:null, food_type:'VEG', rating:4.3, preparation_time:'15 min', is_available:true, ingredients:['wheat flour','milk','saffron']},
+ {id:'m36',restaurant_id:'r11',menu:'rice', name:'Zafrani Pulao', description:'Fragrant saffron pulao with cashews.', image:u('photo-1589302168068-964664d93dc0'), price:199, discount_price:null, food_type:'VEG', rating:4.4, preparation_time:'25 min', is_available:true, ingredients:['basmati rice','saffron','cashew']},
+ {id:'m37',restaurant_id:'r11',menu:'desserts', name:'Shahi Tukda', description:'Royal bread pudding with pistachio.', image:u('photo-1578985545062-69928b1d9587'), price:149, discount_price:null, food_type:'VEG', rating:4.6, preparation_time:'15 min', is_available:true, ingredients:['bread','milk','sugar','pistachio']},
+ {id:'m38',restaurant_id:'r12',menu:'drinks', name:'Hot Chocolate', description:'Rich Belgian hot chocolate with cream.', image:u('photo-1549007994-cb92caebd54b'), price:149, discount_price:null, food_type:'VEG', rating:4.6, preparation_time:'10 min', is_available:true, ingredients:['milk','dark chocolate','cream']},
+ {id:'m39',restaurant_id:'r12',menu:'desserts', name:'Belgian Chocolate Mousse', description:'Airy mousse in a jar with cocoa dust.', image:u('photo-1549007994-cb92caebd54b'), price:199, discount_price:null, food_type:'VEG', rating:4.7, preparation_time:'10 min', is_available:true, ingredients:['dark chocolate','cream','egg']},
+ {id:'m40',restaurant_id:'r13',menu:'drinks', name:'Virgin Sangria', description:'Fruit-loaded mocktail sangria.', image:u('photo-1551538827-9c037cb4f32a'), price:199, discount_price:null, food_type:'VEG', rating:4.3, preparation_time:'10 min', is_available:true, ingredients:['grape juice','orange','apple']},
+ {id:'m41',restaurant_id:'r13',menu:'desserts', name:'Churros with Chocolate', description:'Golden churros with warm chocolate dip.', image:u('photo-1551024506-0bccd828d307'), price:189, discount_price:null, food_type:'VEG', rating:4.5, preparation_time:'15 min', is_available:true, ingredients:['wheat flour','chocolate','cream']},
+ {id:'m42',restaurant_id:'r14',menu:'drinks', name:'Iced Coffee', description:'Cold coffee blended with milk & ice.', image:u('photo-1495474472287-4d71bcdd2085'), price:119, discount_price:null, food_type:'VEG', rating:4.3, preparation_time:'10 min', is_available:true, ingredients:['coffee','milk','ice']},
+ {id:'m43',restaurant_id:'r14',menu:'desserts', name:'Classic Cheesecake Slice', description:'Baked cheesecake with berry coulis.', image:u('photo-1578985545062-69928b1d9587'), price:179, discount_price:null, food_type:'VEG', rating:4.5, preparation_time:'10 min', is_available:true, ingredients:['cream cheese','egg','wheat flour','berries']},
+ {id:'m44',restaurant_id:'r15',menu:'drinks', name:'Punjabi Lassi', description:'Thick creamy lassi, sweet or salted.', image:u('photo-1546173159-315724a31696'), price:119, discount_price:null, food_type:'VEG', rating:4.5, preparation_time:'10 min', is_available:true, ingredients:['yogurt','milk','sugar']},
+ {id:'m45',restaurant_id:'r15',menu:'desserts', name:'Gajar Ka Halwa', description:'Slow-cooked carrot halwa with ghee & nuts.', image:u('photo-1606491956689-2ea866880c84'), price:139, discount_price:null, food_type:'VEG', rating:4.6, preparation_time:'15 min', is_available:true, ingredients:['carrots','milk','ghee','cashew']},
+ {id:'m46',restaurant_id:'r16',menu:'main_course', recommended:true, name:'Chicken Kathi Roll', description:'Juicy chicken wrapped in flaky paratha.', image:u('photo-1626700051175-6818013e1d4f'), price:179, discount_price:null, food_type:'NON_VEG', rating:4.3, preparation_time:'20 min', is_available:true, ingredients:['wheat flour','chicken','egg','onion']},
+ {id:'m47',restaurant_id:'r16',menu:'main_course', name:'Paneer Kathi Roll', description:'Spiced paneer with onions in a roll.', image:u('photo-1626700051175-6818013e1d4f'), price:149, discount_price:null, food_type:'VEG', rating:4.2, preparation_time:'20 min', is_available:true, ingredients:['wheat flour','paneer','onion']},
+ {id:'m48',restaurant_id:'r16',menu:'drinks', name:'Masala Lemonade', description:'Tangy lemonade with a spicy kick.', image:u('photo-1513558161293-cdaf765ed2fd'), price:79, discount_price:null, food_type:'VEG', rating:4.1, preparation_time:'10 min', is_available:true, ingredients:['lemon','soda','spices']},
+ {id:'m49',restaurant_id:'r17',menu:'main_course', recommended:true, name:'South Indian Thali', description:'Rice, dal, veggies, curd & papad platter.', image:u('photo-1585937421612-70a008356fbe'), price:199, discount_price:169, food_type:'VEG', rating:4.5, preparation_time:'25 min', is_available:true, ingredients:['rice','dal','vegetables','yogurt']},
+ {id:'m50',restaurant_id:'r17',menu:'main_course', name:'Rava Dosa', description:'Lacy semolina dosa with onion & pepper.', image:u('photo-1668236543090-82eba5ee5976'), price:139, discount_price:null, food_type:'VEG', rating:4.3, preparation_time:'20 min', is_available:true, ingredients:['semolina','rice flour','onion']},
+ {id:'m51',restaurant_id:'r17',menu:'starters', name:'Podi Idli', description:'Idlis tossed in gunpowder spice & ghee.', image:u('photo-1589301760014-d929f3979dbc'), price:109, discount_price:null, food_type:'VEG', rating:4.2, preparation_time:'15 min', is_available:true, ingredients:['idli','spice powder','ghee']},
+ {id:'m52',restaurant_id:'r17',menu:'desserts', name:'Kesar Payasam', description:'Saffron vermicelli kheer with cashews.', image:u('photo-1563805042-7684c019e1cb'), price:119, discount_price:null, food_type:'VEG', rating:4.4, preparation_time:'15 min', is_available:true, ingredients:['milk','vermicelli','saffron','cashew']},
+ {id:'m53',restaurant_id:'r17',menu:'drinks', name:'Neer Mor', description:'Light ginger buttermilk cooler.', image:u('photo-1546173159-315724a31696'), price:59, discount_price:null, food_type:'VEG', rating:4.1, preparation_time:'10 min', is_available:true, ingredients:['buttermilk','ginger']},
+ {id:'m54',restaurant_id:'r18',menu:'main_course', recommended:true, name:'Sourdough Margherita', description:'Slow-fermented sourdough with mozzarella.', image:u('photo-1565299624946-b28f40a0ae38'), price:399, discount_price:null, food_type:'VEG', rating:4.4, preparation_time:'30 min', is_available:true, ingredients:['sourdough wheat','mozzarella cheese','tomato']},
+ {id:'m55',restaurant_id:'r18',menu:'main_course', name:'BBQ Chicken Pizza', description:'Smoky BBQ chicken with caramelised onion.', image:u('photo-1574071318508-1cdbab80d002'), price:449, discount_price:null, food_type:'NON_VEG', rating:4.5, preparation_time:'30 min', is_available:true, ingredients:['wheat flour','chicken','cheese','bbq sauce']},
+ {id:'m56',restaurant_id:'r18',menu:'starters', name:'Cheesy Garlic Toast', description:'Sourdough toast loaded with cheese.', image:u('photo-1528735602780-2552fd46c7af'), price:159, discount_price:null, food_type:'VEG', rating:4.2, preparation_time:'15 min', is_available:true, ingredients:['bread','cheese','butter','garlic']},
+ {id:'m57',restaurant_id:'r18',menu:'desserts', name:'Berry Cheesecake', description:'Baked cheesecake with fresh berries.', image:u('photo-1578985545062-69928b1d9587'), price:219, discount_price:null, food_type:'VEG', rating:4.6, preparation_time:'10 min', is_available:true, ingredients:['cream cheese','egg','wheat flour','berries']},
+ {id:'m58',restaurant_id:'r18',menu:'drinks', name:'Cold Brew Coffee', description:'18-hour slow-steeped cold brew.', image:u('photo-1495474472287-4d71bcdd2085'), price:149, discount_price:null, food_type:'VEG', rating:4.3, preparation_time:'10 min', is_available:true, ingredients:['coffee']}
+];
+
+const MENU_ORDER = [
+  {key:'recommended', label:'Recommended',  icon:'fa-star'},
+  {key:'starters',    label:'Starters',     icon:'fa-pepper-hot'},
+  {key:'main_course', label:'Main Course',  icon:'fa-utensils'},
+  {key:'rice',        label:'Rice',         icon:'fa-bowl-rice'},
+  {key:'breads',      label:'Breads',       icon:'fa-bread-slice'},
+  {key:'desserts',    label:'Desserts',     icon:'fa-ice-cream'},
+  {key:'drinks',      label:'Drinks',       icon:'fa-mug-hot'}
+];
+
+/* ---------------- STORAGE ---------------- */
+const store = {
+  get(k,d){ try{ const v=localStorage.getItem(k); return v===null?d:JSON.parse(v);}catch(e){return d;} },
+  set(k,v){ localStorage.setItem(k, JSON.stringify(v)); },
+  del(k){ localStorage.removeItem(k); }
+};
+const getUser = () => store.get('foody_user', null);
+const getCart = () => store.get('foody_cart', []);
+const saveCart = c => { store.set('foody_cart', c); updateCartBadge(); };
+const getWishlist = () => store.get('foody_wishlist', {foods:[], restaurants:[]});
+const saveWishlist = w => store.set('foody_wishlist', w);
+const getUserAllergies = () => store.get('foody_allergies', []);
+
+/* ---------------- API HELPER ---------------- */
+async function apiFetch(endpoint, options = {}){
+  const ctrl = new AbortController();
+  const timer = setTimeout(() => ctrl.abort(), 2200);
+  try{
+    const user = getUser();
+    const res = await fetch(API_BASE_URL + endpoint, {
+      ...options,
+      headers:{ 'Content-Type':'application/json', ...(user && user.token ? {'Authorization':'Bearer '+user.token} : {}), ...(options.headers||{}) },
+      signal: ctrl.signal
+    });
+    clearTimeout(timer);
+    if(res.status === 401){ store.del('foody_user'); location.href='login.html'; throw new Error('Session expired'); }
+    if(!res.ok) throw new Error('Request failed');
+    return await res.json();
+  }catch(e){ clearTimeout(timer); return null; }
+}
+const demo = (val, ms=600) => new Promise(r => setTimeout(() => r(val), ms));
+
+/* ---------------- ALLERGY ENGINE ---------------- */
+const ALLERGY_KEYWORDS = {
+  'Peanuts':['peanut'],
+  'Tree Nuts':['cashew','almond','walnut','pistachio','pecan','hazelnut'],
+  'Milk/Dairy':['milk','cheese','cream','butter','paneer','yogurt','curd','ghee','chenna','buttermilk','mascarpone'],
+  'Gluten':['wheat','gluten','flour','maida','semolina','sooji','noodle','pasta','bun','bread','vermicelli','sourdough'],
+  'Wheat':['wheat','flour','maida','semolina','sooji','noodle','bun','bread'],
+  'Soy':['soy','soya'],
+  'Eggs':['egg'],
+  'Seafood':['fish','prawn','shrimp','crab','mussel','seafood','salmon','tuna','rohu','squid'],
+  'Shellfish':['prawn','shrimp','crab','mussel','lobster','shellfish'],
+  'Sesame':['sesame','til'],
+  'Mustard':['mustard']
+};
+function getAllergyWarnings(food){
+  const mine = getUserAllergies();
+  if(!mine.length || !food.ingredients) return [];
+  const hits = [];
+  mine.forEach(a => {
+    const kws = ALLERGY_KEYWORDS[a] || [a.toLowerCase()];
+    const match = food.ingredients.some(ing => {
+      const s = ing.toLowerCase();
+      if(s.includes('coconut')) return false;
+      return kws.some(k => s.includes(k));
+    });
+    if(match) hits.push(a);
+  });
+  return hits;
+}
+
+/* ---------------- UI HELPERS ---------------- */
+function toast(msg, type='success', icon){
+  const icons = { success:'fa-circle-check', error:'fa-circle-xmark', warning:'fa-triangle-exclamation', info:'fa-circle-info' };
+  const zone = document.getElementById('toastZone');
+  const t = document.createElement('div');
+  t.className = `toast ${type}`;
+  t.innerHTML = `<i class="fa-solid ${icon || icons[type]}"></i><span>${msg}</span><button class="t-close" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>`;
+  zone.appendChild(t);
+  const kill = () => { t.classList.add('leaving'); setTimeout(() => t.remove(), 320); };
+  t.querySelector('.t-close').addEventListener('click', kill);
+  setTimeout(kill, 3400);
+}
+let confirmCb = null;
+function showConfirm({title, text, okLabel='Confirm', okClass='btn-primary', icon='warn', onOk}){
+  document.getElementById('confirmTitle').textContent = title;
+  document.getElementById('confirmText').innerHTML = text;
+  const ok = document.getElementById('confirmOk');
+  ok.textContent = okLabel; ok.className = 'btn ' + okClass;
+  const ic = document.getElementById('confirmIcon');
+  ic.className = 'm-icon ' + icon;
+  ic.innerHTML = icon==='danger' ? '<i class="fa-solid fa-right-from-bracket"></i>' : '<i class="fa-solid fa-triangle-exclamation"></i>';
+  confirmCb = onOk;
+  document.getElementById('confirmModal').classList.add('open');
+}
+document.getElementById('confirmCancel').addEventListener('click', () => document.getElementById('confirmModal').classList.remove('open'));
+document.getElementById('confirmOk').addEventListener('click', () => { document.getElementById('confirmModal').classList.remove('open'); if(confirmCb) confirmCb(); });
+document.getElementById('confirmModal').addEventListener('click', e => { if(e.target.id==='confirmModal') e.currentTarget.classList.remove('open'); });
+function updateCartBadge(){
+  const count = getCart().reduce((s,i) => s + i.qty, 0);
+  const b = document.getElementById('cartBadge');
+  b.textContent = count; b.classList.toggle('hidden', count===0);
+}
+
+/* ---------------- HEADER / SIDEBAR ---------------- */
+const sidebar = document.getElementById('sidebar'), sidebarOverlay = document.getElementById('sidebarOverlay');
+document.getElementById('menuBtn').addEventListener('click', () => { sidebar.classList.add('open'); sidebarOverlay.classList.add('open'); document.body.style.overflow='hidden'; });
+document.getElementById('sidebarClose').addEventListener('click', closeSidebar);
+sidebarOverlay.addEventListener('click', closeSidebar);
+function closeSidebar(){ sidebar.classList.remove('open'); sidebarOverlay.classList.remove('open'); document.body.style.overflow=''; }
+function renderSidebarUser(){
+  const usr = getUser(), box = document.getElementById('sidebarUser');
+  if(usr && usr.name){
+    box.innerHTML = `<div class="avatar">${usr.name.trim().charAt(0).toUpperCase()}</div>
+      <div><div class="u-name">${usr.name}</div><div class="u-sub">${usr.email || usr.phone || ''}</div></div>`;
+  }else{
+    box.innerHTML = `<div class="avatar"><i class="fa-solid fa-user"></i></div>
+      <div><div class="u-name">Welcome, Guest</div><div class="u-sub">Login for the full experience</div></div>
+      <a href="login.html" class="login-mini">Login</a>`;
+  }
+}
+document.getElementById('logoutBtn').addEventListener('click', () => showConfirm({
+  title:'Logout?', text:'Your session will be cleared and you will be redirected to login.',
+  okLabel:'Logout', okClass:'btn-danger', icon:'danger',
+  onOk(){ store.del('foody_user'); location.href='login.html'; }
+}));
+function renderCities(){
+  const cur = store.get('foody_location','Mumbai');
+  document.getElementById('locationName').textContent = cur;
+  document.getElementById('cityList').innerHTML = CITIES.map(c =>
+    `<button type="button" data-city="${c}" class="${c===cur?'active':''}"><i class="fa-solid fa-location-dot"></i> ${c}</button>`).join('');
+  document.querySelectorAll('#cityList button').forEach(b => b.addEventListener('click', () => {
+    store.set('foody_location', b.dataset.city);
+    document.getElementById('locationName').textContent = b.dataset.city;
+    togglePanel(document.getElementById('locationPanel'), false);
+    toast(`Delivery location set to ${b.dataset.city}`, 'info', 'fa-location-dot');
+  }));
+}
+function togglePanel(p, force){ p.classList.toggle('open', force===undefined ? !p.classList.contains('open') : force); }
+document.getElementById('locationBtn').addEventListener('click', e => { e.stopPropagation(); togglePanel(document.getElementById('locationPanel')); togglePanel(document.getElementById('notifPanel'), false); });
+function renderNotifs(){
+  const items = store.get('foody_notifications', [
+    {ico:'fa-motorcycle', cls:'green',  text:'Your order #FD1042 is out for delivery.', time:'2 min ago'},
+    {ico:'fa-percent',    cls:'orange', text:'50% OFF weekend offer is live! Use code FOODY50.', time:'1 hr ago'},
+    {ico:'fa-gift',       cls:'red',    text:'You have a free reward spin waiting this week.', time:'Yesterday'}
+  ]);
+  const read = store.get('foody_notifs_read', false);
+  document.getElementById('notifDot').classList.toggle('hidden', read || items.length===0);
+  document.getElementById('notifList').innerHTML = items.length
+    ? items.map(n => `<div class="notif-item"><div class="n-ico ${n.cls}"><i class="fa-solid ${n.ico}"></i></div><div>${n.text}<div class="n-time">${n.time}</div></div></div>`).join('')
+    : `<div class="notif-empty"><i class="fa-regular fa-bell-slash"></i><br>No notifications yet.</div>`;
+}
+document.getElementById('notifBtn').addEventListener('click', e => { e.stopPropagation(); togglePanel(document.getElementById('notifPanel')); togglePanel(document.getElementById('locationPanel'), false); });
+document.getElementById('markReadBtn').addEventListener('click', () => { store.set('foody_notifs_read', true); renderNotifs(); });
+document.addEventListener('click', () => { togglePanel(document.getElementById('locationPanel'), false); togglePanel(document.getElementById('notifPanel'), false); });
+document.querySelectorAll('.dropdown-panel').forEach(p => p.addEventListener('click', e => e.stopPropagation()));
+document.getElementById('headerSearchForm').addEventListener('submit', e => {
+  e.preventDefault();
+  const q = document.getElementById('headerSearchInput').value.trim();
+  location.href = 'search.html' + (q ? '?q=' + encodeURIComponent(q) : '');
+});
+
+/* ---------------- RESTAURANT RENDER ---------------- */
+let RESTAURANT = null, MENU = [];
+const state = { cat:'all', vegOnly:false, q:'' };
+
+function renderHero(r){
+  const reviews = Math.round(r.rating * 312);
+  const initials = r.name.split(' ').map(w => w[0]).slice(0,2).join('').toUpperCase();
+  const wished = getWishlist().restaurants.includes(r.id);
+  document.getElementById('restHero').innerHTML = `
+    <div class="hero-cover">
+      <img src="${r.image}" alt="${r.name} restaurant ambience" onerror="imgErr(this)">
+      <div class="cover-tag">
+        <span class="breadcrumb">
+          <a href="index.html"><i class="fa-solid fa-house" style="font-size:.72rem"></i></a> <i class="fa-solid fa-chevron-right"></i>
+          <a href="restaurants.html">Restaurants</a> <i class="fa-solid fa-chevron-right"></i>
+          <span style="color:var(--color-yellow)">${r.name}</span>
+        </span>
+      </div>
+    </div>
+    <div class="container info-wrap">
+      <div class="info-card">
+        <div class="info-top">
+          <div class="rest-logo" aria-hidden="true">${initials}</div>
+          <div class="info-main">
+            <div class="title-row">
+              <h1>${r.name}</h1>
+              <span class="open-badge ${r.is_active?'open':'closed'}">${r.is_active?'Open':'Closed'}</span>
+            </div>
+            <p class="cuisines">${r.cuisine}</p>
+            <p class="addr-line">
+              <span><i class="fa-solid fa-location-dot"></i> ${r.address}</span>
+              <span><i class="fa-solid fa-phone"></i> ${r.phone}</span>
+            </p>
+          </div>
+          <button class="info-wish ${wished?'active':''}" id="restWishBtn" aria-label="Toggle restaurant wishlist">
+            <i class="fa-${wished?'solid':'regular'} fa-heart"></i>
+          </button>
+        </div>
+        <div class="info-stats">
+          <span class="stat-pill rate"><i class="fa-solid fa-star"></i> ${r.rating} <small>(${reviews} reviews)</small></span>
+          <span class="stat-pill"><i class="fa-regular fa-clock"></i> ${r.delivery_time}</span>
+          <span class="stat-pill ${r.delivery_fee===0?'free':''}"><i class="fa-solid fa-motorcycle"></i> ${r.delivery_fee===0?'Free Delivery':'₹'+r.delivery_fee+' Delivery'}</span>
+        </div>
+        <p class="info-desc">${r.description}</p>
+        ${!r.is_active ? `<div class="closed-banner" role="alert"><i class="fa-solid fa-circle-exclamation"></i><span>This restaurant is currently closed. You can browse the menu, but ordering is paused until it reopens.</span></div>` : ''}
+      </div>
+    </div>`;
+  document.getElementById('restWishBtn').addEventListener('click', () => toggleRestWishlist(r));
+  document.title = `${r.name} | Foody`;
+}
+
+function toggleRestWishlist(r){
+  const w = getWishlist();
+  const i = w.restaurants.indexOf(r.id);
+  if(i > -1){ w.restaurants.splice(i,1); toast(`${r.name} removed from wishlist`, 'info', 'fa-heart-crack'); }
+  else{ w.restaurants.push(r.id); toast(`${r.name} added to wishlist`, 'success', 'fa-heart'); }
+  saveWishlist(w);
+  const btn = document.getElementById('restWishBtn');
+  btn.classList.toggle('active', i===-1);
+  btn.innerHTML = `<i class="fa-${i===-1?'solid':'regular'} fa-heart"></i>`;
+}
+
+/* ---------------- MENU ---------------- */
+function menuItems(){
+  let items = MENU.slice();
+  if(state.vegOnly) items = items.filter(f => f.food_type === 'VEG');
+  if(state.q.trim()){
+    const q = state.q.trim().toLowerCase();
+    items = items.filter(f => (f.name + ' ' + f.description).toLowerCase().includes(q));
+  }
+  return items;
+}
+
+function renderChips(){
+  const box = document.getElementById('catChips');
+  const counts = {};
+  MENU.forEach(f => {
+    counts[f.menu] = (counts[f.menu]||0) + 1;
+    if(f.recommended) counts.recommended = (counts.recommended||0) + 1;
+  });
+  let html = `<button class="cat-chip ${state.cat==='all'?'active':''}" data-cat="all"><i class="fa-solid fa-border-all"></i> All <span class="cnt">${MENU.length}</span></button>`;
+  MENU_ORDER.forEach(c => {
+    const n = counts[c.key] || 0;
+    if(n === 0 && c.key !== 'recommended') return;
+    if(n === 0) return;
+    html += `<button class="cat-chip ${state.cat===c.key?'active':''}" data-cat="${c.key}"><i class="fa-solid ${c.icon}"></i> ${c.label} <span class="cnt">${n}</span></button>`;
+  });
+  box.innerHTML = html;
+  box.querySelectorAll('.cat-chip').forEach(ch => ch.addEventListener('click', () => {
+    state.cat = ch.dataset.cat;
+    renderChips(); renderMenu();
+  }));
+}
+
+function foodCardHTML(f){
+  const warnings = getAllergyWarnings(f);
+  const wished = getWishlist().foods.includes(f.id);
+  const disc = f.discount_price ? Math.round((1 - f.discount_price/f.price)*100) : 0;
+  const avail = f.is_available !== false;
+  const closed = RESTAURANT && !RESTAURANT.is_active;
+  return `
+  <article class="food-card">
+    <div class="food-img-wrap" data-open="${f.id}" role="link" tabindex="0" aria-label="View ${f.name}">
+      <img src="${f.image}" alt="${f.name}" loading="lazy" onerror="imgErr(this)">
+      ${disc > 0 ? `<span class="discount-badge">${disc}% OFF</span>` : ''}
+      ${f.recommended ? '<span class="rec-badge"><i class="fa-solid fa-star"></i> RECOMMENDED</span>' : ''}
+      <span class="mark-chip type-badge ${f.food_type==='VEG'?'veg':'nonveg'}"><span class="food-mark ${f.food_type==='VEG'?'':'nonveg'}"></span> ${f.food_type==='VEG'?'VEG':'NON-VEG'}</span>
+      <button class="wish-btn ${wished?'active':''}" data-wish="${f.id}" aria-label="Toggle wishlist"><i class="fa-${wished?'solid':'regular'} fa-heart"></i></button>
+      ${!avail ? '<div class="soldout-ribbon">SOLD OUT</div>' : ''}
+    </div>
+    <div class="food-body">
+      <div class="food-meta">
+        <span class="rate"><i class="fa-solid fa-star"></i> ${f.rating}</span>
+        <span><i class="fa-regular fa-clock"></i> ${f.preparation_time}</span>
+      </div>
+      <h3 data-open="${f.id}">${f.name}</h3>
+      <p class="food-desc">${f.description}</p>
+      ${warnings.length ? `<div class="allergy-warning" role="alert"><i class="fa-solid fa-triangle-exclamation"></i><span><strong>Allergy warning:</strong> contains ${warnings.join(', ')}.</span></div>` : ''}
+      <div class="food-foot">
+        <div class="price-box">
+          <span class="now">₹${f.discount_price ?? f.price}</span>
+          ${disc > 0 ? `<span class="old">₹${f.price}</span>` : ''}
+        </div>
+        <button class="add-btn" data-add="${f.id}" ${(!avail || closed)?'disabled':''}><i class="fa-solid fa-cart-plus"></i> Add</button>
+      </div>
+    </div>
+  </article>`;
+}
+
+function renderMenu(){
+  const area = document.getElementById('menuArea');
+  const items = menuItems();
+  if(!items.length){
+    area.innerHTML = `<div class="state-block">
+      <i class="fa-solid fa-bowl-food"></i>
+      <h4>No dishes found</h4>
+      <p>No menu items match your current filters. Try clearing the search or switching off "Veg Only".</p>
+      <button class="btn btn-primary" id="menuResetBtn"><i class="fa-solid fa-filter-circle-xmark"></i> Reset Filters</button>
+    </div>`;
+    document.getElementById('menuResetBtn').addEventListener('click', () => {
+      state.q=''; state.vegOnly=false; state.cat='all';
+      document.getElementById('menuSearch').value='';
+      document.getElementById('vegToggle').classList.remove('active');
+      document.getElementById('vegToggle').setAttribute('aria-pressed','false');
+      renderChips(); renderMenu();
+    });
+    return;
+  }
+  if(state.cat === 'all'){
+    let html = '';
+    const recs = items.filter(f => f.recommended);
+    if(recs.length) html += `<h3 class="menu-cat-title"><i class="fa-solid fa-star"></i> Recommended <span class="m-count">${recs.length}</span></h3><div class="menu-grid">${recs.map(foodCardHTML).join('')}</div>`;
+    MENU_ORDER.forEach(c => {
+      if(c.key === 'recommended') return;
+      const list = items.filter(f => f.menu === c.key);
+      if(!list.length) return;
+      html += `<h3 class="menu-cat-title"><i class="fa-solid ${c.icon}"></i> ${c.label} <span class="m-count">${list.length}</span></h3><div class="menu-grid">${list.map(foodCardHTML).join('')}</div>`;
+    });
+    area.innerHTML = html;
+  }else{
+    const meta = MENU_ORDER.find(c => c.key === state.cat);
+    const list = state.cat === 'recommended' ? items.filter(f => f.recommended) : items.filter(f => f.menu === state.cat);
+    area.innerHTML = list.length
+      ? `<h3 class="menu-cat-title"><i class="fa-solid ${meta.icon}"></i> ${meta.label} <span class="m-count">${list.length}</span></h3><div class="menu-grid">${list.map(foodCardHTML).join('')}</div>`
+      : `<div class="state-block"><i class="fa-solid fa-bowl-food"></i><h4>Nothing in ${meta.label} right now</h4><p>Please check another category — new dishes are added often.</p></div>`;
+  }
+  bindCardEvents(area);
+}
+
+function bindCardEvents(scope){
+  scope.querySelectorAll('[data-add]').forEach(b => b.addEventListener('click', () => {
+    addToCart(b.dataset.add, b);
+  }));
+  scope.querySelectorAll('[data-wish]').forEach(b => b.addEventListener('click', e => { e.stopPropagation(); toggleFoodWishlist(b.dataset.wish, b); }));
+  scope.querySelectorAll('[data-open]').forEach(el => {
+    const go = () => location.href = 'food.html?id=' + el.dataset.open;
+    el.addEventListener('click', go);
+    el.addEventListener('keydown', e => { if(e.key==='Enter'){ go(); } });
+  });
+}
+
+/* ---------------- CART / WISHLIST ACTIONS ---------------- */
+function commitAdd(food){
+  const cart = getCart();
+  const line = cart.find(i => i.id === food.id);
+  if(line) line.qty += 1; else cart.push({ id:food.id, qty:1 });
+  saveCart(cart);
+  toast(`${food.name} added to cart`, 'success', 'fa-cart-shopping');
+}
+function addToCart(foodId, btn){
+  const food = FOODS.find(f => f.id === foodId);
+  if(!food) return;
+  if(RESTAURANT && !RESTAURANT.is_active){ toast('This restaurant is currently closed', 'warning', 'fa-store-slash'); return; }
+  if(food.is_available === false){ toast('Sorry, this item is sold out', 'warning'); return; }
+  const warnings = getAllergyWarnings(food);
+  if(warnings.length){
+    showConfirm({
+      title:'Allergy Warning',
+      text:`<strong>${food.name}</strong> contains <strong>${warnings.join(', ')}</strong> based on its ingredients. Do you still want to add it to your cart?`,
+      okLabel:'Add Anyway',
+      onOk(){ commitAdd(food); flashAdded(btn); }
+    });
+  }else{ commitAdd(food); flashAdded(btn); }
+}
+function flashAdded(btn){
+  if(!btn) return;
+  const old = btn.innerHTML;
+  btn.classList.add('added'); btn.innerHTML = '<i class="fa-solid fa-check"></i> Added';
+  setTimeout(() => { btn.classList.remove('added'); btn.innerHTML = old; }, 1200);
+}
+function toggleFoodWishlist(id, btn){
+  const w = getWishlist();
+  const i = w.foods.indexOf(id);
+  const food = FOODS.find(f => f.id === id);
+  if(i > -1){ w.foods.splice(i,1); toast(`${food ? food.name : 'Item'} removed from wishlist`, 'info', 'fa-heart-crack'); }
+  else{ w.foods.push(id); toast(`${food ? food.name : 'Item'} added to wishlist`, 'success', 'fa-heart'); }
+  saveWishlist(w);
+  btn.classList.toggle('active', i===-1);
+  btn.innerHTML = `<i class="fa-${i===-1?'solid':'regular'} fa-heart"></i>`;
+}
+
+/* ---------------- TOOLBAR EVENTS ---------------- */
+let menuSearchTimer = null;
+document.getElementById('menuSearch').addEventListener('input', e => {
+  clearTimeout(menuSearchTimer);
+  menuSearchTimer = setTimeout(() => { state.q = e.target.value; renderMenu(); }, 250);
+});
+document.getElementById('vegToggle').addEventListener('click', function(){
+  state.vegOnly = !state.vegOnly;
+  this.classList.toggle('active', state.vegOnly);
+  this.setAttribute('aria-pressed', String(state.vegOnly));
+  renderChips(); renderMenu();
+});
+
+/* ---------------- ERROR / NOT FOUND ---------------- */
+function renderNotFound(){
+  document.getElementById('restHero').innerHTML = '';
+  document.getElementById('menuToolbar').style.display = 'none';
+  document.getElementById('menuArea').innerHTML = `
+    <div class="state-block err" style="margin-top:40px">
+      <i class="fa-solid fa-store-slash"></i>
+      <h4>Restaurant not found</h4>
+      <p>We couldn't find the restaurant you're looking for. It may have been removed or the link is incorrect.</p>
+      <a href="restaurants.html" class="btn btn-primary"><i class="fa-solid fa-store"></i> Browse Restaurants</a>
+    </div>`;
+}
+
+/* ---------------- INIT ---------------- */
+async function init(){
+  renderSidebarUser(); renderCities(); renderNotifs(); updateCartBadge();
+  window.addEventListener('storage', updateCartBadge);
+
+  const menuArea = document.getElementById('menuArea');
+  menuArea.innerHTML = `<div class="menu-grid">${Array.from({length:8}).map(()=>`<div class="skel-card"><div class="skeleton s-img"></div><div class="skeleton s-line"></div><div class="skeleton s-line w60"></div></div>`).join('')}</div>`;
+
+  try{
+    const r = await apiFetch('/restaurants/' + R_ID) || await demo(RESTAURANTS.find(x => x.id === R_ID) || null, 500);
+    if(!r){ renderNotFound(); return; }
+    RESTAURANT = r;
+    renderHero(r);
+
+    const menu = await apiFetch('/restaurants/' + R_ID + '/menu') || await demo(FOODS.filter(f => f.restaurant_id === r.id), 450);
+    MENU = Array.isArray(menu) ? menu : [];
+    if(!MENU.length){
+      menuArea.innerHTML = `<div class="state-block"><i class="fa-solid fa-bowl-food"></i><h4>Menu coming soon</h4><p>This restaurant hasn't published its menu yet. Please check back later.</p></div>`;
+      return;
+    }
+    document.getElementById('menuToolbar').style.display = 'block';
+    renderChips(); renderMenu();
+  }catch(err){
+    document.getElementById('restHero').innerHTML = '';
+    document.getElementById('menuToolbar').style.display = 'none';
+    menuArea.innerHTML = `
+      <div class="state-block err" style="margin-top:40px">
+        <i class="fa-solid fa-wifi"></i>
+        <h4>Something went wrong</h4>
+        <p>We couldn't load this restaurant right now. Please try again.</p>
+        <button class="btn btn-primary" onclick="location.reload()"><i class="fa-solid fa-rotate-right"></i> Retry</button>
+      </div>`;
+  }
+}
+document.addEventListener('DOMContentLoaded', init);
+</script>
+</body>
+</html>

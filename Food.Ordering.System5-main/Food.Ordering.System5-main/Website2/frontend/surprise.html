@@ -1,0 +1,1006 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Surprise Me! | Foody</title>
+<meta name="description" content="Let Foody surprise you with a personalized dish recommendation based on your preferences and allergies.">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --color-yellow:#FFC107; --color-orange:#FF9800; --color-green:#2E7D32; --color-red:#D32F2F;
+  --color-black:#111111; --color-dark:#181818; --color-white:#FFFFFF;
+  --color-background:#F7F7F7; --color-light-gray:#F1F1F1; --color-border:#E2E2E2;
+  --color-text:#222222; --color-muted:#777777;
+  --gradient-primary:linear-gradient(135deg,#FFC107 0%,#FF9800 100%);
+  --gradient-safe:linear-gradient(135deg,#66BB6A 0%,#2E7D32 100%);
+  --gradient-bal:linear-gradient(135deg,#FFD54F 0%,#FF9800 100%);
+  --gradient-ult:linear-gradient(135deg,#EF5350 0%,#C62828 100%);
+  --shadow-sm:0 2px 8px rgba(0,0,0,.06); --shadow-md:0 6px 20px rgba(0,0,0,.10); --shadow-lg:0 14px 40px rgba(0,0,0,.16);
+  --radius-sm:8px; --radius-md:14px; --radius-lg:20px;
+  --header-h:66px; --sidebar-w:280px;
+  --font:'Poppins',system-ui,-apple-system,Segoe UI,sans-serif;
+}
+html{scroll-behavior:smooth}
+body{font-family:var(--font);background:var(--color-background);color:var(--color-text);overflow-x:hidden;line-height:1.55;font-size:15px}
+img{display:block;max-width:100%}
+a{text-decoration:none;color:inherit}
+button{font-family:inherit;cursor:pointer;border:none;background:none}
+ul{list-style:none}
+::-webkit-scrollbar{height:8px;width:8px}
+::-webkit-scrollbar-thumb{background:#ccc;border-radius:8px}
+.container{width:min(1220px,92%);margin-inline:auto}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;font-weight:600;border-radius:var(--radius-sm);padding:11px 22px;font-size:.87rem;transition:.25s;white-space:nowrap}
+.btn-primary{background:var(--gradient-primary);color:var(--color-black);box-shadow:0 6px 16px rgba(255,152,0,.35)}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 10px 22px rgba(255,152,0,.45)}
+.btn-outline{border:2px solid var(--color-border);color:var(--color-text);background:#fff}
+.btn-outline:hover{border-color:var(--color-orange);color:var(--color-orange)}
+.btn-dark{background:var(--color-black);color:#fff}
+.btn-dark:hover{background:#000;transform:translateY(-2px)}
+.btn[disabled]{opacity:.6;cursor:not-allowed;transform:none!important}
+
+.header{position:sticky;top:0;z-index:900;background:var(--color-black);color:#fff;box-shadow:0 2px 14px rgba(0,0,0,.35)}
+.header-inner{display:flex;align-items:center;gap:14px;height:var(--header-h)}
+.icon-btn{width:40px;height:40px;border-radius:10px;display:grid;place-items:center;color:#fff;font-size:1.05rem;position:relative;transition:.2s;background:rgba(255,255,255,.08)}
+.icon-btn:hover{background:var(--color-yellow);color:var(--color-black)}
+.logo{display:flex;align-items:center;gap:9px;font-size:1.4rem;font-weight:800;letter-spacing:.5px}
+.logo-badge{width:38px;height:38px;border-radius:12px;background:var(--gradient-primary);display:grid;place-items:center;color:var(--color-black);font-size:1.05rem;box-shadow:0 4px 12px rgba(255,193,7,.4)}
+.logo span{color:#fff}.logo b{color:var(--color-yellow);font-weight:800}
+.location-btn{display:flex;align-items:center;gap:7px;color:#eee;font-size:.82rem;padding:8px 10px;border-radius:10px;transition:.2s;max-width:150px}
+.location-btn:hover{background:rgba(255,255,255,.08)}
+.location-btn i.fa-location-dot{color:var(--color-yellow)}
+.location-btn .loc-name{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:600}
+.location-btn i.fa-chevron-down{font-size:.6rem;color:#999}
+.header-search{flex:1;max-width:430px;display:flex;align-items:center;background:#fff;border-radius:var(--radius-sm);overflow:hidden;border:2px solid transparent;transition:.2s}
+.header-search:focus-within{border-color:var(--color-yellow)}
+.header-search i{padding:0 4px 0 14px;color:var(--color-muted)}
+.header-search input{flex:1;border:none;outline:none;padding:10px;font-family:inherit;font-size:.87rem;min-width:0}
+.header-search button{background:var(--gradient-primary);color:var(--color-black);font-weight:700;font-size:.8rem;padding:10px 16px;height:100%}
+.top-nav{display:flex;gap:4px;margin-left:auto}
+.top-nav a{color:#ddd;font-size:.87rem;font-weight:600;padding:9px 13px;border-radius:9px;transition:.2s;display:flex;align-items:center;gap:7px}
+.top-nav a i{font-size:.85rem}
+.top-nav a:hover{color:var(--color-yellow);background:rgba(255,255,255,.07)}
+.top-nav a.active{color:var(--color-yellow)}
+.header-actions{display:flex;align-items:center;gap:8px}
+.cart-link{position:relative}
+.cart-badge{position:absolute;top:-4px;right:-4px;min-width:19px;height:19px;padding:0 4px;border-radius:20px;background:var(--color-red);color:#fff;font-size:.68rem;font-weight:700;display:grid;place-items:center;border:2px solid var(--color-black)}
+.cart-badge.hidden{display:none}
+.badge-dot{position:absolute;top:2px;right:2px;width:9px;height:9px;border-radius:50%;background:var(--color-red);border:2px solid var(--color-black)}
+.badge-dot.hidden{display:none}
+.dropdown-wrap{position:relative}
+.dropdown-panel{position:absolute;top:calc(100% + 10px);right:0;background:#fff;color:var(--color-text);border-radius:var(--radius-md);box-shadow:var(--shadow-lg);width:300px;opacity:0;visibility:hidden;transform:translateY(8px);transition:.22s;z-index:950;overflow:hidden}
+.dropdown-panel.open{opacity:1;visibility:visible;transform:translateY(0)}
+.dd-head{display:flex;justify-content:space-between;align-items:center;padding:13px 16px;border-bottom:1px solid var(--color-border);font-weight:700;font-size:.9rem}
+.dd-head button{color:var(--color-orange);font-size:.75rem;font-weight:600}
+.notif-item{display:flex;gap:11px;padding:13px 16px;border-bottom:1px solid var(--color-light-gray);font-size:.8rem;transition:.15s}
+.notif-item:last-child{border-bottom:none}
+.notif-item:hover{background:var(--color-light-gray)}
+.notif-item .n-ico{width:34px;height:34px;flex:none;border-radius:10px;display:grid;place-items:center;font-size:.85rem}
+.n-ico.orange{background:#FFF3E0;color:var(--color-orange)}
+.n-ico.green{background:#E8F5E9;color:var(--color-green)}
+.n-ico.red{background:#FFEBEE;color:var(--color-red)}
+.notif-item .n-time{color:var(--color-muted);font-size:.7rem;margin-top:2px}
+.notif-empty{padding:26px;text-align:center;color:var(--color-muted);font-size:.83rem}
+.city-list{max-height:300px;overflow:auto;padding:6px}
+.city-list button{display:flex;align-items:center;gap:10px;width:100%;text-align:left;padding:10px 12px;border-radius:8px;font-size:.86rem;transition:.15s}
+.city-list button:hover{background:var(--color-light-gray)}
+.city-list button.active{background:#FFF8E1;color:#a56b00;font-weight:600}
+.city-list button i{color:var(--color-orange)}
+.subnav{display:none;background:var(--color-dark);border-top:1px solid rgba(255,255,255,.08);overflow-x:auto;scrollbar-width:none}
+.subnav::-webkit-scrollbar{display:none}
+.subnav a{flex:none;color:#ccc;font-size:.83rem;font-weight:600;padding:10px 16px;display:flex;align-items:center;gap:7px}
+.subnav a.active{color:var(--color-yellow)}
+
+.sidebar-overlay{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:980;opacity:0;visibility:hidden;transition:.3s;backdrop-filter:blur(2px)}
+.sidebar-overlay.open{opacity:1;visibility:visible}
+.sidebar{position:fixed;top:0;left:0;bottom:0;width:var(--sidebar-w);max-width:85vw;background:#fff;z-index:990;transform:translateX(-102%);transition:transform .32s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column;box-shadow:var(--shadow-lg)}
+.sidebar.open{transform:translateX(0)}
+.sidebar-head{display:flex;align-items:center;justify-content:space-between;padding:16px 18px;background:var(--color-black);color:#fff}
+.sidebar-head .logo{font-size:1.2rem}
+.sidebar-close{width:36px;height:36px;border-radius:9px;display:grid;place-items:center;color:#fff;background:rgba(255,255,255,.1);transition:.2s}
+.sidebar-close:hover{background:var(--color-red)}
+.sidebar-user{display:flex;align-items:center;gap:12px;padding:18px;border-bottom:1px solid var(--color-border);background:var(--color-light-gray)}
+.avatar{width:46px;height:46px;border-radius:50%;background:var(--gradient-primary);color:var(--color-black);display:grid;place-items:center;font-weight:800;font-size:1.1rem;flex:none;overflow:hidden}
+.avatar img{width:100%;height:100%;object-fit:cover}
+.sidebar-user .u-name{font-weight:700;font-size:.92rem;line-height:1.2}
+.sidebar-user .u-sub{font-size:.75rem;color:var(--color-muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:160px}
+.sidebar-nav{flex:1;overflow-y:auto;padding:12px}
+.sidebar-nav a{display:flex;align-items:center;gap:13px;padding:12px 14px;border-radius:var(--radius-sm);font-size:.9rem;font-weight:600;margin-bottom:3px;transition:.2s;position:relative}
+.sidebar-nav a i{width:22px;text-align:center;color:var(--color-muted);font-size:1rem;transition:.2s}
+.sidebar-nav a:hover{background:#FFF8E1;color:#b26a00;transform:translateX(3px)}
+.sidebar-nav a:hover i{color:var(--color-orange)}
+.sidebar-nav a.active{background:var(--gradient-primary);color:var(--color-black)}
+.sidebar-nav a.active i{color:var(--color-black)}
+.sidebar-nav a.active::before{content:'';position:absolute;left:-12px;top:20%;bottom:20%;width:4px;border-radius:4px;background:var(--color-orange)}
+.sidebar-divider{height:1px;background:var(--color-border);margin:10px 6px}
+.sidebar-foot{padding:14px;border-top:1px solid var(--color-border)}
+.logout-btn{width:100%;display:flex;align-items:center;gap:13px;padding:12px 14px;border-radius:var(--radius-sm);font-size:.9rem;font-weight:600;color:var(--color-red);transition:.2s}
+.logout-btn:hover{background:#FFEBEE}
+
+.surprise-hero{background:var(--color-dark);color:#fff;padding:60px 0 70px;position:relative;overflow:hidden;text-align:center}
+.surprise-hero::before{content:'';position:absolute;width:700px;height:700px;border-radius:50%;background:radial-gradient(circle,rgba(255,193,7,.22),transparent 65%);top:-260px;right:-180px;pointer-events:none;animation:heroFloat 9s ease-in-out infinite}
+.surprise-hero::after{content:'';position:absolute;width:560px;height:560px;border-radius:50%;background:radial-gradient(circle,rgba(255,87,34,.18),transparent 65%);bottom:-220px;left:-160px;pointer-events:none;animation:heroFloat 11s ease-in-out infinite reverse}
+@keyframes heroFloat{0%,100%{transform:translate(0,0)}50%{transform:translate(0,-20px)}}
+.hero-inner{position:relative;z-index:2;max-width:780px;margin:0 auto}
+.hero-emoji{font-size:4rem;display:inline-block;animation:bob 2.6s ease-in-out infinite;margin-bottom:12px;filter:drop-shadow(0 6px 16px rgba(255,152,0,.4))}
+@keyframes bob{0%,100%{transform:translateY(0) rotate(-4deg)}50%{transform:translateY(-10px) rotate(4deg)}}
+.surprise-hero h1{font-size:clamp(2rem,4.6vw,3.2rem);font-weight:800;line-height:1.15;margin-bottom:14px}
+.surprise-hero h1 .hl{color:var(--color-yellow);position:relative;display:inline-block}
+.surprise-hero h1 .hl::after{content:'';position:absolute;left:0;right:0;bottom:4px;height:10px;background:rgba(255,152,0,.35);z-index:-1;border-radius:4px}
+.surprise-hero p{color:#bdbdbd;font-size:clamp(.95rem,1.4vw,1.05rem);max-width:560px;margin:0 auto}
+.pref-summary{margin-top:24px;display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+.pref-chip{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);color:#e8e8e8;font-size:.78rem;font-weight:600;padding:7px 14px;border-radius:30px;display:inline-flex;align-items:center;gap:7px;transition:.2s}
+.pref-chip i{color:var(--color-yellow);font-size:.78rem}
+.pref-chip a{color:var(--color-yellow);text-decoration:underline;text-underline-offset:3px}
+.pref-chip a:hover{color:#fff}
+.pref-chip.warn{background:rgba(239,83,80,.15);border-color:rgba(239,83,80,.4);color:#ffcdd2}
+.pref-chip.warn i{color:#ff8a80}
+.pref-chip.missing{background:rgba(255,193,7,.15);border-color:rgba(255,193,7,.4);color:#ffe082}
+.pref-chip.missing i{color:var(--color-yellow)}
+
+/* Setup nudge banner (shown inline, no redirect) */
+.setup-nudge{background:#FFF8E1;border:1.5px solid #ffe0b3;border-radius:var(--radius-md);padding:14px 18px;margin:20px auto;max-width:760px;display:flex;gap:14px;align-items:center;flex-wrap:wrap;font-size:.85rem;color:#8a6200}
+.setup-nudge i{font-size:1.2rem;color:var(--color-orange);flex:none}
+.setup-nudge b{color:#6a4b00}
+.setup-nudge a{color:#6a4b00;font-weight:700;text-decoration:underline;text-underline-offset:3px}
+.setup-nudge a:hover{color:var(--color-orange)}
+.setup-nudge .nudge-acts{display:flex;gap:8px;margin-left:auto;flex-wrap:wrap}
+.setup-nudge .nudge-acts a{padding:7px 14px;border-radius:30px;background:var(--color-orange);color:#fff;text-decoration:none;font-size:.78rem;font-weight:700}
+.setup-nudge .nudge-acts a:hover{background:#e65100;color:#fff}
+
+.levels-section{padding:50px 0 20px;margin-top:-40px;position:relative;z-index:3}
+.levels-section h2{text-align:center;font-size:1.3rem;font-weight:700;margin-bottom:6px}
+.levels-section .sub{text-align:center;color:var(--color-muted);font-size:.88rem;margin-bottom:28px}
+.levels-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+.level-card{background:#fff;border-radius:var(--radius-lg);padding:28px 22px;text-align:center;cursor:pointer;position:relative;overflow:hidden;box-shadow:var(--shadow-md);transition:.3s cubic-bezier(.2,.8,.25,1);border:2px solid transparent;animation:fadeUp .5s both}
+.level-card:nth-child(2){animation-delay:.08s}
+.level-card:nth-child(3){animation-delay:.16s}
+.level-card::before{content:'';position:absolute;top:0;left:0;right:0;height:5px;background:var(--grad);transition:.3s}
+.level-card:hover{transform:translateY(-8px);box-shadow:var(--shadow-lg)}
+.level-card:hover::before{height:8px}
+.level-card.safe{--grad:var(--gradient-safe)}
+.level-card.bal{--grad:var(--gradient-bal)}
+.level-card.ult{--grad:var(--gradient-ult)}
+.level-emoji{font-size:3.4rem;margin-bottom:10px;display:inline-block;animation:wobble 3s ease-in-out infinite}
+@keyframes wobble{0%,100%{transform:rotate(-6deg)}50%{transform:rotate(6deg)}}
+.level-title{font-size:1.15rem;font-weight:800;margin-bottom:6px}
+.level-sub{font-size:.82rem;color:var(--color-muted);margin-bottom:14px;line-height:1.5;min-height:44px}
+.level-tags{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-bottom:18px}
+.level-tag{font-size:.68rem;font-weight:700;padding:4px 10px;border-radius:20px;background:var(--color-light-gray);color:var(--color-muted)}
+.level-card.safe .level-tag{background:#E8F5E9;color:var(--color-green)}
+.level-card.bal .level-tag{background:#FFF8E1;color:#a56b00}
+.level-card.ult .level-tag{background:#FFEBEE;color:#c62828}
+.level-btn{display:inline-flex;align-items:center;gap:8px;padding:11px 24px;border-radius:30px;font-weight:700;font-size:.85rem;color:#fff;background:var(--grad);box-shadow:0 6px 16px rgba(0,0,0,.15);transition:.25s}
+.level-btn:hover{transform:scale(1.05);box-shadow:0 10px 24px rgba(0,0,0,.2)}
+@keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+
+.results-section{padding:20px 0 60px;animation:fadeUp .45s both}
+.results-section.hidden{display:none}
+.results-head{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:22px;flex-wrap:wrap}
+.results-head h2{font-size:1.2rem;font-weight:700;display:flex;align-items:center;gap:10px}
+.results-head h2 .badge{display:inline-flex;align-items:center;gap:7px;font-size:.7rem;font-weight:800;padding:5px 12px;border-radius:20px;color:#fff;text-transform:uppercase;letter-spacing:.4px}
+.results-head h2 .badge.safe{background:var(--gradient-safe)}
+.results-head h2 .badge.bal{background:var(--gradient-bal);color:#4a3100}
+.results-head h2 .badge.ult{background:var(--gradient-ult)}
+.results-actions{display:flex;gap:10px;flex-wrap:wrap}
+.dice-spin{animation:spin .6s cubic-bezier(.2,.9,.3,1.4)}
+@keyframes spin{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+
+.dish-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:22px}
+.dish-card{background:#fff;border:1px solid var(--color-border);border-radius:var(--radius-lg);overflow:hidden;box-shadow:var(--shadow-sm);transition:.3s;opacity:0;transform:translateY(20px);animation:cardIn .5s forwards;position:relative}
+.dish-card:hover{transform:translateY(-6px);box-shadow:var(--shadow-lg);border-color:#ffd782}
+@keyframes cardIn{to{opacity:1;transform:translateY(0)}}
+.dish-img-wrap{position:relative;height:180px;overflow:hidden;background:var(--color-light-gray)}
+.dish-img-wrap img{width:100%;height:100%;object-fit:cover;transition:.5s}
+.dish-card:hover .dish-img-wrap img{transform:scale(1.08)}
+.type-badge{position:absolute;top:12px;left:12px;display:inline-flex;align-items:center;gap:6px;font-size:.7rem;font-weight:700;letter-spacing:.4px;padding:5px 10px;border-radius:6px;background:#fff;box-shadow:var(--shadow-sm)}
+.type-badge.veg{color:var(--color-green);border:1px solid rgba(46,125,50,.35)}
+.type-badge.nonveg{color:#A8462D;border:1px solid rgba(168,70,45,.35)}
+.food-mark{width:14px;height:14px;border:1.5px solid var(--color-green);border-radius:3px;display:inline-grid;place-items:center;flex:none;background:#fff}
+.food-mark::after{content:'';width:7px;height:7px;border-radius:50%;background:var(--color-green)}
+.food-mark.nonveg{border-color:#A8462D}
+.food-mark.nonveg::after{content:'';width:0;height:0;border-radius:0;background:transparent;border-left:4px solid transparent;border-right:4px solid transparent;border-bottom:8px solid #A8462D}
+.reason-badge{position:absolute;top:12px;right:12px;font-size:.66rem;font-weight:800;padding:5px 11px;border-radius:20px;background:rgba(0,0,0,.75);color:#fff;backdrop-filter:blur(6px);display:inline-flex;align-items:center;gap:5px;letter-spacing:.3px;max-width:65%}
+.reason-badge i{font-size:.62rem}
+.disc-badge{position:absolute;bottom:12px;left:12px;background:var(--color-red);color:#fff;font-size:.7rem;font-weight:700;padding:5px 10px;border-radius:7px;box-shadow:var(--shadow-sm)}
+.dish-body{padding:16px 18px 18px}
+.dish-body h3{font-size:1rem;font-weight:700;margin-bottom:4px;line-height:1.3}
+.rest-line{font-size:.78rem;color:var(--color-muted);display:flex;align-items:center;gap:6px;margin-bottom:10px}
+.rest-line i{color:var(--color-orange)}
+.dish-desc{font-size:.82rem;color:var(--color-muted);line-height:1.55;display:-webkit-box;-webkit-line-clamp:2;line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;min-height:44px;margin-bottom:12px}
+.dish-meta{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px;font-size:.72rem;color:var(--color-muted)}
+.dish-meta span{display:inline-flex;align-items:center;gap:5px}
+.dish-meta i{color:var(--color-orange);font-size:.7rem}
+.dish-meta .rate{background:#FFF8E1;color:#a56b00;padding:3px 9px;border-radius:20px;font-weight:700}
+.dish-meta .rate i{color:var(--color-yellow)}
+.dish-foot{display:flex;align-items:center;justify-content:space-between;gap:10px;padding-top:12px;border-top:1px solid var(--color-light-gray)}
+.price-box{display:flex;flex-direction:column;line-height:1.2}
+.price-box .now{font-weight:800;font-size:1.05rem;color:var(--color-black)}
+.price-box .old{font-size:.72rem;color:var(--color-muted);text-decoration:line-through}
+.dish-add{display:inline-flex;align-items:center;gap:7px;background:var(--gradient-primary);color:var(--color-black);font-weight:700;font-size:.8rem;padding:9px 16px;border-radius:10px;transition:.25s;box-shadow:0 4px 12px rgba(255,152,0,.3)}
+.dish-add:hover{transform:translateY(-2px);box-shadow:0 8px 18px rgba(255,152,0,.45)}
+
+/* Empty state — only for TRULY zero matches */
+.state-block{text-align:center;padding:54px 24px;background:#fff;border:1px dashed var(--color-border);border-radius:var(--radius-lg);margin-top:10px}
+.state-block .big-ico{width:78px;height:78px;border-radius:50%;background:#FFF8E1;display:grid;place-items:center;margin:0 auto 16px;font-size:2rem;color:var(--color-orange)}
+.state-block h4{font-size:1.15rem;margin-bottom:6px}
+.state-block p{color:var(--color-muted);font-size:.88rem;margin:0 auto 20px;max-width:420px;line-height:1.6}
+.state-block .row{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+
+.footer{background:var(--color-black);color:#bbb}
+.footer-grid{display:grid;grid-template-columns:1.4fr 1fr 1fr 1.2fr;gap:34px;padding:54px 0 40px}
+.footer h4{color:#fff;font-size:.95rem;margin-bottom:16px;font-weight:700}
+.footer .about{font-size:.83rem;line-height:1.7;max-width:290px;margin-top:12px}
+.footer-links a{display:block;font-size:.85rem;padding:5px 0;transition:.2s}
+.footer-links a:hover{color:var(--color-yellow);padding-left:5px}
+.footer-contact li{display:flex;gap:11px;font-size:.84rem;margin-bottom:11px;align-items:flex-start}
+.footer-contact i{color:var(--color-yellow);margin-top:3px}
+.socials{display:flex;gap:10px;margin-top:18px}
+.socials a{width:38px;height:38px;border-radius:10px;background:rgba(255,255,255,.08);display:grid;place-items:center;color:#ddd;transition:.25s}
+.socials a:hover{background:var(--gradient-primary);color:var(--color-black);transform:translateY(-3px)}
+.footer-bottom{border-top:1px solid rgba(255,255,255,.1);padding:17px 0;display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;font-size:.78rem;color:#888}
+.footer-bottom b{color:var(--color-yellow)}
+
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:1100;display:grid;place-items:center;padding:18px;opacity:0;visibility:hidden;transition:.25s}
+.modal-overlay.open{opacity:1;visibility:visible}
+.modal{background:#fff;border-radius:var(--radius-lg);max-width:420px;width:100%;padding:30px 26px 24px;text-align:center;transform:scale(.9);transition:.25s;box-shadow:var(--shadow-lg)}
+.modal-overlay.open .modal{transform:scale(1)}
+.m-icon{width:60px;height:60px;border-radius:50%;display:grid;place-items:center;font-size:1.5rem;margin:0 auto 14px}
+.m-icon.warn{background:#FFF3E0;color:#E65100}
+.modal h3{font-size:1.12rem;margin-bottom:8px}
+.modal p{color:var(--color-muted);font-size:.87rem;margin-bottom:20px;line-height:1.6}
+.modal .m-actions{display:flex;gap:10px;justify-content:center}
+.modal .m-actions .btn{flex:1}
+
+.toast-zone{position:fixed;bottom:22px;right:22px;z-index:1200;display:flex;flex-direction:column;gap:10px;max-width:min(360px,90vw)}
+.toast{background:#fff;border-radius:var(--radius-md);box-shadow:var(--shadow-lg);padding:13px 16px;display:flex;align-items:flex-start;gap:11px;font-size:.85rem;font-weight:500;min-width:270px;animation:toastIn .3s;border-left:4px solid var(--color-green)}
+.toast i{font-size:1rem;margin-top:2px}
+.toast.success{border-color:var(--color-green)}.toast.success i{color:var(--color-green)}
+.toast.error{border-color:var(--color-red)}.toast.error i{color:var(--color-red)}
+.toast.warning{border-color:var(--color-orange)}.toast.warning i{color:var(--color-orange)}
+.toast.info{border-color:#1976D2}.toast.info i{color:#1976D2}
+.toast .t-close{margin-left:auto;color:#bbb;font-size:.8rem;padding:2px}
+@keyframes toastIn{from{opacity:0;transform:translateX(30px)}to{opacity:1;transform:translateX(0)}}
+.toast.leaving{opacity:0;transform:translateX(30px);transition:.3s}
+
+@media(max-width:980px){.levels-grid{grid-template-columns:1fr}}
+@media(max-width:900px){
+  .top-nav{display:none}
+  .subnav{display:flex}
+  .footer-grid{grid-template-columns:1fr 1fr}
+}
+@media(max-width:768px){
+  .header-search{display:none}
+  .surprise-hero{padding:44px 0 60px}
+}
+@media(max-width:520px){
+  .footer-grid{grid-template-columns:1fr;gap:26px;padding:40px 0 30px}
+  .toast-zone{left:14px;right:14px;bottom:14px}
+  .toast{min-width:0;width:100%}
+  .logo span{display:none}
+  .hero-emoji{font-size:3rem}
+  .setup-nudge{flex-direction:column;text-align:center;align-items:stretch}
+  .setup-nudge .nudge-acts{margin-left:0;justify-content:center}
+}
+</style>
+</head>
+<body>
+
+<header class="header">
+  <div class="container header-inner">
+    <button class="icon-btn" id="menuBtn" aria-label="Open menu"><i class="fa-solid fa-bars"></i></button>
+    <a href="index.html" class="logo" aria-label="Foody Home">
+      <span class="logo-badge"><i class="fa-solid fa-utensils"></i></span>
+      <span>Foo<b>dy</b></span>
+    </a>
+    <div class="dropdown-wrap">
+      <button class="location-btn" id="locationBtn" aria-label="Change delivery location">
+        <i class="fa-solid fa-location-dot"></i>
+        <span class="loc-name" id="locationName">Mumbai</span>
+        <i class="fa-solid fa-chevron-down"></i>
+      </button>
+      <div class="dropdown-panel" id="locationPanel">
+        <div class="dd-head"><span><i class="fa-solid fa-location-dot" style="color:var(--color-orange)"></i> Select Location</span></div>
+        <div class="city-list" id="cityList"></div>
+      </div>
+    </div>
+    <form class="header-search" id="headerSearchForm" role="search">
+      <i class="fa-solid fa-magnifying-glass"></i>
+      <input type="search" id="headerSearchInput" placeholder="Search restaurants or dishes..." aria-label="Search">
+      <button type="submit">Search</button>
+    </form>
+    <nav class="top-nav" aria-label="Primary">
+      <a href="index.html"><i class="fa-solid fa-house"></i> Home</a>
+      <a href="restaurants.html"><i class="fa-solid fa-store"></i> Restaurants</a>
+      <a href="rewards.html"><i class="fa-solid fa-gift"></i> Rewards</a>
+      <a href="support.html"><i class="fa-solid fa-headset"></i> Support</a>
+    </nav>
+    <div class="header-actions">
+      <div class="dropdown-wrap">
+        <button class="icon-btn" id="notifBtn" aria-label="Notifications">
+          <i class="fa-regular fa-bell"></i>
+          <span class="badge-dot" id="notifDot"></span>
+        </button>
+        <div class="dropdown-panel" id="notifPanel">
+          <div class="dd-head"><span>Notifications</span><button id="markReadBtn">Mark all read</button></div>
+          <div id="notifList"></div>
+        </div>
+      </div>
+      <a href="cart.html" class="icon-btn cart-link" aria-label="Cart">
+        <i class="fa-solid fa-cart-shopping"></i>
+        <span class="cart-badge hidden" id="cartBadge">0</span>
+      </a>
+    </div>
+  </div>
+  <nav class="subnav" aria-label="Primary mobile">
+    <a href="index.html"><i class="fa-solid fa-house"></i> Home</a>
+    <a href="restaurants.html"><i class="fa-solid fa-store"></i> Restaurants</a>
+    <a href="rewards.html"><i class="fa-solid fa-gift"></i> Rewards</a>
+    <a href="support.html"><i class="fa-solid fa-headset"></i> Support</a>
+  </nav>
+</header>
+
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+<aside class="sidebar" id="sidebar" aria-label="User menu">
+  <div class="sidebar-head">
+    <a href="index.html" class="logo"><span class="logo-badge"><i class="fa-solid fa-utensils"></i></span><span>Foo<b>dy</b></span></a>
+    <button class="sidebar-close" id="sidebarClose" aria-label="Close menu"><i class="fa-solid fa-xmark"></i></button>
+  </div>
+  <div class="sidebar-user" id="sidebarUser"></div>
+  <nav class="sidebar-nav">
+    <a href="profile.html"><i class="fa-solid fa-user"></i> Profile</a>
+    <a href="orders.html"><i class="fa-solid fa-bag-shopping"></i> Orders</a>
+    <a href="food-preferences.html"><i class="fa-solid fa-sliders"></i> Food Preferences</a>
+    <a href="food-allergies.html"><i class="fa-solid fa-shield-halved"></i> Food Allergies</a>
+    <a href="wishlist.html"><i class="fa-solid fa-heart"></i> Wishlist</a>
+    <a href="rewards.html"><i class="fa-solid fa-gift"></i> Rewards</a>
+    <a href="support.html"><i class="fa-solid fa-headset"></i> Support</a>
+    <div class="sidebar-divider"></div>
+    <a href="index.html"><i class="fa-solid fa-house"></i> Home</a>
+    <a href="restaurants.html"><i class="fa-solid fa-store"></i> Restaurants</a>
+    <a href="games.html">🎮 Play Arcade Games</a>
+  </nav>
+  <div class="sidebar-foot">
+    <button class="logout-btn" id="logoutBtn"><i class="fa-solid fa-right-from-bracket"></i> Logout</button>
+  </div>
+</aside>
+
+<main>
+  <section class="surprise-hero">
+    <div class="container hero-inner">
+      <div class="hero-emoji">🎲</div>
+      <h1>Feeling indecisive? Let us <span class="hl">surprise</span> you!</h1>
+      <p>Pick your comfort level. We'll recommend dishes that fit your food preferences and never include your allergens — every single time.</p>
+      <div class="pref-summary" id="prefSummary"></div>
+    </div>
+  </section>
+
+  <div class="container">
+    <!-- Setup nudge: shown ONLY if user has nothing saved at all -->
+    <div id="setupNudge"></div>
+
+    <section class="levels-section" id="levelsSection">
+      <h2>Choose your surprise level</h2>
+      <p class="sub">All levels respect your saved food type (veg/non-veg) and allergies.</p>
+
+      <div class="levels-grid">
+        <div class="level-card safe" data-level="safe">
+          <div class="level-emoji">🟢</div>
+          <div class="level-title">Safe Surprise</div>
+          <p class="level-sub">Only dishes from your favourite cuisines and categories. Zero risk, all comfort.</p>
+          <div class="level-tags"><span class="level-tag">My favourites</span><span class="level-tag">Zero surprises</span></div>
+          <button class="level-btn"><i class="fa-solid fa-shield-halved"></i> Go Safe</button>
+        </div>
+
+        <div class="level-card bal" data-level="balanced">
+          <div class="level-emoji">🟡</div>
+          <div class="level-title">Balanced Surprise</div>
+          <p class="level-sub">A healthy mix of your favourites plus new cuisines you haven't tried yet.</p>
+          <div class="level-tags"><span class="level-tag">Favourites</span><span class="level-tag">+ New discoveries</span></div>
+          <button class="level-btn"><i class="fa-solid fa-scale-balanced"></i> Try Balanced</button>
+        </div>
+
+        <div class="level-card ult" data-level="ultimate">
+          <div class="level-emoji">🔴</div>
+          <div class="level-title">Ultimate Surprise</div>
+          <p class="level-sub">Completely random picks from the full menu. Adventure mode — still allergy-safe!</p>
+          <div class="level-tags"><span class="level-tag">Full menu</span><span class="level-tag">Random</span><span class="level-tag">Allergy-safe</span></div>
+          <button class="level-btn"><i class="fa-solid fa-bolt"></i> Go Wild</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="results-section hidden" id="resultsSection">
+      <div class="results-head">
+        <h2>
+          <i class="fa-solid fa-wand-magic-sparkles" style="color:var(--color-orange)" id="resultsIcon"></i>
+          <span id="resultsTitle">Your picks</span>
+          <span class="badge" id="resultsBadge"></span>
+        </h2>
+        <div class="results-actions">
+          <button class="btn btn-outline" id="rerollBtn"><i class="fa-solid fa-dice"></i> Roll again</button>
+          <button class="btn btn-outline" id="changeLevelBtn"><i class="fa-solid fa-sliders"></i> Change level</button>
+        </div>
+      </div>
+      <div id="resultsArea"></div>
+    </section>
+  </div>
+</main>
+
+<div class="modal-overlay" id="confirmModal" role="dialog" aria-modal="true">
+  <div class="modal">
+    <div class="m-icon warn" id="confirmIcon"><i class="fa-solid fa-triangle-exclamation"></i></div>
+    <h3 id="confirmTitle">Are you sure?</h3>
+    <p id="confirmText"></p>
+    <div class="m-actions">
+      <button class="btn btn-outline" id="confirmCancel">Cancel</button>
+      <button class="btn btn-primary" id="confirmOk">Confirm</button>
+    </div>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <a href="index.html" class="logo"><span class="logo-badge"><i class="fa-solid fa-utensils"></i></span><span>Foo<b>dy</b></span></a>
+        <p class="about">Foody connects you with the best restaurants around you. Order your favourite meals and get them delivered hot, fresh and fast.</p>
+        <div class="socials">
+          <a href="#" aria-label="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
+          <a href="#" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+          <a href="#" aria-label="Twitter"><i class="fa-brands fa-twitter"></i></a>
+          <a href="#" aria-label="YouTube"><i class="fa-brands fa-youtube"></i></a>
+        </div>
+      </div>
+      <div>
+        <h4>Quick Links</h4>
+        <div class="footer-links">
+          <a href="restaurants.html">Restaurants</a>
+          <a href="search.html">Search Food</a>
+          <a href="orders.html">My Orders</a>
+          <a href="wishlist.html">Wishlist</a>
+          <a href="rewards.html">Rewards</a>
+        </div>
+      </div>
+      <div>
+        <h4>Top Categories</h4>
+        <div class="footer-links">
+          <a href="search.html?category=Biryani">Biryani</a>
+          <a href="search.html?category=Fast%20Food">Fast Food</a>
+          <a href="search.html?category=South%20Indian">South Indian</a>
+          <a href="search.html?category=Dessert">Desserts</a>
+          <a href="search.html?category=Drinks">Drinks</a>
+        </div>
+      </div>
+      <div>
+        <h4>Contact Us</h4>
+        <ul class="footer-contact">
+          <li><i class="fa-solid fa-location-dot"></i> Foody HQ, Bandra Kurla Complex, Mumbai 400051</li>
+          <li><i class="fa-solid fa-phone"></i> +91 98765 43210</li>
+          <li><i class="fa-solid fa-envelope"></i> support@foody.in</li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 <b>Foody</b>. All rights reserved.</span>
+      <span>Made with <i class="fa-solid fa-heart" style="color:var(--color-red)"></i> for food lovers</span>
+    </div>
+  </div>
+</footer>
+
+<div class="toast-zone" id="toastZone" aria-live="polite"></div>
+
+<script>
+'use strict';
+const CITIES = ['Mumbai','Delhi','Bengaluru','Hyderabad','Chennai','Kolkata','Pune','Goa','Lucknow','Amritsar'];
+const FALLBACK_IMG = "https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=800&q=72";
+const u = (id,w=800) => `https://images.unsplash.com/${id}?auto=format&fit=crop&w=${w}&q=72`;
+function imgErr(el){ el.onerror=null; el.src=FALLBACK_IMG; }
+
+const store = {
+  get(k,d){ try{ const v=localStorage.getItem(k); return v===null?d:JSON.parse(v);}catch(e){return d;} },
+  set(k,v){ localStorage.setItem(k, JSON.stringify(v)); },
+  del(k){ localStorage.removeItem(k); }
+};
+const getUser = () => store.get('foody_user', null);
+const getPreferences = () => store.get('foody_preferences', null);
+const getAllergies = () => store.get('foody_allergies', []);
+const getCart = () => store.get('foody_cart', []);
+const saveCart = c => { store.set('foody_cart', c); updateCartBadge(); };
+
+function updateCartBadge(){
+  const count = getCart().reduce((s,i) => s + i.qty, 0);
+  const b = document.getElementById('cartBadge');
+  b.textContent = count; b.classList.toggle('hidden', count===0);
+}
+
+const RESTAURANTS = [
+ {id:'r1', name:'Spice Symphony', cuisine:'North Indian, Mughlai', rating:4.5, delivery_time:'25-30 min', delivery_fee:29, is_active:true},
+ {id:'r2', name:'Dosa Junction', cuisine:'South Indian', rating:4.6, delivery_time:'20-25 min', delivery_fee:19, is_active:true},
+ {id:'r3', name:'Biryani Blues', cuisine:'Biryani, Mughlai', rating:4.8, delivery_time:'30-35 min', delivery_fee:0, is_active:true},
+ {id:'r4', name:'Pizza Roma', cuisine:'Italian, Pizza', rating:4.4, delivery_time:'25-30 min', delivery_fee:25, is_active:true},
+ {id:'r5', name:'Tokyo Bites', cuisine:'Japanese, Asian', rating:4.7, delivery_time:'30-40 min', delivery_fee:49, is_active:true},
+ {id:'r6', name:'Burger Barn', cuisine:'Fast Food, American', rating:4.3, delivery_time:'15-20 min', delivery_fee:15, is_active:true},
+ {id:'r7', name:'Coastal Catch', cuisine:'Seafood, Goan', rating:4.6, delivery_time:'30-35 min', delivery_fee:35, is_active:true},
+ {id:'r8', name:'Sweet Treats', cuisine:'Desserts, Bengali Sweets', rating:4.5, delivery_time:'20-25 min', delivery_fee:20, is_active:true},
+ {id:'r9', name:'Kolkata Biryani House', cuisine:'Biryani, Bengali', rating:4.7, delivery_time:'35-40 min', delivery_fee:25, is_active:true},
+ {id:'r10',name:'Dragon Wok', cuisine:'Chinese, Asian', rating:4.2, delivery_time:'25-30 min', delivery_fee:20, is_active:true},
+ {id:'r11',name:'Kebab Factory', cuisine:'Kebab, Mughlai', rating:4.6, delivery_time:'30-35 min', delivery_fee:30, is_active:true},
+ {id:'r12',name:'Choco Loco', cuisine:'Chocolate, Desserts', rating:4.4, delivery_time:'20-25 min', delivery_fee:25, is_active:true},
+ {id:'r14',name:'Donut Delight', cuisine:'Donuts, Bakery', rating:4.5, delivery_time:'15-20 min', delivery_fee:15, is_active:true},
+ {id:'r15',name:'Punjab Grill', cuisine:'North Indian, Punjabi', rating:4.4, delivery_time:'25-30 min', delivery_fee:22, is_active:true},
+ {id:'r16',name:'Roll Revolution', cuisine:'Fast Food, Street Food', rating:4.1, delivery_time:'15-20 min', delivery_fee:10, is_active:true},
+ {id:'r17',name:'Madras Meals', cuisine:'South Indian', rating:4.4, delivery_time:'20-25 min', delivery_fee:15, is_active:true},
+ {id:'r18',name:'Oven Stories', cuisine:'Bakery, Desserts, Pizza', rating:4.2, delivery_time:'25-30 min', delivery_fee:20, is_active:true}
+];
+const restById = id => RESTAURANTS.find(r => r.id === id);
+
+const FOODS = [
+ {id:'f1', restaurant_id:'r4', cat:'Italian', name:'Margherita Pizza', description:'Classic pizza with mozzarella, fresh tomato & basil on a hand-tossed base.', image:u('photo-1565299624946-b28f40a0ae38'), price:299, discount_price:249, food_type:'VEG', rating:4.5, preparation_time:'25 min', is_available:true, ingredients:['wheat flour','mozzarella cheese','tomato','basil','olive oil']},
+ {id:'f2', restaurant_id:'r4', cat:'Italian', name:'Farmhouse Supreme Pizza', description:'Loaded with capsicum, onion, corn, mushroom & extra mozzarella.', image:u('photo-1513104890138-7c749659a591'), price:429, discount_price:349, food_type:'VEG', rating:4.3, preparation_time:'30 min', is_available:true, ingredients:['wheat flour','cheese','capsicum','onion','corn','mushroom']},
+ {id:'f3', restaurant_id:'r4', cat:'Italian', name:'Chicken Tikka Pizza', description:'Smoky chicken tikka chunks with onion & tikka drizzle.', image:u('photo-1574071318508-1cdbab80d002'), price:469, discount_price:399, food_type:'NON_VEG', rating:4.6, preparation_time:'30 min', is_available:true, ingredients:['wheat flour','chicken','cheese','onion','tikka sauce']},
+ {id:'f4', restaurant_id:'r2', cat:'South Indian', name:'Masala Dosa', description:'Golden crispy dosa with spiced potato filling, served with sambar & chutneys.', image:u('photo-1668236543090-82eba5ee5976'), price:149, discount_price:119, food_type:'VEG', rating:4.7, preparation_time:'15 min', is_available:true, ingredients:['rice','urad dal','potato','onion','spices']},
+ {id:'f5', restaurant_id:'r2', cat:'South Indian', name:'Idli Sambar (4 pcs)', description:'Soft steamed idlis dunked in piping hot sambar.', image:u('photo-1589301760014-d929f3979dbc'), price:119, discount_price:99, food_type:'VEG', rating:4.4, preparation_time:'15 min', is_available:true, ingredients:['rice','urad dal','vegetables','tamarind']},
+ {id:'f6', restaurant_id:'r2', cat:'Drinks', name:'Filter Coffee', description:'Strong South Indian filter coffee with frothy milk.', image:u('photo-1495474472287-4d71bcdd2085'), price:79, food_type:'VEG', rating:4.6, preparation_time:'10 min', is_available:true, ingredients:['coffee','milk','sugar']},
+ {id:'f7', restaurant_id:'r1', cat:'North Indian', name:'Paneer Butter Masala', description:'Cottage cheese simmered in silky tomato-cashew gravy.', image:u('photo-1631452180519-c014fe946bc7'), price:289, discount_price:239, food_type:'VEG', rating:4.6, preparation_time:'25 min', is_available:true, ingredients:['paneer','butter','cream','tomato','cashew paste']},
+ {id:'f8', restaurant_id:'r1', cat:'North Indian', name:'Butter Chicken', description:'Tandoori chicken in rich buttery tomato gravy.', image:u('photo-1565557623262-b51c2513a641'), price:349, discount_price:299, food_type:'NON_VEG', rating:4.7, preparation_time:'30 min', is_available:true, ingredients:['chicken','butter','cream','tomato','cashew paste']},
+ {id:'f9', restaurant_id:'r1', cat:'North Indian', name:'Dal Makhani', description:'Slow-cooked black lentils finished with butter & cream.', image:u('photo-1547592180-85f173990554'), price:229, discount_price:199, food_type:'VEG', rating:4.4, preparation_time:'30 min', is_available:true, ingredients:['black lentils','butter','cream','tomato']},
+ {id:'f11',restaurant_id:'r3', cat:'Biryani', name:'Hyderabadi Chicken Biryani', description:'Fragrant dum biryani with saffron, mint & fried onion.', image:u('photo-1563379091339-03b21ab4a4f8'), price:329, discount_price:279, food_type:'NON_VEG', rating:4.8, preparation_time:'35 min', is_available:true, ingredients:['basmati rice','chicken','yogurt','saffron','cashew','onion']},
+ {id:'f12',restaurant_id:'r3', cat:'Biryani', name:'Veg Dum Biryani', description:'Garden vegetables layered with aromatic basmati rice.', image:u('photo-1589302168068-964664d93dc0'), price:259, discount_price:219, food_type:'VEG', rating:4.3, preparation_time:'30 min', is_available:true, ingredients:['basmati rice','vegetables','yogurt','cashew','saffron']},
+ {id:'f13',restaurant_id:'r9', cat:'Biryani', name:'Kolkata Mutton Biryani', description:'Signature Kolkata biryani with potato & boiled egg.', image:u('photo-1596797038530-2c107229654b'), price:399, discount_price:349, food_type:'NON_VEG', rating:4.7, preparation_time:'40 min', is_available:true, ingredients:['basmati rice','mutton','potato','yogurt','boiled egg']},
+ {id:'f14',restaurant_id:'r5', cat:'Japanese', name:'Sushi Platter (8 pcs)', description:'Chef\'s selection of salmon & tuna nigiri and rolls.', image:u('photo-1579584425555-c3ce17fd4351'), price:549, discount_price:479, food_type:'NON_VEG', rating:4.6, preparation_time:'25 min', is_available:true, ingredients:['sushi rice','salmon','tuna','sesame seeds','soy sauce','nori']},
+ {id:'f15',restaurant_id:'r5', cat:'Japanese', name:'Chicken Ramen', description:'Rich broth, wheat noodles, soft egg & scallions.', image:u('photo-1569718212165-3a8278d5f624'), price:419, food_type:'NON_VEG', rating:4.5, preparation_time:'25 min', is_available:true, ingredients:['wheat noodles','chicken broth','egg','soy sauce','scallion']},
+ {id:'f16',restaurant_id:'r6', cat:'Fast Food', name:'Classic Chicken Burger', description:'Crispy chicken patty, cheese, lettuce & house sauce.', image:u('photo-1568901346375-23c9450c58cd'), price:219, discount_price:179, food_type:'NON_VEG', rating:4.4, preparation_time:'20 min', is_available:true, ingredients:['chicken patty','wheat bun','cheese','lettuce','sesame seeds','egg mayonnaise']},
+ {id:'f17',restaurant_id:'r6', cat:'Fast Food', name:'Crispy Veg Burger', description:'Golden veggie patty with tangy sauce & crunchy slaw.', image:u('photo-1550547660-d9450f859349'), price:149, discount_price:129, food_type:'VEG', rating:4.2, preparation_time:'15 min', is_available:true, ingredients:['veggie patty','wheat bun','cheese','lettuce','egg mayonnaise']},
+ {id:'f18',restaurant_id:'r6', cat:'Fast Food', name:'Peri Peri Fries', description:'Crackly fries dusted with fiery peri peri spice.', image:u('photo-1573080496219-bb080dd4f877'), price:119, discount_price:99, food_type:'VEG', rating:4.3, preparation_time:'15 min', is_available:true, ingredients:['potato','oil','peri peri spice']},
+ {id:'f19',restaurant_id:'r7', cat:'Seafood', name:'Prawn Ghee Roast', description:'Juicy prawns tossed in spicy ghee-roasted masala.', image:u('photo-1565680018434-b513d5e5fd47'), price:459, discount_price:389, food_type:'NON_VEG', rating:4.7, preparation_time:'30 min', is_available:true, ingredients:['prawns','ghee','tomato','onion','spices']},
+ {id:'f20',restaurant_id:'r7', cat:'Seafood', name:'Goan Fish Curry', description:'Fresh fish simmered in tangy coconut-based curry.', image:u('photo-1559742811-822873691df8'), price:389, discount_price:329, food_type:'NON_VEG', rating:4.6, preparation_time:'35 min', is_available:true, ingredients:['fish','coconut','kokum','spices','rice']},
+ {id:'f21',restaurant_id:'r9', cat:'Bengali', name:'Machher Jhol', description:'Classic Bengali fish curry with potato & mustard notes.', image:u('photo-1519708227418-c8fd9a32b7a2'), price:369, discount_price:319, food_type:'NON_VEG', rating:4.5, preparation_time:'35 min', is_available:true, ingredients:['rohu fish','mustard oil','potato','tomato']},
+ {id:'f22',restaurant_id:'r8', cat:'Sweets', name:'Rasgulla (2 pcs)', description:'Spongy chenna dumplings soaked in light syrup.', image:u('photo-1606491956689-2ea866880c84'), price:99, discount_price:79, food_type:'VEG', rating:4.5, preparation_time:'10 min', is_available:true, ingredients:['chenna','sugar','cardamom']},
+ {id:'f23',restaurant_id:'r10',cat:'Chinese', name:'Chilli Chicken', description:'Crispy chicken tossed with peppers in spicy soy glaze.', image:u('photo-1603133872878-684f208fb84b'), price:279, discount_price:239, food_type:'NON_VEG', rating:4.4, preparation_time:'25 min', is_available:true, ingredients:['chicken','soy sauce','capsicum','corn starch','chilli']},
+ {id:'f24',restaurant_id:'r10',cat:'Chinese', name:'Veg Hakka Noodles', description:'Wok-tossed noodles with crunchy vegetables.', image:u('photo-1585032226651-759b368d7246'), price:189, discount_price:159, food_type:'VEG', rating:4.2, preparation_time:'20 min', is_available:true, ingredients:['wheat noodles','cabbage','carrot','soy sauce']},
+ {id:'f25',restaurant_id:'r11',cat:'Kebab', name:'Mutton Seekh Kebab', description:'Charcoal-grilled minced mutton skewers with mint.', image:u('photo-1599487488170-d11ec9c172f0'), price:319, discount_price:269, food_type:'NON_VEG', rating:4.6, preparation_time:'25 min', is_available:true, ingredients:['mutton','onion','spices','mint']},
+ {id:'f26',restaurant_id:'r11',cat:'Kebab', name:'Paneer Tikka', description:'Smoky grilled cottage cheese cubes with peppers.', image:u('photo-1529193591184-b1d58069ecdd'), price:259, discount_price:219, food_type:'VEG', rating:4.5, preparation_time:'25 min', is_available:true, ingredients:['paneer','yogurt','spices','capsicum']},
+ {id:'f29',restaurant_id:'r8', cat:'Dessert', name:'Chocolate Brownie Sundae', description:'Warm brownie, ice cream, hot fudge & roasted nuts.', image:u('photo-1563805042-7684c019e1cb'), price:239, discount_price:199, food_type:'VEG', rating:4.7, preparation_time:'15 min', is_available:true, ingredients:['chocolate','flour','butter','egg','vanilla ice cream','almonds']},
+ {id:'f30',restaurant_id:'r12',cat:'Chocolate', name:'Chocolate Truffle Pastry', description:'Decadent layered pastry with dark chocolate ganache.', image:u('photo-1578985545062-69928b1d9587'), price:189, discount_price:149, food_type:'VEG', rating:4.6, preparation_time:'10 min', is_available:true, ingredients:['dark chocolate','cream','flour','egg','butter']},
+ {id:'f31',restaurant_id:'r14',cat:'Donuts', name:'Assorted Glazed Donuts (6 pcs)', description:'Box of six freshly glazed assorted donuts.', image:u('photo-1551024601-bec78aea704b'), price:249, discount_price:199, food_type:'VEG', rating:4.5, preparation_time:'15 min', is_available:true, ingredients:['flour','sugar','milk','egg','butter','chocolate glaze']},
+ {id:'f34',restaurant_id:'r15',cat:'North Indian', name:'Amritsari Chole Kulche', description:'Buttery kulche with spicy chickpea curry.', image:u('photo-1601050690597-df0568f70950'), price:199, discount_price:169, food_type:'VEG', rating:4.6, preparation_time:'25 min', is_available:true, ingredients:['wheat flour','chickpeas','butter','onion','spices']},
+ {id:'f35',restaurant_id:'r15',cat:'North Indian', name:'Tandoori Chicken', description:'Yogurt-spice marinated chicken grilled in the tandoor.', image:u('photo-1544025162-d76694265947'), price:339, discount_price:289, food_type:'NON_VEG', rating:4.5, preparation_time:'30 min', is_available:true, ingredients:['chicken','yogurt','spices','lemon']},
+ {id:'m46',restaurant_id:'r16',cat:'Fast Food', name:'Chicken Kathi Roll', description:'Juicy chicken wrapped in flaky paratha.', image:u('photo-1626700051175-6818013e1d4f'), price:179, food_type:'NON_VEG', rating:4.3, preparation_time:'20 min', is_available:true, ingredients:['wheat flour','chicken','egg','onion']},
+ {id:'m47',restaurant_id:'r16',cat:'Fast Food', name:'Paneer Kathi Roll', description:'Spiced paneer with onions in a roll.', image:u('photo-1626700051175-6818013e1d4f'), price:149, food_type:'VEG', rating:4.2, preparation_time:'20 min', is_available:true, ingredients:['wheat flour','paneer','onion']},
+ {id:'m49',restaurant_id:'r17',cat:'South Indian', name:'South Indian Thali', description:'Rice, dal, veggies, curd & papad platter.', image:u('photo-1585937421612-70a008356fbe'), price:199, discount_price:169, food_type:'VEG', rating:4.5, preparation_time:'25 min', is_available:true, ingredients:['rice','dal','vegetables','yogurt']},
+ {id:'m54',restaurant_id:'r18',cat:'Pizza', name:'Sourdough Margherita', description:'Slow-fermented sourdough with mozzarella.', image:u('photo-1565299624946-b28f40a0ae38'), price:399, food_type:'VEG', rating:4.4, preparation_time:'30 min', is_available:true, ingredients:['sourdough wheat','mozzarella cheese','tomato']},
+ {id:'m55',restaurant_id:'r18',cat:'Pizza', name:'BBQ Chicken Pizza', description:'Smoky BBQ chicken with caramelised onion.', image:u('photo-1574071318508-1cdbab80d002'), price:449, food_type:'NON_VEG', rating:4.5, preparation_time:'30 min', is_available:true, ingredients:['wheat flour','chicken','cheese','bbq sauce']},
+ {id:'m57',restaurant_id:'r18',cat:'Desserts', name:'Berry Cheesecake', description:'Baked cheesecake with fresh berries.', image:u('photo-1578985545062-69928b1d9587'), price:219, food_type:'VEG', rating:4.6, preparation_time:'10 min', is_available:true, ingredients:['cream cheese','egg','wheat flour','berries']},
+ {id:'m58',restaurant_id:'r18',cat:'Drinks', name:'Cold Brew Coffee', description:'18-hour slow-steeped cold brew.', image:u('photo-1495474472287-4d71bcdd2085'), price:149, food_type:'VEG', rating:4.3, preparation_time:'10 min', is_available:true, ingredients:['coffee']}
+];
+
+const ALLERGY_KEYWORDS = {
+  'Peanuts':['peanut'],
+  'Tree Nuts':['cashew','almond','walnut','pistachio','pecan','hazelnut'],
+  'Milk/Dairy':['milk','cheese','cream','butter','paneer','yogurt','curd','ghee','chenna','buttermilk','mascarpone','ice cream','cream cheese'],
+  'Gluten':['wheat','gluten','flour','maida','semolina','sooji','noodle','pasta','bun','bread','vermicelli','sourdough','noodles'],
+  'Wheat':['wheat','flour','maida','semolina','sooji','noodle','bun','bread','sourdough'],
+  'Soy':['soy','soya'],
+  'Eggs':['egg','mayonnaise'],
+  'Seafood':['fish','prawn','shrimp','crab','mussel','seafood','salmon','tuna','rohu','squid'],
+  'Shellfish':['prawn','shrimp','crab','mussel','lobster','shellfish','squid'],
+  'Sesame':['sesame','til'],
+  'Mustard':['mustard']
+};
+function ingredientAllergyHits(ings, myAllergies){
+  if(!ings || !myAllergies.length) return [];
+  const hits = [];
+  ings.forEach(ing => {
+    const s = ing.toLowerCase();
+    if(s.includes('coconut')) return;
+    myAllergies.forEach(a => {
+      const kws = ALLERGY_KEYWORDS[a] || [a.toLowerCase()];
+      if(kws.some(k => s.includes(k)) && !hits.includes(a)) hits.push(a);
+    });
+  });
+  return hits;
+}
+
+function toast(msg, type='success', icon){
+  const icons = { success:'fa-circle-check', error:'fa-circle-xmark', warning:'fa-triangle-exclamation', info:'fa-circle-info' };
+  const zone = document.getElementById('toastZone');
+  const t = document.createElement('div');
+  t.className = `toast ${type}`;
+  t.innerHTML = `<i class="fa-solid ${icon || icons[type]}"></i><span>${msg}</span><button class="t-close" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>`;
+  zone.appendChild(t);
+  const kill = () => { t.classList.add('leaving'); setTimeout(() => t.remove(), 320); };
+  t.querySelector('.t-close').addEventListener('click', kill);
+  setTimeout(kill, 3400);
+}
+let confirmCb = null;
+function showConfirm({title, text, okLabel='Confirm', okClass='btn-primary', icon='fa-triangle-exclamation', onOk}){
+  document.getElementById('confirmTitle').textContent = title;
+  document.getElementById('confirmText').innerHTML = text;
+  document.getElementById('confirmIcon').innerHTML = `<i class="fa-solid ${icon}"></i>`;
+  const ok = document.getElementById('confirmOk');
+  ok.textContent = okLabel; ok.className = 'btn ' + okClass;
+  confirmCb = onOk;
+  document.getElementById('confirmModal').classList.add('open');
+}
+document.getElementById('confirmCancel').addEventListener('click', () => document.getElementById('confirmModal').classList.remove('open'));
+document.getElementById('confirmOk').addEventListener('click', () => { document.getElementById('confirmModal').classList.remove('open'); if(confirmCb) confirmCb(); });
+document.getElementById('confirmModal').addEventListener('click', e => { if(e.target.id==='confirmModal') e.currentTarget.classList.remove('open'); });
+
+const sidebar = document.getElementById('sidebar'), sidebarOverlay = document.getElementById('sidebarOverlay');
+document.getElementById('menuBtn').addEventListener('click', () => { sidebar.classList.add('open'); sidebarOverlay.classList.add('open'); document.body.style.overflow='hidden'; });
+document.getElementById('sidebarClose').addEventListener('click', closeSidebar);
+sidebarOverlay.addEventListener('click', closeSidebar);
+function closeSidebar(){ sidebar.classList.remove('open'); sidebarOverlay.classList.remove('open'); document.body.style.overflow=''; }
+function renderSidebarUser(){
+  const usr = getUser(), box = document.getElementById('sidebarUser');
+  if(usr && usr.name){
+    const initials = usr.name.trim().split(/\s+/).map(w=>w[0]).slice(0,2).join('').toUpperCase();
+    const avContent = usr.avatar ? `<img src="${usr.avatar}" alt="Profile">` : initials;
+    box.innerHTML = `<div class="avatar">${avContent}</div>
+      <div><div class="u-name">${usr.name}</div><div class="u-sub">${usr.email || usr.phone || ''}</div></div>`;
+  }else{
+    box.innerHTML = `<div class="avatar"><i class="fa-solid fa-user"></i></div>
+      <div><div class="u-name">Welcome, Guest</div><div class="u-sub">Login for the full experience</div></div>`;
+  }
+}
+function renderCities(){
+  const cur = store.get('foody_location','Mumbai');
+  document.getElementById('locationName').textContent = cur;
+  document.getElementById('cityList').innerHTML = CITIES.map(c =>
+    `<button type="button" data-city="${c}" class="${c===cur?'active':''}"><i class="fa-solid fa-location-dot"></i> ${c}</button>`).join('');
+  document.querySelectorAll('#cityList button').forEach(b => b.addEventListener('click', () => {
+    store.set('foody_location', b.dataset.city);
+    document.getElementById('locationName').textContent = b.dataset.city;
+    togglePanel(document.getElementById('locationPanel'), false);
+    toast(`Delivery location set to ${b.dataset.city}`, 'info', 'fa-location-dot');
+  }));
+}
+function togglePanel(p, force){ p.classList.toggle('open', force===undefined ? !p.classList.contains('open') : force); }
+document.getElementById('locationBtn').addEventListener('click', e => { e.stopPropagation(); togglePanel(document.getElementById('locationPanel')); togglePanel(document.getElementById('notifPanel'), false); });
+function renderNotifs(){
+  const items = store.get('foody_notifications', [
+    {ico:'fa-motorcycle', cls:'green', text:'Your order #FD1042 is out for delivery.', time:'2 min ago'},
+    {ico:'fa-percent', cls:'orange', text:'50% OFF weekend offer is live! Use code FOODY50.', time:'1 hr ago'}
+  ]);
+  const read = store.get('foody_notifs_read', false);
+  document.getElementById('notifDot').classList.toggle('hidden', read || items.length===0);
+  document.getElementById('notifList').innerHTML = items.length
+    ? items.map(n => `<div class="notif-item"><div class="n-ico ${n.cls}"><i class="fa-solid ${n.ico}"></i></div><div>${n.text}<div class="n-time">${n.time}</div></div></div>`).join('')
+    : `<div class="notif-empty"><i class="fa-regular fa-bell-slash"></i><br>No notifications yet.</div>`;
+}
+document.getElementById('notifBtn').addEventListener('click', e => { e.stopPropagation(); togglePanel(document.getElementById('notifPanel')); togglePanel(document.getElementById('locationPanel'), false); });
+document.getElementById('markReadBtn').addEventListener('click', () => { store.set('foody_notifs_read', true); renderNotifs(); });
+document.addEventListener('click', () => { togglePanel(document.getElementById('locationPanel'), false); togglePanel(document.getElementById('notifPanel'), false); });
+document.querySelectorAll('.dropdown-panel').forEach(p => p.addEventListener('click', e => e.stopPropagation()));
+document.getElementById('headerSearchForm').addEventListener('submit', e => {
+  e.preventDefault();
+  const q = document.getElementById('headerSearchInput').value.trim();
+  location.href = 'search.html' + (q ? '?q=' + encodeURIComponent(q) : '');
+});
+document.getElementById('logoutBtn').addEventListener('click', () => {
+  showConfirm({
+    title:'Logout?', text:'Your session will be cleared.',
+    okLabel:'Logout', okClass:'btn-primary', icon:'fa-right-from-bracket',
+    onOk(){ store.del('foody_user'); location.href='login.html'; }
+  });
+});
+
+/* ================= SURPRISE ENGINE ================= */
+let currentLevel = null;
+let currentPicks = [];
+
+/**
+ * Check whether the user has ANY preferences/allergies saved.
+ * Returns an object describing what's missing.
+ *   { hasAnyPrefs: bool, hasAllergies: bool, missingPrefs: bool, missingAllergies: bool }
+ */
+function checkSetupState(){
+  const usr = getUser();
+  if(!usr) return { loggedIn:false, hasAny:false };
+  const prefs = getPreferences();
+  const allergies = getAllergies();
+  const hasPrefs = !!(prefs && (prefs.food_type || (prefs.cuisines && prefs.cuisines.length) || (prefs.dislikes && prefs.dislikes.length)));
+  const hasAllergies = Array.isArray(allergies) && allergies.length > 0;
+  return {
+    loggedIn:true,
+    hasPrefs,
+    hasAllergies,
+    hasAny: hasPrefs || hasAllergies,
+    missingPrefs: !hasPrefs,
+    missingAllergies: !hasAllergies
+  };
+}
+
+/** Render inline chips under hero + optional nudge banner (NO redirect) */
+function renderPrefSummary(){
+  const state = checkSetupState();
+  const chips = [];
+
+  if(!state.loggedIn){
+    chips.push(`<span class="pref-chip missing"><i class="fa-solid fa-lock"></i> <a href="login.html">Login to personalise surprises</a></span>`);
+  } else {
+    const prefs = getPreferences();
+    const allergens = getAllergies();
+
+    if(prefs && prefs.food_type){
+      const ft = prefs.food_type;
+      const ftLabel = ft === 'VEG' ? '🥬 Vegetarian' : (ft === 'NON_VEG' ? '🍗 Non-vegetarian' : '🍽️ Both Veg & Non-veg');
+      chips.push(`<span class="pref-chip"><i class="fa-solid fa-sliders"></i> ${ftLabel}</span>`);
+    } else {
+      chips.push(`<span class="pref-chip missing"><i class="fa-solid fa-sliders"></i> Food type: any — <a href="food-preferences.html">set</a></span>`);
+    }
+
+    if(prefs && prefs.cuisines && prefs.cuisines.length){
+      chips.push(`<span class="pref-chip"><i class="fa-solid fa-utensils"></i> Likes: ${prefs.cuisines.slice(0,3).join(', ')}${prefs.cuisines.length>3?' +':''}</span>`);
+    } else {
+      chips.push(`<span class="pref-chip missing"><i class="fa-solid fa-utensils"></i> Favourite cuisines: none — <a href="food-preferences.html">add</a></span>`);
+    }
+
+    if(prefs && prefs.dislikes && prefs.dislikes.length){
+      chips.push(`<span class="pref-chip"><i class="fa-solid fa-xmark"></i> Avoiding: ${prefs.dislikes.slice(0,2).join(', ')}</span>`);
+    }
+
+    if(allergens.length){
+      chips.push(`<span class="pref-chip warn"><i class="fa-solid fa-shield-halved"></i> Allergies: ${allergens.slice(0,3).join(', ')}${allergens.length>3?' +':''}</span>`);
+    } else {
+      chips.push(`<span class="pref-chip missing"><i class="fa-solid fa-shield-halved"></i> Allergies: none saved — <a href="food-allergies.html">add</a></span>`);
+    }
+  }
+
+  document.getElementById('prefSummary').innerHTML = chips.join('');
+
+  /* Setup nudge banner — only shown if NOTHING at all is saved AND user is logged in */
+  const nudgeBox = document.getElementById('setupNudge');
+  if(state.loggedIn && !state.hasAny){
+    nudgeBox.innerHTML = `
+      <div class="setup-nudge">
+        <i class="fa-solid fa-lightbulb"></i>
+        <span><b>Make surprises smarter!</b> You haven't saved any preferences or allergies yet. We'll use top-rated dishes for now, but setting them gives much better recommendations.</span>
+        <div class="nudge-acts">
+          <a href="food-preferences.html"><i class="fa-solid fa-sliders"></i> Set Preferences</a>
+          <a href="food-allergies.html"><i class="fa-solid fa-shield-halved"></i> Add Allergies</a>
+        </div>
+      </div>`;
+  } else {
+    nudgeBox.innerHTML = '';
+  }
+}
+
+/* Build a SAFE pool: always respects food_type AND filters allergens (hard rule) */
+function buildSafePool(){
+  const prefs = getPreferences();
+  const allergens = getAllergies();
+  const foodTypePref = prefs && prefs.food_type ? prefs.food_type : 'ANY';
+  const dislikedCats = (prefs && prefs.dislikes) ? prefs.dislikes.map(s => s.toLowerCase()) : [];
+
+  return FOODS.filter(f => {
+    if(f.is_available === false) return false;
+    const rest = restById(f.restaurant_id);
+    if(rest && !rest.is_active) return false;
+    if(foodTypePref !== 'ANY' && f.food_type !== foodTypePref) return false;
+    // Hard allergen filter — always applied
+    const hits = ingredientAllergyHits(f.ingredients || [], allergens);
+    if(hits.length) return false;
+    if(dislikedCats.length && dislikedCats.some(d => f.cat && f.cat.toLowerCase().includes(d))) return false;
+    return true;
+  });
+}
+
+/* Build favourites subset. Falls back to top-rated if user has no saved cuisines. */
+function buildFavourites(safePool){
+  const prefs = getPreferences();
+  if(!prefs || !prefs.cuisines || !prefs.cuisines.length){
+    // FALLBACK: no cuisines saved → treat top-rated dishes as favourites
+    return [...safePool].sort((a,b) => b.rating - a.rating);
+  }
+  const likedCuisines = prefs.cuisines.map(c => c.toLowerCase());
+  const favs = safePool.filter(f => {
+    if(!f.cat) return false;
+    const catLow = f.cat.toLowerCase();
+    return likedCuisines.some(lc => catLow.includes(lc) || lc.includes(catLow));
+  });
+  if(favs.length < 4){
+    const extras = safePool.filter(f => !favs.includes(f)).sort((a,b) => b.rating - a.rating);
+    return [...favs, ...extras];
+  }
+  return favs;
+}
+
+function pickRandom(arr, n){
+  if(arr.length <= n) return [...arr];
+  const copy = [...arr];
+  const picked = [];
+  for(let i = 0; i < n && copy.length; i++){
+    const idx = Math.floor(Math.random() * copy.length);
+    picked.push(copy.splice(idx, 1)[0]);
+  }
+  return picked;
+}
+
+function shuffle(arr){
+  const c = [...arr];
+  for(let i = c.length - 1; i > 0; i--){
+    const j = Math.floor(Math.random() * (i + 1));
+    [c[i], c[j]] = [c[j], c[i]];
+  }
+  return c;
+}
+
+function generatePicks(level){
+  const safePool = buildSafePool();
+  const favs = buildFavourites(safePool);
+  const wishlist = store.get('foody_wishlist', {foods:[], restaurants:[]});
+  const wishedFoodIds = wishlist.foods || [];
+  const prefs = getPreferences();
+  const likedCuisines = (prefs && prefs.cuisines) ? prefs.cuisines.map(c => c.toLowerCase()) : [];
+  const hasCuisines = !!(prefs && prefs.cuisines && prefs.cuisines.length);
+
+  let picks = [];
+
+  if(level === 'safe'){
+    picks = pickRandom(favs, 4).map(f => {
+      const reason = hasCuisines
+        ? `Matches your love for ${f.cat}`
+        : `Top-rated ${f.food_type === 'VEG' ? 'veg' : 'non-veg'} dish`;
+      return { dish: f, reason, reasonIcon:'fa-heart', reasonColor:'var(--color-green)' };
+    });
+  }
+  else if(level === 'balanced'){
+    const favPicks = pickRandom(favs, 2);
+    const usedIds = new Set(favPicks.map(f => f.id));
+    const newDishes = safePool.filter(f => {
+      if(usedIds.has(f.id)) return false;
+      if(wishedFoodIds.includes(f.id)) return false;
+      if(!hasCuisines) return !usedIds.has(f.id); // if no cuisines, just avoid duplicates
+      if(!f.cat) return true;
+      const catLow = f.cat.toLowerCase();
+      return !likedCuisines.some(lc => catLow.includes(lc) || lc.includes(catLow));
+    });
+    const newPicks = newDishes.length >= 2
+      ? pickRandom(newDishes, 2)
+      : pickRandom(safePool.filter(f => !usedIds.has(f.id)), 2);
+    picks = [
+      ...favPicks.map(f => ({ dish:f, reason: hasCuisines ? 'From your favourites' : 'Top-rated pick', reasonIcon:'fa-heart', reasonColor:'var(--color-green)' })),
+      ...newPicks.map(f => ({ dish:f, reason: hasCuisines ? 'New cuisine for you!' : 'Worth trying', reasonIcon:'fa-sparkles', reasonColor:'var(--color-orange)' }))
+    ];
+  }
+  else if(level === 'ultimate'){
+    picks = pickRandom(safePool, 4).map(f => {
+      const reasons = ['Random pick from the menu','Chef\'s wildcard','Mystery pick','Let\'s try something new','Off the beaten path'];
+      return { dish:f, reason: reasons[Math.floor(Math.random()*reasons.length)], reasonIcon:'fa-dice', reasonColor:'var(--color-red)' };
+    });
+  }
+
+  return shuffle(picks);
+}
+
+function renderResults(picks, level){
+  const section = document.getElementById('resultsSection');
+  const area = document.getElementById('resultsArea');
+  const icon = document.getElementById('resultsIcon');
+  const title = document.getElementById('resultsTitle');
+  const badge = document.getElementById('resultsBadge');
+
+  const labels = {
+    safe: { t:'Your safe picks', badge:'🟢 Safe Surprise', icon:'fa-shield-halved' },
+    balanced: { t:'A balanced mix', badge:'🟡 Balanced Surprise', icon:'fa-scale-balanced' },
+    ultimate: { t:'Wild picks incoming!', badge:'🔴 Ultimate Surprise', icon:'fa-bolt' }
+  };
+  const meta = labels[level];
+  title.textContent = meta.t;
+  badge.textContent = meta.badge;
+  badge.className = 'badge ' + (level === 'safe' ? 'safe' : level === 'balanced' ? 'bal' : 'ult');
+  icon.className = 'fa-solid ' + meta.icon;
+  icon.style.color = level === 'safe' ? 'var(--color-green)' : (level === 'balanced' ? 'var(--color-orange)' : 'var(--color-red)');
+
+  // ONLY show empty state if TRULY zero dishes passed the safety filters
+  if(!picks.length){
+    area.innerHTML = `
+      <div class="state-block">
+        <div class="big-ico"><i class="fa-solid fa-face-frown"></i></div>
+        <h4>No dishes match your filters</h4>
+        <p>Your allergy and food-type settings are very strict — every dish on the menu got filtered out. Try relaxing one of your saved preferences.</p>
+        <div class="row">
+          <a href="food-preferences.html" class="btn btn-outline"><i class="fa-solid fa-sliders"></i> Edit Preferences</a>
+          <a href="food-allergies.html" class="btn btn-outline"><i class="fa-solid fa-shield-halved"></i> Edit Allergies</a>
+        </div>
+      </div>`;
+    section.classList.remove('hidden');
+    section.scrollIntoView({behavior:'smooth',block:'start'});
+    return;
+  }
+
+  area.innerHTML = `<div class="dish-grid">${picks.map((p, i) => {
+    const f = p.dish;
+    const rest = restById(f.restaurant_id);
+    const disc = f.discount_price ? Math.round((1 - f.discount_price/f.price)*100) : 0;
+    const unitP = f.discount_price ?? f.price;
+    const isVeg = f.food_type === 'VEG';
+    return `
+      <article class="dish-card" style="animation-delay:${i*0.1}s">
+        <div class="dish-img-wrap">
+          <img src="${f.image}" alt="${f.name}" onerror="imgErr(this)">
+          <span class="type-badge ${isVeg?'veg':'nonveg'}"><span class="food-mark ${isVeg?'':'nonveg'}"></span> ${isVeg?'VEG':'NON-VEG'}</span>
+          <span class="reason-badge"><i class="fa-solid ${p.reasonIcon}" style="color:${p.reasonColor}"></i> ${p.reason}</span>
+          ${disc > 0 ? `<span class="disc-badge"><i class="fa-solid fa-percent"></i> ${disc}% OFF</span>` : ''}
+        </div>
+        <div class="dish-body">
+          <h3>${f.name}</h3>
+          <div class="rest-line"><i class="fa-solid fa-store"></i> ${rest ? rest.name : 'Restaurant'} · ${f.cat}</div>
+          <p class="dish-desc">${f.description}</p>
+          <div class="dish-meta">
+            <span class="rate"><i class="fa-solid fa-star"></i> ${f.rating}</span>
+            <span><i class="fa-regular fa-clock"></i> ${f.preparation_time}</span>
+            ${rest ? `<span><i class="fa-solid fa-motorcycle"></i> ${rest.delivery_time}</span>` : ''}
+          </div>
+          <div class="dish-foot">
+            <div class="price-box">
+              <span class="now">₹${unitP}</span>
+              ${disc > 0 ? `<span class="old">₹${f.price}</span>` : ''}
+            </div>
+            <a href="food.html?id=${f.id}" class="dish-add" data-id="${f.id}"><i class="fa-solid fa-circle-info"></i> View dish</a>
+          </div>
+        </div>
+      </article>`;
+  }).join('')}</div>`;
+
+  section.classList.remove('hidden');
+  setTimeout(() => section.scrollIntoView({behavior:'smooth',block:'start'}), 120);
+}
+
+/* Level card clicks — NO redirect. Results always shown. */
+document.querySelectorAll('.level-card').forEach(card => {
+  card.addEventListener('click', () => {
+    const level = card.dataset.level;
+    // Login check only — we can still show results for guests (treated as "ANY" food type, no allergies)
+    const state = checkSetupState();
+    if(!state.loggedIn){
+      showConfirm({
+        title:'Login recommended',
+        text:'You can still get random recommendations, but for personalised surprises please log in so we can use your preferences.',
+        okLabel:'Login now',
+        cancelLabel:'Continue as guest',
+        onOk(){ location.href = 'login.html'; }
+      });
+      // Allow continuing as guest with generic picks
+    }
+    currentLevel = level;
+    currentPicks = generatePicks(level);
+    renderResults(currentPicks, level);
+    // Gentle toast if user has no preferences
+    if(state.loggedIn && !state.hasAny){
+      toast('Showing top-rated dishes. Set preferences for better picks!', 'info', 'fa-lightbulb');
+    }
+  });
+});
+
+document.getElementById('rerollBtn').addEventListener('click', () => {
+  if(!currentLevel) return;
+  const icon = document.getElementById('resultsIcon');
+  icon.classList.add('dice-spin');
+  setTimeout(() => icon.classList.remove('dice-spin'), 600);
+  currentPicks = generatePicks(currentLevel);
+  renderResults(currentPicks, currentLevel);
+  toast('Re-rolled! Fresh picks coming up.', 'info', 'fa-dice');
+});
+
+document.getElementById('changeLevelBtn').addEventListener('click', () => {
+  document.getElementById('resultsSection').classList.add('hidden');
+  currentLevel = null;
+  currentPicks = [];
+  document.getElementById('levelsSection').scrollIntoView({behavior:'smooth',block:'start'});
+});
+
+function init(){
+  renderSidebarUser(); renderCities(); renderNotifs(); updateCartBadge();
+  renderPrefSummary();
+  window.addEventListener('storage', () => { updateCartBadge(); renderPrefSummary(); });
+}
+document.addEventListener('DOMContentLoaded', init);
+</script>
+</body>
+</html>

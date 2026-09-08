@@ -1,0 +1,1249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Checkout | Foody</title>
+<meta name="description" content="Checkout on Foody — choose delivery address, payment method and review your order.">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+/* ============ RESET & TOKENS ============ */
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --color-yellow:#FFC107; --color-orange:#FF9800; --color-green:#2E7D32; --color-red:#D32F2F;
+  --color-black:#111111; --color-dark:#181818; --color-white:#FFFFFF;
+  --color-background:#F7F7F7; --color-light-gray:#F1F1F1; --color-border:#E2E2E2;
+  --color-text:#222222; --color-muted:#777777;
+  --gradient-primary:linear-gradient(135deg,#FFC107 0%,#FF9800 100%);
+  --shadow-sm:0 2px 8px rgba(0,0,0,.06); --shadow-md:0 6px 20px rgba(0,0,0,.10); --shadow-lg:0 14px 40px rgba(0,0,0,.16);
+  --radius-sm:8px; --radius-md:14px; --radius-lg:20px;
+  --header-h:66px; --sidebar-w:280px;
+  --font:'Poppins',system-ui,-apple-system,Segoe UI,sans-serif;
+}
+html{scroll-behavior:smooth}
+body{font-family:var(--font);background:var(--color-background);color:var(--color-text);overflow-x:hidden;line-height:1.55;font-size:15px}
+img{display:block;max-width:100%}
+a{text-decoration:none;color:inherit}
+button{font-family:inherit;cursor:pointer;border:none;background:none}
+ul{list-style:none}
+::-webkit-scrollbar{height:8px;width:8px}
+::-webkit-scrollbar-thumb{background:#ccc;border-radius:8px}
+.container{width:min(1220px,92%);margin-inline:auto}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;font-weight:600;border-radius:var(--radius-sm);padding:12px 22px;font-size:.9rem;transition:.25s;white-space:nowrap}
+.btn-primary{background:var(--gradient-primary);color:var(--color-black);box-shadow:0 6px 16px rgba(255,152,0,.35)}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 10px 22px rgba(255,152,0,.45)}
+.btn-dark{background:var(--color-black);color:#fff}
+.btn-dark:hover{background:#000;transform:translateY(-2px)}
+.btn-outline{border:2px solid var(--color-border);color:var(--color-text);background:#fff}
+.btn-outline:hover{border-color:var(--color-orange);color:var(--color-orange)}
+.btn-danger{background:var(--color-red);color:#fff}
+.btn[disabled]{opacity:.55;cursor:not-allowed;transform:none!important}
+
+/* ============ HEADER ============ */
+.header{position:sticky;top:0;z-index:900;background:var(--color-black);color:#fff;box-shadow:0 2px 14px rgba(0,0,0,.35)}
+.header-inner{display:flex;align-items:center;gap:14px;height:var(--header-h)}
+.icon-btn{width:40px;height:40px;border-radius:10px;display:grid;place-items:center;color:#fff;font-size:1.05rem;position:relative;transition:.2s;background:rgba(255,255,255,.08)}
+.icon-btn:hover{background:var(--color-yellow);color:var(--color-black)}
+.logo{display:flex;align-items:center;gap:9px;font-size:1.4rem;font-weight:800;letter-spacing:.5px}
+.logo-badge{width:38px;height:38px;border-radius:12px;background:var(--gradient-primary);display:grid;place-items:center;color:var(--color-black);font-size:1.05rem;box-shadow:0 4px 12px rgba(255,193,7,.4)}
+.logo span{color:#fff}.logo b{color:var(--color-yellow);font-weight:800}
+.location-btn{display:flex;align-items:center;gap:7px;color:#eee;font-size:.82rem;padding:8px 10px;border-radius:10px;transition:.2s;max-width:150px}
+.location-btn:hover{background:rgba(255,255,255,.08)}
+.location-btn i.fa-location-dot{color:var(--color-yellow)}
+.location-btn .loc-name{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:600}
+.location-btn i.fa-chevron-down{font-size:.6rem;color:#999}
+.header-search{flex:1;max-width:430px;display:flex;align-items:center;background:#fff;border-radius:var(--radius-sm);overflow:hidden;border:2px solid transparent;transition:.2s}
+.header-search:focus-within{border-color:var(--color-yellow)}
+.header-search i{padding:0 4px 0 14px;color:var(--color-muted)}
+.header-search input{flex:1;border:none;outline:none;padding:10px;font-family:inherit;font-size:.87rem;min-width:0}
+.header-search button{background:var(--gradient-primary);color:var(--color-black);font-weight:700;font-size:.8rem;padding:10px 16px;height:100%}
+.top-nav{display:flex;gap:4px;margin-left:auto}
+.top-nav a{color:#ddd;font-size:.87rem;font-weight:600;padding:9px 13px;border-radius:9px;transition:.2s;display:flex;align-items:center;gap:7px}
+.top-nav a i{font-size:.85rem}
+.top-nav a:hover{color:var(--color-yellow);background:rgba(255,255,255,.07)}
+.header-actions{display:flex;align-items:center;gap:8px}
+.cart-link{position:relative}
+.cart-badge{position:absolute;top:-4px;right:-4px;min-width:19px;height:19px;padding:0 4px;border-radius:20px;background:var(--color-red);color:#fff;font-size:.68rem;font-weight:700;display:grid;place-items:center;border:2px solid var(--color-black)}
+.cart-badge.hidden{display:none}
+.badge-dot{position:absolute;top:2px;right:2px;width:9px;height:9px;border-radius:50%;background:var(--color-red);border:2px solid var(--color-black)}
+.badge-dot.hidden{display:none}
+.dropdown-wrap{position:relative}
+.dropdown-panel{position:absolute;top:calc(100% + 10px);right:0;background:#fff;color:var(--color-text);border-radius:var(--radius-md);box-shadow:var(--shadow-lg);width:300px;opacity:0;visibility:hidden;transform:translateY(8px);transition:.22s;z-index:950;overflow:hidden}
+.dropdown-panel.open{opacity:1;visibility:visible;transform:translateY(0)}
+.dd-head{display:flex;justify-content:space-between;align-items:center;padding:13px 16px;border-bottom:1px solid var(--color-border);font-weight:700;font-size:.9rem}
+.dd-head button{color:var(--color-orange);font-size:.75rem;font-weight:600}
+.notif-item{display:flex;gap:11px;padding:13px 16px;border-bottom:1px solid var(--color-light-gray);font-size:.8rem;transition:.15s}
+.notif-item:last-child{border-bottom:none}
+.notif-item:hover{background:var(--color-light-gray)}
+.notif-item .n-ico{width:34px;height:34px;flex:none;border-radius:10px;display:grid;place-items:center;font-size:.85rem}
+.n-ico.orange{background:#FFF3E0;color:var(--color-orange)}
+.n-ico.green{background:#E8F5E9;color:var(--color-green)}
+.n-ico.red{background:#FFEBEE;color:var(--color-red)}
+.notif-item .n-time{color:var(--color-muted);font-size:.7rem;margin-top:2px}
+.notif-empty{padding:26px;text-align:center;color:var(--color-muted);font-size:.83rem}
+.city-list{max-height:300px;overflow:auto;padding:6px}
+.city-list button{display:flex;align-items:center;gap:10px;width:100%;text-align:left;padding:10px 12px;border-radius:8px;font-size:.86rem;transition:.15s}
+.city-list button:hover{background:var(--color-light-gray)}
+.city-list button.active{background:#FFF8E1;color:#a56b00;font-weight:600}
+.city-list button i{color:var(--color-orange)}
+.subnav{display:none;background:var(--color-dark);border-top:1px solid rgba(255,255,255,.08);overflow-x:auto;scrollbar-width:none}
+.subnav::-webkit-scrollbar{display:none}
+.subnav a{flex:none;color:#ccc;font-size:.83rem;font-weight:600;padding:10px 16px;display:flex;align-items:center;gap:7px}
+
+/* ============ SIDEBAR ============ */
+.sidebar-overlay{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:980;opacity:0;visibility:hidden;transition:.3s;backdrop-filter:blur(2px)}
+.sidebar-overlay.open{opacity:1;visibility:visible}
+.sidebar{position:fixed;top:0;left:0;bottom:0;width:var(--sidebar-w);max-width:85vw;background:#fff;z-index:990;transform:translateX(-102%);transition:transform .32s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column;box-shadow:var(--shadow-lg)}
+.sidebar.open{transform:translateX(0)}
+.sidebar-head{display:flex;align-items:center;justify-content:space-between;padding:16px 18px;background:var(--color-black);color:#fff}
+.sidebar-head .logo{font-size:1.2rem}
+.sidebar-close{width:36px;height:36px;border-radius:9px;display:grid;place-items:center;color:#fff;background:rgba(255,255,255,.1);transition:.2s}
+.sidebar-close:hover{background:var(--color-red)}
+.sidebar-user{display:flex;align-items:center;gap:12px;padding:18px;border-bottom:1px solid var(--color-border);background:var(--color-light-gray)}
+.avatar{width:46px;height:46px;border-radius:50%;background:var(--gradient-primary);color:var(--color-black);display:grid;place-items:center;font-weight:800;font-size:1.1rem;flex:none}
+.sidebar-user .u-name{font-weight:700;font-size:.92rem;line-height:1.2}
+.sidebar-user .u-sub{font-size:.75rem;color:var(--color-muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:160px}
+.sidebar-nav{flex:1;overflow-y:auto;padding:12px}
+.sidebar-nav a{display:flex;align-items:center;gap:13px;padding:12px 14px;border-radius:var(--radius-sm);font-size:.9rem;font-weight:600;margin-bottom:3px;transition:.2s;position:relative}
+.sidebar-nav a i{width:22px;text-align:center;color:var(--color-muted);font-size:1rem;transition:.2s}
+.sidebar-nav a:hover{background:#FFF8E1;color:#b26a00;transform:translateX(3px)}
+.sidebar-nav a:hover i{color:var(--color-orange)}
+.sidebar-nav a.active{background:var(--gradient-primary);color:var(--color-black)}
+.sidebar-nav a.active i{color:var(--color-black)}
+.sidebar-nav a.active::before{content:'';position:absolute;left:-12px;top:20%;bottom:20%;width:4px;border-radius:4px;background:var(--color-orange)}
+.sidebar-divider{height:1px;background:var(--color-border);margin:10px 6px}
+.sidebar-foot{padding:14px;border-top:1px solid var(--color-border)}
+.logout-btn{width:100%;display:flex;align-items:center;gap:13px;padding:12px 14px;border-radius:var(--radius-sm);font-size:.9rem;font-weight:600;color:var(--color-red);transition:.2s}
+.logout-btn:hover{background:#FFEBEE}
+
+/* ============ PAGE HEAD ============ */
+.page-head{background:var(--color-dark);color:#fff;padding:36px 0;position:relative;overflow:hidden}
+.page-head::before{content:'';position:absolute;width:460px;height:460px;border-radius:50%;background:radial-gradient(circle,rgba(255,152,0,.2),transparent 65%);top:-190px;right:-90px;pointer-events:none}
+.page-head h1{font-size:clamp(1.5rem,3vw,2.1rem);font-weight:800;display:flex;align-items:center;gap:12px;position:relative}
+.page-head h1 i{color:var(--color-yellow);font-size:.9em}
+.page-head p{color:#b5b5b5;font-size:.9rem;margin-top:6px;position:relative}
+
+/* ============ STEPPER ============ */
+.stepper{display:flex;align-items:flex-start;justify-content:center;gap:0;background:#fff;border:1px solid var(--color-border);border-radius:var(--radius-lg);padding:20px 18px;margin-bottom:22px}
+.step{display:flex;align-items:center;gap:10px;flex:1;min-width:0}
+.step .dot{width:42px;height:42px;flex:none;border-radius:50%;display:grid;place-items:center;font-weight:800;font-size:.95rem;background:var(--color-light-gray);color:var(--color-muted);border:2px solid var(--color-border);transition:.3s}
+.step .s-txt{min-width:0}
+.step .s-title{font-size:.86rem;font-weight:700;color:var(--color-muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.step .s-sub{font-size:.68rem;color:#aaa}
+.step .bar{flex:1;height:3px;background:var(--color-border);border-radius:3px;margin:0 12px;min-width:22px;transition:.4s}
+.step.done .dot{background:var(--color-green);border-color:var(--color-green);color:#fff}
+.step.done .s-title{color:var(--color-green)}
+.step.done .bar{background:var(--color-green)}
+.step.active .dot{background:var(--gradient-primary);border-color:transparent;color:var(--color-black);box-shadow:0 6px 16px rgba(255,152,0,.4);animation:pulse 1.8s infinite}
+.step.active .s-title{color:var(--color-black)}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(255,152,0,.35)}50%{box-shadow:0 0 0 9px rgba(255,152,0,0)}}
+
+/* ============ CHECKOUT LAYOUT ============ */
+.checkout-layout{display:grid;grid-template-columns:1fr 380px;gap:26px;padding:4px 0 60px;align-items:start}
+.panel{background:#fff;border:1px solid var(--color-border);border-radius:var(--radius-lg);padding:22px;animation:fadeSlide .35s both}
+@keyframes fadeSlide{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+.panel-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:16px;flex-wrap:wrap}
+.panel-head h2{font-size:1.1rem;font-weight:700;display:flex;gap:9px;align-items:center}
+.panel-head h2 i{color:var(--color-orange)}
+
+/* ---- Address cards ---- */
+.addr-card{display:flex;gap:13px;border:2px solid var(--color-border);border-radius:var(--radius-md);padding:15px;margin-bottom:12px;transition:.22s;cursor:pointer;position:relative;background:#fff}
+.addr-card:hover{border-color:#ffd782;box-shadow:var(--shadow-sm)}
+.addr-card.selected{border-color:var(--color-orange);background:#FFFDF6;box-shadow:0 6px 18px rgba(255,152,0,.15)}
+.addr-radio{width:20px;height:20px;flex:none;border-radius:50%;border:2px solid var(--color-border);margin-top:3px;display:grid;place-items:center;transition:.2s}
+.addr-card.selected .addr-radio{border-color:var(--color-orange)}
+.addr-card.selected .addr-radio::after{content:'';width:10px;height:10px;border-radius:50%;background:var(--color-orange)}
+.addr-body{flex:1;min-width:0}
+.addr-top{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.addr-top .a-type{display:inline-flex;align-items:center;gap:6px;font-size:.7rem;font-weight:700;background:var(--color-light-gray);padding:3px 9px;border-radius:6px;color:var(--color-muted);text-transform:uppercase;letter-spacing:.4px}
+.addr-card.selected .a-type{background:#FFF3E0;color:#b26a00}
+.addr-top .a-label{font-weight:700;font-size:.95rem}
+.default-badge{display:inline-flex;align-items:center;gap:5px;background:#E8F5E9;color:var(--color-green);border:1px solid #c8e6c9;font-size:.66rem;font-weight:700;padding:3px 9px;border-radius:20px;letter-spacing:.3px}
+.addr-name{font-size:.85rem;font-weight:600;margin-top:6px}
+.addr-name span{color:var(--color-muted);font-weight:500}
+.addr-line{font-size:.8rem;color:var(--color-muted);margin-top:3px;line-height:1.5}
+.addr-actions{display:flex;gap:8px;margin-top:11px;flex-wrap:wrap}
+.mini-btn{display:inline-flex;align-items:center;gap:6px;font-size:.73rem;font-weight:700;padding:6px 12px;border-radius:7px;border:1.5px solid var(--color-border);color:var(--color-text);background:#fff;transition:.2s}
+.mini-btn:hover{border-color:var(--color-orange);color:var(--color-orange)}
+.mini-btn.danger{color:var(--color-red);border-color:#ffcdd2}
+.mini-btn.danger:hover{background:#FFEBEE;border-color:var(--color-red)}
+.mini-btn.star i{color:#bbb}
+.mini-btn.star.is-default i{color:var(--color-yellow)}
+
+/* ---- Payment methods ---- */
+.pay-card{display:flex;gap:14px;border:2px solid var(--color-border);border-radius:var(--radius-md);padding:17px;margin-bottom:12px;cursor:pointer;transition:.22s;background:#fff;align-items:flex-start}
+.pay-card:hover{border-color:#ffd782;box-shadow:var(--shadow-sm)}
+.pay-card.selected{border-color:var(--color-orange);background:#FFFDF6;box-shadow:0 6px 18px rgba(255,152,0,.15)}
+.pay-radio{width:20px;height:20px;flex:none;border-radius:50%;border:2px solid var(--color-border);margin-top:3px;display:grid;place-items:center;transition:.2s}
+.pay-card.selected .pay-radio{border-color:var(--color-orange)}
+.pay-card.selected .pay-radio::after{content:'';width:10px;height:10px;border-radius:50%;background:var(--color-orange)}
+.pay-ico{width:48px;height:48px;flex:none;border-radius:12px;display:grid;place-items:center;font-size:1.25rem;background:#FFF8E1;color:var(--color-orange)}
+.pay-info{flex:1;min-width:0}
+.pay-info h3{font-size:.98rem;font-weight:700;display:flex;gap:9px;align-items:center;flex-wrap:wrap}
+.pay-info p{font-size:.78rem;color:var(--color-muted);margin-top:4px;line-height:1.5}
+.sim-tag{background:#FFEBEE;color:var(--color-red);border:1px solid #ffcdd2;font-size:.62rem;font-weight:800;padding:3px 8px;border-radius:6px;letter-spacing:.4px}
+.future-note{display:flex;gap:9px;align-items:flex-start;font-size:.72rem;color:var(--color-muted);background:var(--color-light-gray);border-radius:var(--radius-sm);padding:11px 13px;margin-top:4px;line-height:1.5}
+.future-note i{color:var(--color-orange);margin-top:2px}
+
+/* ---- Confirm ---- */
+.review-block{border:1.5px solid var(--color-border);border-radius:var(--radius-md);padding:15px;margin-bottom:13px;position:relative}
+.review-block .rb-label{position:absolute;top:-10px;left:14px;background:#fff;padding:0 8px;font-size:.68rem;font-weight:800;color:var(--color-orange);letter-spacing:.6px;text-transform:uppercase}
+.review-block p{font-size:.83rem;color:var(--color-text);line-height:1.6}
+.review-block .rb-sub{color:var(--color-muted);font-size:.78rem}
+.review-block .change-btn{position:absolute;top:12px;right:12px;font-size:.72rem;font-weight:700;color:var(--color-orange)}
+.review-block .change-btn:hover{text-decoration:underline}
+.review-items{margin-top:8px}
+.review-items li{display:flex;justify-content:space-between;gap:10px;font-size:.8rem;padding:5px 0;border-bottom:1px dashed var(--color-border)}
+.review-items li:last-child{border-bottom:none}
+.review-items .ri-name{color:var(--color-text);font-weight:600}
+.review-items .ri-name span{color:var(--color-muted);font-weight:500}
+
+.step-nav{display:flex;justify-content:space-between;gap:12px;margin-top:20px;flex-wrap:wrap}
+.step-nav .btn{min-width:180px}
+
+/* ---- Summary ---- */
+.summary-card{background:#fff;border:1px solid var(--color-border);border-radius:var(--radius-lg);padding:22px;position:sticky;top:calc(var(--header-h) + 16px);box-shadow:var(--shadow-sm)}
+.summary-card h3{font-size:1.05rem;font-weight:700;display:flex;gap:9px;align-items:center;margin-bottom:14px}
+.summary-card h3 i{color:var(--color-orange)}
+.sum-items{max-height:260px;overflow-y:auto;padding-right:4px;margin-bottom:8px}
+.sum-item{display:flex;gap:11px;padding:9px 0;border-bottom:1px dashed var(--color-border);align-items:center}
+.sum-item:last-child{border-bottom:none}
+.sum-item img{width:52px;height:52px;border-radius:10px;object-fit:cover;flex:none;background:var(--color-light-gray)}
+.sum-item .si-body{flex:1;min-width:0}
+.sum-item .si-name{font-size:.8rem;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sum-item .si-meta{font-size:.7rem;color:var(--color-muted)}
+.sum-item .si-total{font-size:.83rem;font-weight:800;flex:none}
+.sum-row{display:flex;justify-content:space-between;align-items:center;font-size:.86rem;padding:7px 0}
+.sum-row .lbl{color:var(--color-muted);display:flex;gap:7px;align-items:center}
+.sum-row .lbl i{color:var(--color-orange);font-size:.78rem}
+.sum-row.discount .val{color:var(--color-green);font-weight:700}
+.sum-row .val.free{color:var(--color-green);font-weight:700}
+.sum-row .strike{text-decoration:line-through;color:var(--color-muted);font-size:.78rem;margin-right:6px}
+.sum-divider{height:1px;background:var(--color-border);margin:9px 0}
+.sum-total{display:flex;justify-content:space-between;align-items:center;font-size:1.12rem;font-weight:800;padding:6px 0 2px}
+.coupon-line{display:flex;align-items:center;gap:7px;font-size:.78rem;color:var(--color-green);font-weight:700}
+.coupon-line i{font-size:.75rem}
+.coupon-line.none{color:var(--color-muted);font-weight:500}
+.secure-note{display:flex;gap:8px;align-items:flex-start;font-size:.7rem;color:var(--color-muted);margin-top:14px;line-height:1.5}
+.secure-note i{color:var(--color-green);margin-top:2px}
+
+/* ---- forms / modal ---- */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:1100;display:grid;place-items:center;padding:18px;opacity:0;visibility:hidden;transition:.25s}
+.modal-overlay.open{opacity:1;visibility:visible}
+.modal{background:#fff;border-radius:var(--radius-lg);max-width:520px;width:100%;padding:26px 24px;transform:scale(.93);transition:.25s;box-shadow:var(--shadow-lg);max-height:92vh;overflow-y:auto}
+.modal-overlay.open .modal{transform:scale(1)}
+.modal-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
+.modal-head h3{font-size:1.1rem;display:flex;gap:9px;align-items:center}
+.modal-head h3 i{color:var(--color-orange)}
+.modal-x{width:36px;height:36px;border-radius:9px;display:grid;place-items:center;color:#888;background:var(--color-light-gray);transition:.2s}
+.modal-x:hover{background:#FFEBEE;color:var(--color-red)}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:13px}
+.form-group{display:flex;flex-direction:column;gap:6px}
+.form-group.full{grid-column:1/-1}
+.form-group label{font-size:.76rem;font-weight:700;color:var(--color-text)}
+.form-group label .req{color:var(--color-red)}
+.form-group input,.form-group select{border:1.5px solid var(--color-border);border-radius:9px;padding:10px 12px;font-family:inherit;font-size:.85rem;outline:none;transition:.2s;background:#fff;width:100%}
+.form-group input:focus{border-color:var(--color-yellow);box-shadow:0 0 0 3px rgba(255,193,7,.15)}
+.form-group input.invalid{border-color:var(--color-red);box-shadow:0 0 0 3px rgba(211,47,47,.12)}
+.f-err{font-size:.7rem;color:var(--color-red);font-weight:600;display:none}
+.f-err.show{display:block}
+.type-pick{display:flex;gap:8px}
+.type-pick button{flex:1;border:1.5px solid var(--color-border);border-radius:9px;padding:9px;font-size:.8rem;font-weight:700;color:var(--color-muted);transition:.2s;display:inline-flex;gap:7px;align-items:center;justify-content:center}
+.type-pick button.active{border-color:var(--color-orange);color:#b26a00;background:#FFF8E1}
+.check-row{display:flex;gap:9px;align-items:center;font-size:.8rem;font-weight:600;cursor:pointer}
+.check-row input{width:17px;height:17px;accent-color:var(--color-orange)}
+.modal-actions{display:flex;gap:10px;margin-top:20px}
+.modal-actions .btn{flex:1}
+.m-icon{width:60px;height:60px;border-radius:50%;display:grid;place-items:center;font-size:1.5rem;margin:0 auto 14px}
+.m-icon.danger{background:#FFEBEE;color:var(--color-red)}
+.modal.center{text-align:center;max-width:400px}
+
+/* ---- skeletons / states ---- */
+.skeleton{position:relative;overflow:hidden;background:#e8e8e8;border-radius:var(--radius-md)}
+.skeleton::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.65),transparent);animation:shimmer 1.3s infinite}
+@keyframes shimmer{from{transform:translateX(-100%)}to{transform:translateX(100%)}}
+.skel-block{border-radius:var(--radius-lg);overflow:hidden;background:#fff;border:1px solid var(--color-border);padding:22px;margin-bottom:16px}
+.skel-block .s-line{height:14px;margin-bottom:13px;border-radius:7px}
+.state-block{text-align:center;padding:64px 24px;background:#fff;border:1px dashed var(--color-border);border-radius:var(--radius-lg)}
+.state-block .big-ico{width:90px;height:90px;border-radius:50%;background:#FFF8E1;display:grid;place-items:center;margin:0 auto 18px;font-size:2.1rem;color:var(--color-orange)}
+.state-block.err .big-ico{background:#FFEBEE;color:var(--color-red)}
+.state-block h4{font-size:1.2rem;margin-bottom:6px}
+.state-block p{color:var(--color-muted);font-size:.88rem;margin-bottom:20px;max-width:420px;margin-inline:auto}
+.auth-gate{text-align:center;padding:80px 24px;background:#fff;border:1px dashed var(--color-border);border-radius:var(--radius-lg);margin:40px 0 60px}
+.auth-gate .big-ico{width:86px;height:86px;border-radius:50%;background:#FFF8E1;display:grid;place-items:center;margin:0 auto 18px;font-size:2rem;color:var(--color-orange)}
+.auth-gate h4{font-size:1.2rem;margin-bottom:6px}
+.auth-gate p{color:var(--color-muted);font-size:.88rem;margin:0 auto 20px;max-width:420px}
+
+/* ============ FOOTER ============ */
+.footer{background:var(--color-black);color:#bbb}
+.footer-grid{display:grid;grid-template-columns:1.4fr 1fr 1fr 1.2fr;gap:34px;padding:54px 0 40px}
+.footer h4{color:#fff;font-size:.95rem;margin-bottom:16px;font-weight:700}
+.footer .about{font-size:.83rem;line-height:1.7;max-width:290px;margin-top:12px}
+.footer-links a{display:block;font-size:.85rem;padding:5px 0;transition:.2s}
+.footer-links a:hover{color:var(--color-yellow);padding-left:5px}
+.footer-contact li{display:flex;gap:11px;font-size:.84rem;margin-bottom:11px;align-items:flex-start}
+.footer-contact i{color:var(--color-yellow);margin-top:3px}
+.socials{display:flex;gap:10px;margin-top:18px}
+.socials a{width:38px;height:38px;border-radius:10px;background:rgba(255,255,255,.08);display:grid;place-items:center;color:#ddd;transition:.25s}
+.socials a:hover{background:var(--gradient-primary);color:var(--color-black);transform:translateY(-3px)}
+.footer-bottom{border-top:1px solid rgba(255,255,255,.1);padding:17px 0;display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;font-size:.78rem;color:#888}
+.footer-bottom b{color:var(--color-yellow)}
+
+/* ============ TOAST ============ */
+.toast-zone{position:fixed;bottom:22px;right:22px;z-index:1200;display:flex;flex-direction:column;gap:10px;max-width:min(360px,90vw)}
+.toast{background:#fff;border-radius:var(--radius-md);box-shadow:var(--shadow-lg);padding:13px 16px;display:flex;align-items:flex-start;gap:11px;font-size:.85rem;font-weight:500;min-width:270px;animation:toastIn .3s;border-left:4px solid var(--color-green)}
+.toast i{font-size:1rem;margin-top:2px}
+.toast.success{border-color:var(--color-green)}.toast.success i{color:var(--color-green)}
+.toast.error{border-color:var(--color-red)}.toast.error i{color:var(--color-red)}
+.toast.warning{border-color:var(--color-orange)}.toast.warning i{color:var(--color-orange)}
+.toast.info{border-color:#1976D2}.toast.info i{color:#1976D2}
+.toast .t-close{margin-left:auto;color:#bbb;font-size:.8rem;padding:2px}
+@keyframes toastIn{from{opacity:0;transform:translateX(30px)}to{opacity:1;transform:translateX(0)}}
+.toast.leaving{opacity:0;transform:translateX(30px);transition:.3s}
+
+/* ============ RESPONSIVE ============ */
+@media(max-width:1024px){
+  .checkout-layout{grid-template-columns:1fr}
+  .summary-card{position:static;order:2}
+}
+@media(max-width:900px){
+  .top-nav{display:none}
+  .subnav{display:flex}
+  .footer-grid{grid-template-columns:1fr 1fr}
+}
+@media(max-width:768px){
+  .header-search{display:none}
+  .stepper{padding:14px 10px}
+  .step .s-sub{display:none}
+  .step .s-title{font-size:.72rem}
+  .step .dot{width:36px;height:36px;font-size:.85rem}
+}
+@media(max-width:520px){
+  .form-grid{grid-template-columns:1fr}
+  .step-nav .btn{flex:1;min-width:0}
+  .footer-grid{grid-template-columns:1fr;gap:26px;padding:40px 0 30px}
+  .toast-zone{left:14px;right:14px;bottom:14px}
+  .toast{min-width:0;width:100%}
+  .logo span{display:none}
+}
+</style>
+</head>
+<body>
+
+<!-- ================= HEADER ================= -->
+<header class="header">
+  <div class="container header-inner">
+    <button class="icon-btn" id="menuBtn" aria-label="Open menu"><i class="fa-solid fa-bars"></i></button>
+    <a href="index.html" class="logo" aria-label="Foody Home">
+      <span class="logo-badge"><i class="fa-solid fa-utensils"></i></span>
+      <span>Foo<b>dy</b></span>
+    </a>
+    <div class="dropdown-wrap">
+      <button class="location-btn" id="locationBtn" aria-label="Change delivery location">
+        <i class="fa-solid fa-location-dot"></i>
+        <span class="loc-name" id="locationName">Mumbai</span>
+        <i class="fa-solid fa-chevron-down"></i>
+      </button>
+      <div class="dropdown-panel" id="locationPanel">
+        <div class="dd-head"><span><i class="fa-solid fa-location-dot" style="color:var(--color-orange)"></i> Select Location</span></div>
+        <div class="city-list" id="cityList"></div>
+      </div>
+    </div>
+    <form class="header-search" id="headerSearchForm" role="search">
+      <i class="fa-solid fa-magnifying-glass"></i>
+      <input type="search" id="headerSearchInput" placeholder="Search restaurants or dishes..." aria-label="Search">
+      <button type="submit">Search</button>
+    </form>
+    <nav class="top-nav" aria-label="Primary">
+      <a href="index.html"><i class="fa-solid fa-house"></i> Home</a>
+      <a href="restaurants.html"><i class="fa-solid fa-store"></i> Restaurants</a>
+      <a href="rewards.html"><i class="fa-solid fa-gift"></i> Rewards</a>
+      <a href="support.html"><i class="fa-solid fa-headset"></i> Support</a>
+    </nav>
+    <div class="header-actions">
+      <div class="dropdown-wrap">
+        <button class="icon-btn" id="notifBtn" aria-label="Notifications">
+          <i class="fa-regular fa-bell"></i>
+          <span class="badge-dot" id="notifDot"></span>
+        </button>
+        <div class="dropdown-panel" id="notifPanel">
+          <div class="dd-head"><span>Notifications</span><button id="markReadBtn">Mark all read</button></div>
+          <div id="notifList"></div>
+        </div>
+      </div>
+      <a href="cart.html" class="icon-btn cart-link" aria-label="Cart">
+        <i class="fa-solid fa-cart-shopping"></i>
+        <span class="cart-badge hidden" id="cartBadge">0</span>
+      </a>
+    </div>
+  </div>
+  <nav class="subnav" aria-label="Primary mobile">
+    <a href="index.html"><i class="fa-solid fa-house"></i> Home</a>
+    <a href="restaurants.html"><i class="fa-solid fa-store"></i> Restaurants</a>
+    <a href="rewards.html"><i class="fa-solid fa-gift"></i> Rewards</a>
+    <a href="support.html"><i class="fa-solid fa-headset"></i> Support</a>
+  </nav>
+</header>
+
+<!-- ================= SIDEBAR ================= -->
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+<aside class="sidebar" id="sidebar" aria-label="User menu">
+  <div class="sidebar-head">
+    <a href="index.html" class="logo"><span class="logo-badge"><i class="fa-solid fa-utensils"></i></span><span>Foo<b>dy</b></span></a>
+    <button class="sidebar-close" id="sidebarClose" aria-label="Close menu"><i class="fa-solid fa-xmark"></i></button>
+  </div>
+  <div class="sidebar-user" id="sidebarUser"></div>
+  <nav class="sidebar-nav">
+    <a href="profile.html"><i class="fa-solid fa-user"></i> Profile</a>
+    <a href="orders.html"><i class="fa-solid fa-bag-shopping"></i> Orders</a>
+    <a href="food-preferences.html"><i class="fa-solid fa-sliders"></i> Food Preferences</a>
+    <a href="food-allergies.html"><i class="fa-solid fa-shield-halved"></i> Food Allergies</a>
+    <a href="wishlist.html"><i class="fa-solid fa-heart"></i> Wishlist</a>
+    <a href="rewards.html"><i class="fa-solid fa-gift"></i> Rewards</a>
+    <a href="support.html"><i class="fa-solid fa-headset"></i> Support</a>
+    <div class="sidebar-divider"></div>
+    <a href="index.html"><i class="fa-solid fa-house"></i> Home</a>
+    <a href="restaurants.html"><i class="fa-solid fa-store"></i> Restaurants</a>
+    <a href="/games.html">🎮 Play Arcade Games</a>
+  </nav>
+  <div class="sidebar-foot">
+    <button class="logout-btn" id="logoutBtn"><i class="fa-solid fa-right-from-bracket"></i> Logout</button>
+  </div>
+</aside>
+
+<main>
+  <!-- ================= PAGE HEAD ================= -->
+  <section class="page-head">
+    <div class="container">
+      <h1><i class="fa-solid fa-bag-shopping"></i> Checkout</h1>
+      <p>Choose your delivery address, pick how you'd like to pay, and review your order.</p>
+    </div>
+  </section>
+
+  <!-- ================= CHECKOUT ================= -->
+  <div class="container">
+    <div id="checkoutMain">
+      <div class="checkout-layout">
+        <section aria-label="Checkout steps">
+          <div class="stepper" id="stepper"></div>
+          <div id="stepArea"></div>
+        </section>
+
+        <aside class="summary-card" aria-label="Order summary">
+          <h3><i class="fa-solid fa-receipt"></i> Order Summary</h3>
+          <div class="sum-items" id="sumItems"></div>
+          <div class="sum-divider"></div>
+          <div class="sum-row"><span class="lbl"><i class="fa-solid fa-basket-shopping"></i> Subtotal</span><span class="val" id="sumSubtotal">₹0</span></div>
+          <div class="sum-row"><span class="lbl"><i class="fa-solid fa-tag"></i> Coupon</span><span id="sumCoupon" class="coupon-line none">None applied</span></div>
+          <div class="sum-row discount"><span class="lbl"><i class="fa-solid fa-percent"></i> Discount</span><span class="val" id="sumDiscount">− ₹0</span></div>
+          <div class="sum-row"><span class="lbl"><i class="fa-solid fa-motorcycle"></i> Delivery Fee</span><span class="val" id="sumDelivery">₹0</span></div>
+          <div class="sum-divider"></div>
+          <div class="sum-total"><span>Total</span><span id="sumTotal">₹0</span></div>
+          <p class="secure-note"><i class="fa-solid fa-shield-halved"></i> Final totals, discounts and coupon validity are recalculated and verified by the server when the order is placed. Values shown here are indicative.</p>
+        </aside>
+      </div>
+    </div>
+  </div>
+</main>
+
+<!-- ================= FOOTER ================= -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <a href="index.html" class="logo"><span class="logo-badge"><i class="fa-solid fa-utensils"></i></span><span>Foo<b>dy</b></span></a>
+        <p class="about">Foody connects you with the best restaurants around you. Order your favourite meals and get them delivered hot, fresh and fast.</p>
+        <div class="socials">
+          <a href="#" aria-label="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
+          <a href="#" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+          <a href="#" aria-label="Twitter"><i class="fa-brands fa-twitter"></i></a>
+          <a href="#" aria-label="YouTube"><i class="fa-brands fa-youtube"></i></a>
+        </div>
+      </div>
+      <div>
+        <h4>Quick Links</h4>
+        <div class="footer-links">
+          <a href="restaurants.html">Restaurants</a>
+          <a href="search.html">Search Food</a>
+          <a href="orders.html">My Orders</a>
+          <a href="wishlist.html">Wishlist</a>
+          <a href="rewards.html">Rewards</a>
+        </div>
+      </div>
+      <div>
+        <h4>Top Categories</h4>
+        <div class="footer-links">
+          <a href="search.html?category=Biryani">Biryani</a>
+          <a href="search.html?category=Fast%20Food">Fast Food</a>
+          <a href="search.html?category=South%20Indian">South Indian</a>
+          <a href="search.html?category=Dessert">Desserts</a>
+          <a href="search.html?category=Drinks">Drinks</a>
+        </div>
+      </div>
+      <div>
+        <h4>Contact Us</h4>
+        <ul class="footer-contact">
+          <li><i class="fa-solid fa-location-dot"></i> Foody HQ, Bandra Kurla Complex, Mumbai 400051</li>
+          <li><i class="fa-solid fa-phone"></i> +91 98765 43210</li>
+          <li><i class="fa-solid fa-envelope"></i> support@foody.in</li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 <b>Foody</b>. All rights reserved.</span>
+      <span>Made with <i class="fa-solid fa-heart" style="color:var(--color-red)"></i> for food lovers</span>
+    </div>
+  </div>
+</footer>
+
+<!-- Address modal -->
+<div class="modal-overlay" id="addrModal" role="dialog" aria-modal="true" aria-label="Address form">
+  <div class="modal">
+    <div class="modal-head">
+      <h3><i class="fa-solid fa-location-dot"></i> <span id="addrModalTitle">Add New Address</span></h3>
+      <button class="modal-x" id="addrModalClose" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <form id="addrForm" novalidate>
+      <div class="form-grid">
+        <div class="form-group full">
+          <label>Address Type</label>
+          <div class="type-pick">
+            <button type="button" data-type="Home" class="active"><i class="fa-solid fa-house"></i> Home</button>
+            <button type="button" data-type="Work"><i class="fa-solid fa-briefcase"></i> Work</button>
+            <button type="button" data-type="Other"><i class="fa-solid fa-location-dot"></i> Other</button>
+          </div>
+        </div>
+        <div class="form-group full">
+          <label for="fLabel">Label (e.g. Home, Office) <span class="req">*</span></label>
+          <input type="text" id="fLabel" maxlength="30" placeholder="Home">
+          <span class="f-err" id="eLabel">Please enter a label for this address.</span>
+        </div>
+        <div class="form-group full">
+          <label for="fName">Full Name <span class="req">*</span></label>
+          <input type="text" id="fName" maxlength="60" placeholder="Receiver's full name">
+          <span class="f-err" id="eName">Please enter the receiver's name.</span>
+        </div>
+        <div class="form-group">
+          <label for="fPhone">Phone <span class="req">*</span></label>
+          <input type="tel" id="fPhone" maxlength="10" placeholder="10-digit mobile" inputmode="numeric">
+          <span class="f-err" id="ePhone">Enter a valid 10-digit phone number.</span>
+        </div>
+        <div class="form-group">
+          <label for="fPin">Pincode <span class="req">*</span></label>
+          <input type="text" id="fPin" maxlength="6" placeholder="6-digit pincode" inputmode="numeric">
+          <span class="f-err" id="ePin">Enter a valid 6-digit pincode.</span>
+        </div>
+        <div class="form-group full">
+          <label for="fLine1">Address Line 1 <span class="req">*</span></label>
+          <input type="text" id="fLine1" maxlength="90" placeholder="Flat / House no. / Building / Street">
+          <span class="f-err" id="eLine1">Address line 1 is required.</span>
+        </div>
+        <div class="form-group full">
+          <label for="fLine2">Address Line 2 (optional)</label>
+          <input type="text" id="fLine2" maxlength="90" placeholder="Area / Landmark">
+        </div>
+        <div class="form-group full">
+          <label for="fCity">City <span class="req">*</span></label>
+          <input type="text" id="fCity" maxlength="40" placeholder="City">
+          <span class="f-err" id="eCity">City is required.</span>
+        </div>
+        <div class="form-group full">
+          <label class="check-row"><input type="checkbox" id="fDefault"> Set as default address</label>
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button type="button" class="btn btn-outline" id="addrCancel">Cancel</button>
+        <button type="submit" class="btn btn-primary" id="addrSaveBtn"><i class="fa-solid fa-floppy-disk"></i> Save Address</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Generic confirm modal -->
+<div class="modal-overlay" id="confirmModal" role="dialog" aria-modal="true">
+  <div class="modal center">
+    <div class="m-icon danger"><i class="fa-solid fa-trash-can"></i></div>
+    <h3 id="confirmTitle">Are you sure?</h3>
+    <p id="confirmText"></p>
+    <div class="modal-actions">
+      <button class="btn btn-outline" id="confirmCancel">Cancel</button>
+      <button class="btn btn-danger" id="confirmOk">Delete</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast-zone" id="toastZone" aria-live="polite"></div>
+
+<script>
+/* ============================================================
+   FOODY — CHECKOUT (protected)
+   Address → Payment → Confirm  +  Order Summary
+============================================================ */
+'use strict';
+const API_BASE_URL = "http://localhost:5000/api/v1";
+const FALLBACK_IMG = "https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=200&q=70";
+function imgErr(el){ el.onerror=null; el.src=FALLBACK_IMG; }
+const u = (id,w=200) => `https://images.unsplash.com/${id}?auto=format&fit=crop&w=${w}&q=72`;
+
+/* ---------------- DEMO DATA (cart item resolution) ---------------- */
+const CITIES = ['Mumbai','Delhi','Bengaluru','Hyderabad','Chennai','Kolkata','Pune','Goa','Lucknow','Amritsar'];
+const REST_NAMES = {r1:'Spice Symphony',r2:'Dosa Junction',r3:'Biryani Blues',r4:'Pizza Roma',r5:'Tokyo Bites',r6:'Burger Barn',r7:'Coastal Catch',r8:'Sweet Treats',r9:'Kolkata Biryani House',r10:'Dragon Wok',r11:'Kebab Factory',r12:'Choco Loco',r13:'The Spanish Fork',r14:'Donut Delight',r15:'Punjab Grill',r16:'Roll Revolution',r17:'Madras Meals',r18:'Oven Stories'};
+const F = (id,restaurant_id,name,price,discount_price,img) => ({id,restaurant_id,name,price,discount_price,image:u(img)});
+const FOODS = [
+ F('f1','r4','Margherita Pizza',299,249,'photo-1565299624946-b28f40a0ae38'),
+ F('f2','r4','Farmhouse Supreme Pizza',429,349,'photo-1513104890138-7c749659a591'),
+ F('f3','r4','Chicken Tikka Pizza',469,399,'photo-1574071318508-1cdbab80d002'),
+ F('f4','r2','Masala Dosa',149,119,'photo-1668236543090-82eba5ee5976'),
+ F('f5','r2','Idli Sambar (4 pcs)',119,99,'photo-1589301760014-d929f3979dbc'),
+ F('f6','r2','Filter Coffee',79,null,'photo-1495474472287-4d71bcdd2085'),
+ F('f7','r1','Paneer Butter Masala',289,239,'photo-1631452180519-c014fe946bc7'),
+ F('f8','r1','Butter Chicken',349,299,'photo-1565557623262-b51c2513a641'),
+ F('f9','r1','Dal Makhani',229,199,'photo-1547592180-85f173990554'),
+ F('f10','r1','Butter Naan (2 pcs)',59,49,'photo-1585937421612-70a008356fbe'),
+ F('f11','r3','Hyderabadi Chicken Biryani',329,279,'photo-1563379091339-03b21ab4a4f8'),
+ F('f12','r3','Veg Dum Biryani',259,219,'photo-1589302168068-964664d93dc0'),
+ F('f13','r9','Kolkata Mutton Biryani',399,349,'photo-1596797038530-2c107229654b'),
+ F('f14','r5','Sushi Platter (8 pcs)',549,479,'photo-1579584425555-c3ce17fd4351'),
+ F('f15','r5','Chicken Ramen',419,null,'photo-1569718212165-3a8278d5f624'),
+ F('f16','r6','Classic Chicken Burger',219,179,'photo-1568901346375-23c9450c58cd'),
+ F('f17','r6','Crispy Veg Burger',149,129,'photo-1550547660-d9450f859349'),
+ F('f18','r6','Peri Peri Fries',119,99,'photo-1573080496219-bb080dd4f877'),
+ F('f19','r7','Prawn Ghee Roast',459,389,'photo-1565680018434-b513d5e5fd47'),
+ F('f20','r7','Goan Fish Curry',389,329,'photo-1559742811-822873691df8'),
+ F('f21','r9','Machher Jhol (Fish Curry)',369,319,'photo-1519708227418-c8fd9a32b7a2'),
+ F('f22','r8','Rasgulla (2 pcs)',99,79,'photo-1606491956689-2ea866880c84'),
+ F('f23','r10','Chilli Chicken',279,239,'photo-1603133872878-684f208fb84b'),
+ F('f24','r10','Veg Hakka Noodles',189,159,'photo-1585032226651-759b368d7246'),
+ F('f25','r11','Mutton Seekh Kebab',319,269,'photo-1599487488170-d11ec9c172f0'),
+ F('f26','r11','Paneer Tikka',259,219,'photo-1529193591184-b1d58069ecdd'),
+ F('f27','r13','Spanish Seafood Paella',629,549,'photo-1534080564583-6be75777b70a'),
+ F('f28','r13','Patatas Bravas',199,null,'photo-1512621776951-a57141f2eefd'),
+ F('f29','r8','Chocolate Brownie Sundae',239,199,'photo-1563805042-7684c019e1cb'),
+ F('f30','r12','Chocolate Truffle Pastry',189,149,'photo-1578985545062-69928b1d9587'),
+ F('f31','r14','Assorted Glazed Donuts (6 pcs)',249,199,'photo-1551024601-bec78aea704b'),
+ F('f32','r14','Chocolate Fudge Donut',99,79,'photo-1551024506-0bccd828d307'),
+ F('f33','r7','Fresh Lime Soda',89,69,'photo-1513558161293-cdaf765ed2fd'),
+ F('f34','r15','Amritsari Chole Kulche',199,169,'photo-1601050690597-df0568f70950'),
+ F('f35','r15','Tandoori Chicken',339,289,'photo-1544025162-d76694265947'),
+ F('m1','r1','Paneer Tikka Angara',269,229,'photo-1631452180519-c014fe946bc7'),
+ F('m2','r1','Tandoori Chicken Wings',299,259,'photo-1544025162-d76694265947'),
+ F('m3','r1','Jeera Rice',149,null,'photo-1596797038530-2c107229654b'),
+ F('m4','r1','Garlic Naan',79,69,'photo-1585937421612-70a008356fbe'),
+ F('m5','r1','Tandoori Roti',39,null,'photo-1585937421612-70a008356fbe'),
+ F('m6','r1','Sweet Lassi',99,79,'photo-1546173159-315724a31696'),
+ F('m7','r1','Masala Chaas',79,null,'photo-1546173159-315724a31696'),
+ F('m8','r1','Gulab Jamun (2 pcs)',119,99,'photo-1606491956689-2ea866880c84'),
+ F('m9','r2','Medu Vada (2 pcs)',89,null,'photo-1589301760014-d929f3979dbc'),
+ F('m10','r2','Mysore Bonda (4 pcs)',99,null,'photo-1601050690597-df0568f70950'),
+ F('m11','r2','Curd Rice',129,null,'photo-1504674900247-0877df9cc836'),
+ F('m12','r2','Fresh Buttermilk',59,null,'photo-1546173159-315724a31696'),
+ F('m13','r2','Pal Payasam',129,null,'photo-1563805042-7684c019e1cb'),
+ F('m14','r3','Chicken 65',249,219,'photo-1603133872878-684f208fb84b'),
+ F('m15','r3','Double Ka Meetha',139,null,'photo-1578985545062-69928b1d9587'),
+ F('m16','r3','Kesar Badam Milk',129,null,'photo-1546173159-315724a31696'),
+ F('m17','r4','Garlic Bread',149,null,'photo-1573080496219-bb080dd4f877'),
+ F('m18','r4','Cola Fizz',79,null,'photo-1513558161293-cdaf765ed2fd'),
+ F('m19','r4','Tiramisu',229,null,'photo-1578985545062-69928b1d9587'),
+ F('m20','r5','Chicken Gyoza (6 pcs)',199,null,'photo-1496116218417-1a781b1c41a3'),
+ F('m21','r5','Iced Green Tea',99,null,'photo-1546173159-315724a31696'),
+ F('m22','r5','Mochi Ice Cream',179,null,'photo-1563805042-7684c019e1cb'),
+ F('m23','r6','Chocolate Shake',129,null,'photo-1549007994-cb92caebd54b'),
+ F('m24','r6','Choco Lava Cake',119,99,'photo-1578985545062-69928b1d9587'),
+ F('m25','r7','Calamari Fritti',329,null,'photo-1565680018434-b513d5e5fd47'),
+ F('m26','r7','Steamed Rice',99,null,'photo-1504674900247-0877df9cc836'),
+ F('m27','r7','Bebinca',159,null,'photo-1587668178277-295251f900ce'),
+ F('m28','r8','Rose Milk',89,null,'photo-1546173159-315724a31696'),
+ F('m29','r8','Kesar Kulfi',99,null,'photo-1563805042-7684c019e1cb'),
+ F('m30','r9','Bengali Fish Fry',299,259,'photo-1519708227418-c8fd9a32b7a2'),
+ F('m31','r9','Mishti Doi',99,null,'photo-1606491956689-2ea866880c84'),
+ F('m32','r10','Veg Spring Rolls',149,null,'photo-1601050690597-df0568f70950'),
+ F('m33','r10','Veg Fried Rice',179,null,'photo-1603133872878-684f208fb84b'),
+ F('m34','r10','Lemon Iced Tea',99,null,'photo-1513558161293-cdaf765ed2fd'),
+ F('m35','r11','Sheermal',89,null,'photo-1585937421612-70a008356fbe'),
+ F('m36','r11','Zafrani Pulao',199,null,'photo-1589302168068-964664d93dc0'),
+ F('m37','r11','Shahi Tukda',149,null,'photo-1578985545062-69928b1d9587'),
+ F('m38','r12','Hot Chocolate',149,null,'photo-1549007994-cb92caebd54b'),
+ F('m39','r12','Belgian Chocolate Mousse',199,null,'photo-1549007994-cb92caebd54b'),
+ F('m40','r13','Virgin Sangria',199,null,'photo-1551538827-9c037cb4f32a'),
+ F('m41','r13','Churros with Chocolate',189,null,'photo-1551024506-0bccd828d307'),
+ F('m42','r14','Iced Coffee',119,null,'photo-1495474472287-4d71bcdd2085'),
+ F('m43','r14','Classic Cheesecake Slice',179,null,'photo-1578985545062-69928b1d9587'),
+ F('m44','r15','Punjabi Lassi',119,null,'photo-1546173159-315724a31696'),
+ F('m45','r15','Gajar Ka Halwa',139,null,'photo-1606491956689-2ea866880c84'),
+ F('m46','r16','Chicken Kathi Roll',179,null,'photo-1626700051175-6818013e1d4f'),
+ F('m47','r16','Paneer Kathi Roll',149,null,'photo-1626700051175-6818013e1d4f'),
+ F('m48','r16','Masala Lemonade',79,null,'photo-1513558161293-cdaf765ed2fd'),
+ F('m49','r17','South Indian Thali',199,169,'photo-1585937421612-70a008356fbe'),
+ F('m50','r17','Rava Dosa',139,null,'photo-1668236543090-82eba5ee5976'),
+ F('m51','r17','Podi Idli',109,null,'photo-1589301760014-d929f3979dbc'),
+ F('m52','r17','Kesar Payasam',119,null,'photo-1563805042-7684c019e1cb'),
+ F('m53','r17','Neer Mor',59,null,'photo-1546173159-315724a31696'),
+ F('m54','r18','Sourdough Margherita',399,null,'photo-1565299624946-b28f40a0ae38'),
+ F('m55','r18','BBQ Chicken Pizza',449,null,'photo-1574071318508-1cdbab80d002'),
+ F('m56','r18','Cheesy Garlic Toast',159,null,'photo-1528735602780-2552fd46c7af'),
+ F('m57','r18','Berry Cheesecake',219,null,'photo-1578985545062-69928b1d9587'),
+ F('m58','r18','Cold Brew Coffee',149,null,'photo-1495474472287-4d71bcdd2085')
+];
+const foodById = id => FOODS.find(f => f.id === id);
+const effPrice = f => f.discount_price ?? f.price;
+const BASE_DELIVERY = 29;
+const FREE_DELIVERY_ABOVE = 499;
+const COUPONS = {
+  FOODY20:  {type:'percent',  value:20, max:120, min:0},
+  FOODY30:  {type:'percent',  value:30, max:150, min:499},
+  FOODY50:  {type:'percent',  value:50, max:100, min:299},
+  WEEKEND40:{type:'percent',  value:40, max:100, min:199},
+  FOODYFREE:{type:'delivery', value:0,  max:0,   min:299}
+};
+
+/* ---------------- STORAGE ---------------- */
+const store = {
+  get(k,d){ try{ const v=localStorage.getItem(k); return v===null?d:JSON.parse(v);}catch(e){return d;} },
+  set(k,v){ localStorage.setItem(k, JSON.stringify(v)); },
+  del(k){ localStorage.removeItem(k); }
+};
+const getUser = () => store.get('foody_user', null);
+const getCart = () => store.get('foody_cart', []);
+const getCoupon = () => store.get('foody_coupon', null);
+const getAddresses = () => store.get('foody_addresses', []);
+const saveAddresses = a => store.set('foody_addresses', a);
+function updateCartBadge(){
+  const count = getCart().reduce((s,i) => s + i.qty, 0);
+  const b = document.getElementById('cartBadge');
+  b.textContent = count; b.classList.toggle('hidden', count===0);
+}
+
+/* ---------------- API HELPER ---------------- */
+async function apiFetch(endpoint, options = {}){
+  const ctrl = new AbortController();
+  const timer = setTimeout(() => ctrl.abort(), 2200);
+  try{
+    const user = getUser();
+    const res = await fetch(API_BASE_URL + endpoint, {
+      ...options,
+      headers:{ 'Content-Type':'application/json', ...(user && user.token ? {'Authorization':'Bearer '+user.token} : {}), ...(options.headers||{}) },
+      signal: ctrl.signal
+    });
+    clearTimeout(timer);
+    if(res.status === 401){ store.del('foody_user'); location.href='login.html'; throw new Error('Session expired'); }
+    if(!res.ok) throw new Error('Request failed');
+    return await res.json();
+  }catch(e){ clearTimeout(timer); return null; }
+}
+const demo = (val, ms=550) => new Promise(r => setTimeout(() => r(val), ms));
+
+/* ---------------- UI HELPERS ---------------- */
+function toast(msg, type='success', icon){
+  const icons = { success:'fa-circle-check', error:'fa-circle-xmark', warning:'fa-triangle-exclamation', info:'fa-circle-info' };
+  const zone = document.getElementById('toastZone');
+  const t = document.createElement('div');
+  t.className = `toast ${type}`;
+  t.innerHTML = `<i class="fa-solid ${icon || icons[type]}"></i><span>${msg}</span><button class="t-close" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>`;
+  zone.appendChild(t);
+  const kill = () => { t.classList.add('leaving'); setTimeout(() => t.remove(), 320); };
+  t.querySelector('.t-close').addEventListener('click', kill);
+  setTimeout(kill, 3400);
+}
+let confirmCb = null;
+function showConfirm(title, text, onOk){
+  document.getElementById('confirmTitle').textContent = title;
+  document.getElementById('confirmText').innerHTML = text;
+  confirmCb = onOk;
+  document.getElementById('confirmModal').classList.add('open');
+}
+document.getElementById('confirmCancel').addEventListener('click', () => document.getElementById('confirmModal').classList.remove('open'));
+document.getElementById('confirmOk').addEventListener('click', () => { document.getElementById('confirmModal').classList.remove('open'); if(confirmCb) confirmCb(); });
+document.getElementById('confirmModal').addEventListener('click', e => { if(e.target.id==='confirmModal') e.currentTarget.classList.remove('open'); });
+
+/* ---------------- AUTH GATE ---------------- */
+function requireAuth(){
+  const usr = getUser();
+  if(usr && usr.name) return true;
+  document.getElementById('checkoutMain').innerHTML = `
+    <div class="auth-gate">
+      <div class="big-ico"><i class="fa-solid fa-lock"></i></div>
+      <h4>Login Required</h4>
+      <p>Checkout is a protected step. Please login to continue with your order. Redirecting you to login...</p>
+      <a href="login.html" class="btn btn-primary"><i class="fa-solid fa-right-to-bracket"></i> Go to Login</a>
+    </div>`;
+  setTimeout(() => { location.href = 'login.html'; }, 1400);
+  return false;
+}
+
+/* ---------------- HEADER / SIDEBAR ---------------- */
+const sidebar = document.getElementById('sidebar'), sidebarOverlay = document.getElementById('sidebarOverlay');
+document.getElementById('menuBtn').addEventListener('click', () => { sidebar.classList.add('open'); sidebarOverlay.classList.add('open'); document.body.style.overflow='hidden'; });
+document.getElementById('sidebarClose').addEventListener('click', closeSidebar);
+sidebarOverlay.addEventListener('click', closeSidebar);
+function closeSidebar(){ sidebar.classList.remove('open'); sidebarOverlay.classList.remove('open'); document.body.style.overflow=''; }
+function renderSidebarUser(){
+  const usr = getUser(), box = document.getElementById('sidebarUser');
+  if(usr && usr.name){
+    box.innerHTML = `<div class="avatar">${usr.name.trim().charAt(0).toUpperCase()}</div>
+      <div><div class="u-name">${usr.name}</div><div class="u-sub">${usr.email || usr.phone || ''}</div></div>`;
+  }else{
+    box.innerHTML = `<div class="avatar"><i class="fa-solid fa-user"></i></div>
+      <div><div class="u-name">Welcome, Guest</div><div class="u-sub">Login for the full experience</div></div>`;
+  }
+}
+document.getElementById('logoutBtn').addEventListener('click', () => showConfirm('Logout?', 'Your session will be cleared and you will be redirected to login.', () => { store.del('foody_user'); location.href='login.html'; }));
+function renderCities(){
+  const cur = store.get('foody_location','Mumbai');
+  document.getElementById('locationName').textContent = cur;
+  document.getElementById('cityList').innerHTML = CITIES.map(c =>
+    `<button type="button" data-city="${c}" class="${c===cur?'active':''}"><i class="fa-solid fa-location-dot"></i> ${c}</button>`).join('');
+  document.querySelectorAll('#cityList button').forEach(b => b.addEventListener('click', () => {
+    store.set('foody_location', b.dataset.city);
+    document.getElementById('locationName').textContent = b.dataset.city;
+    togglePanel(document.getElementById('locationPanel'), false);
+    toast(`Delivery location set to ${b.dataset.city}`, 'info', 'fa-location-dot');
+  }));
+}
+function togglePanel(p, force){ p.classList.toggle('open', force===undefined ? !p.classList.contains('open') : force); }
+document.getElementById('locationBtn').addEventListener('click', e => { e.stopPropagation(); togglePanel(document.getElementById('locationPanel')); togglePanel(document.getElementById('notifPanel'), false); });
+function renderNotifs(){
+  const items = store.get('foody_notifications', [
+    {ico:'fa-motorcycle', cls:'green',  text:'Your order #FD1042 is out for delivery.', time:'2 min ago'},
+    {ico:'fa-percent',    cls:'orange', text:'50% OFF weekend offer is live! Use code FOODY50.', time:'1 hr ago'},
+    {ico:'fa-gift',       cls:'red',    text:'You have a free reward spin waiting this week.', time:'Yesterday'}
+  ]);
+  const read = store.get('foody_notifs_read', false);
+  document.getElementById('notifDot').classList.toggle('hidden', read || items.length===0);
+  document.getElementById('notifList').innerHTML = items.length
+    ? items.map(n => `<div class="notif-item"><div class="n-ico ${n.cls}"><i class="fa-solid ${n.ico}"></i></div><div>${n.text}<div class="n-time">${n.time}</div></div></div>`).join('')
+    : `<div class="notif-empty"><i class="fa-regular fa-bell-slash"></i><br>No notifications yet.</div>`;
+}
+document.getElementById('notifBtn').addEventListener('click', e => { e.stopPropagation(); togglePanel(document.getElementById('notifPanel')); togglePanel(document.getElementById('locationPanel'), false); });
+document.getElementById('markReadBtn').addEventListener('click', () => { store.set('foody_notifs_read', true); renderNotifs(); });
+document.addEventListener('click', () => { togglePanel(document.getElementById('locationPanel'), false); togglePanel(document.getElementById('notifPanel'), false); });
+document.querySelectorAll('.dropdown-panel').forEach(p => p.addEventListener('click', e => e.stopPropagation()));
+document.getElementById('headerSearchForm').addEventListener('submit', e => {
+  e.preventDefault();
+  const q = document.getElementById('headerSearchInput').value.trim();
+  location.href = 'search.html' + (q ? '?q=' + encodeURIComponent(q) : '');
+});
+
+/* ---------------- CHECKOUT STATE ---------------- */
+const state = { step:1, addressId:null, method:null, editingId:null, addrType:'Home' };
+
+function seedAddresses(){
+  if(getAddresses().length) return;
+  const usr = getUser();
+  const name = (usr && usr.name) ? usr.name : 'Aarav Sharma';
+  const phone = (usr && usr.phone) ? usr.phone : '9876543210';
+  saveAddresses([
+    {id:'a1', type:'Home', label:'Home', name, phone, line1:'B-704, Sunshine Residency', line2:'Linking Road, Bandra West', city:'Mumbai', pincode:'400050', is_default:true},
+    {id:'a2', type:'Work', label:'Office', name, phone, line1:'3rd Floor, Trade Tower', line2:'Bandra Kurla Complex', city:'Mumbai', pincode:'400051', is_default:false}
+  ]);
+}
+const addrById = id => getAddresses().find(a => a.id === id);
+
+function cartLines(){
+  return getCart().map(ci => { const f = foodById(ci.id); return f ? {f, qty:ci.qty} : null; }).filter(Boolean);
+}
+function computeSummary(){
+  const lines = cartLines();
+  const subtotal = lines.reduce((s,l) => s + effPrice(l.f)*l.qty, 0);
+  let discount = 0, fee = subtotal > 0 ? (subtotal >= FREE_DELIVERY_ABOVE ? 0 : BASE_DELIVERY) : 0;
+  let coupon = getCoupon();
+  if(coupon){
+    const c = COUPONS[coupon];
+    if(!c || subtotal < c.min){ coupon = null; setCouponNull(); }
+    else{
+      if(c.type==='percent') discount = Math.min(Math.round(subtotal*c.value/100), c.max);
+      else if(c.type==='delivery') fee = 0;
+    }
+  }
+  const total = Math.max(0, subtotal - discount) + fee;
+  return { lines, subtotal, discount, fee, total, coupon };
+}
+function setCouponNull(){ store.del('foody_coupon'); }
+
+function renderSummary(){
+  const s = computeSummary();
+  const box = document.getElementById('sumItems');
+  box.innerHTML = s.lines.map(l => `
+    <div class="sum-item">
+      <img src="${l.f.image}" alt="${l.f.name}" loading="lazy" onerror="imgErr(this)">
+      <div class="si-body">
+        <div class="si-name">${l.f.name}</div>
+        <div class="si-meta">${REST_NAMES[l.f.restaurant_id] || 'Restaurant'} · Qty ${l.qty} × ₹${effPrice(l.f)}</div>
+      </div>
+      <span class="si-total">₹${effPrice(l.f)*l.qty}</span>
+    </div>`).join('');
+  document.getElementById('sumSubtotal').textContent = '₹' + s.subtotal;
+  document.getElementById('sumDiscount').textContent = '− ₹' + s.discount;
+  const del = document.getElementById('sumDelivery');
+  if(s.fee === 0 && s.subtotal > 0) del.innerHTML = `<span class="strike">₹${BASE_DELIVERY}</span><span class="free">FREE</span>`;
+  else del.textContent = '₹' + s.fee;
+  document.getElementById('sumTotal').textContent = '₹' + s.total;
+  const cp = document.getElementById('sumCoupon');
+  if(s.coupon){ cp.className = 'coupon-line'; cp.innerHTML = `<i class="fa-solid fa-circle-check"></i> ${s.coupon} applied`; }
+  else{ cp.className = 'coupon-line none'; cp.textContent = 'None applied'; }
+}
+
+/* ---------------- STEPPER ---------------- */
+function renderStepper(){
+  const steps = [
+    {n:1, t:'Address', sub:'Delivery location', icon:'fa-location-dot'},
+    {n:2, t:'Payment', sub:'Choose method', icon:'fa-credit-card'},
+    {n:3, t:'Confirm', sub:'Review & place order', icon:'fa-circle-check'}
+  ];
+  document.getElementById('stepper').innerHTML = steps.map((s,i) => {
+    const cls = state.step > s.n ? 'done' : (state.step === s.n ? 'active' : '');
+    const dot = state.step > s.n ? '<i class="fa-solid fa-check"></i>' : s.n;
+    const bar = i < steps.length-1 ? `<span class="bar"></span>` : '';
+    return `<div class="step ${cls}"><span class="dot">${dot}</span><span class="s-txt"><span class="s-title">${s.t}</span><br><span class="s-sub">${s.sub}</span></span>${bar}</div>`;
+  }).join('');
+}
+
+/* ---------------- STEP 1: ADDRESS ---------------- */
+function renderStepAddress(){
+  const addrs = getAddresses();
+  const area = document.getElementById('stepArea');
+  let html = `
+    <div class="panel">
+      <div class="panel-head">
+        <h2><i class="fa-solid fa-location-dot"></i> Delivery Address</h2>
+        <button class="btn btn-outline" id="addAddrBtn" style="padding:9px 16px;font-size:.82rem"><i class="fa-solid fa-plus"></i> Add New Address</button>
+      </div>`;
+  if(!addrs.length){
+    html += `
+      <div class="state-block" style="padding:40px 20px">
+        <div class="big-ico" style="width:70px;height:70px;font-size:1.6rem"><i class="fa-solid fa-map-location-dot"></i></div>
+        <h4>No Saved Addresses</h4>
+        <p>Add a delivery address to continue with your order.</p>
+        <button class="btn btn-primary" id="addAddrBtn2"><i class="fa-solid fa-plus"></i> Add Address</button>
+      </div>`;
+  }else{
+    addrs.forEach(a => {
+      const sel = state.addressId === a.id;
+      const typeIcon = a.type==='Home' ? 'fa-house' : (a.type==='Work' ? 'fa-briefcase' : 'fa-location-dot');
+      html += `
+      <div class="addr-card ${sel?'selected':''}" data-addr="${a.id}" role="radio" aria-checked="${sel}" tabindex="0">
+        <span class="addr-radio"></span>
+        <div class="addr-body">
+          <div class="addr-top">
+            <span class="a-type"><i class="fa-solid ${typeIcon}"></i> ${a.type}</span>
+            <span class="a-label">${a.label}</span>
+            ${a.is_default ? '<span class="default-badge"><i class="fa-solid fa-star"></i> DEFAULT</span>' : ''}
+          </div>
+          <p class="addr-name">${a.name} <span>· +91 ${a.phone}</span></p>
+          <p class="addr-line">${a.line1}${a.line2 ? ', ' + a.line2 : ''}, ${a.city} — ${a.pincode}</p>
+          <div class="addr-actions">
+            <button type="button" class="mini-btn" data-edit="${a.id}"><i class="fa-solid fa-pen"></i> Edit</button>
+            <button type="button" class="mini-btn star ${a.is_default?'is-default':''}" data-default="${a.id}"><i class="fa-solid fa-star"></i> ${a.is_default?'Default':'Set Default'}</button>
+            <button type="button" class="mini-btn danger" data-del="${a.id}"><i class="fa-solid fa-trash-can"></i> Delete</button>
+          </div>
+        </div>
+      </div>`;
+    });
+    html += `
+      <div class="step-nav">
+        <a href="cart.html" class="btn btn-outline"><i class="fa-solid fa-arrow-left"></i> Back to Cart</a>
+        <button class="btn btn-primary" id="toStep2" ${state.addressId?'':'disabled'}>Deliver Here <i class="fa-solid fa-arrow-right"></i></button>
+      </div>`;
+  }
+  html += `</div>`;
+  area.innerHTML = html;
+
+  const bindAdd = () => openAddrModal(null);
+  const b1 = document.getElementById('addAddrBtn'); if(b1) b1.addEventListener('click', bindAdd);
+  const b2 = document.getElementById('addAddrBtn2'); if(b2) b2.addEventListener('click', bindAdd);
+
+  area.querySelectorAll('.addr-card').forEach(card => {
+    const pick = () => { state.addressId = card.dataset.addr; store.set('foody_selected_address', state.addressId); renderStepAddress(); };
+    card.addEventListener('click', e => { if(!e.target.closest('.mini-btn')) pick(); });
+    card.addEventListener('keydown', e => { if(e.key==='Enter' && !e.target.closest('.mini-btn')) pick(); });
+  });
+  area.querySelectorAll('[data-edit]').forEach(b => b.addEventListener('click', () => openAddrModal(b.dataset.edit)));
+  area.querySelectorAll('[data-default]').forEach(b => b.addEventListener('click', () => setDefault(b.dataset.default)));
+  area.querySelectorAll('[data-del]').forEach(b => b.addEventListener('click', () => deleteAddress(b.dataset.del)));
+  const to2 = document.getElementById('toStep2');
+  if(to2) to2.addEventListener('click', () => { state.step = 2; render(); scrollToSteps(); });
+}
+
+function setDefault(id){
+  const addrs = getAddresses().map(a => ({...a, is_default: a.id===id}));
+  saveAddresses(addrs);
+  toast('Default address updated', 'success', 'fa-star');
+  renderStepAddress();
+}
+function deleteAddress(id){
+  const a = addrById(id);
+  showConfirm('Delete Address?', `Remove <strong>${a ? a.label : 'this address'}</strong> from your saved addresses?`, async () => {
+    saveAddresses(getAddresses().filter(x => x.id !== id));
+    if(state.addressId === id) state.addressId = (getAddresses().find(x => x.is_default) || getAddresses()[0] || {id:null}).id;
+    store.set('foody_selected_address', state.addressId);
+    toast('Address deleted', 'info', 'fa-trash-can');
+    renderStepAddress();
+  });
+}
+
+/* ---------------- ADDRESS MODAL ---------------- */
+const addrModal = document.getElementById('addrModal');
+function openAddrModal(editId){
+  state.editingId = editId;
+  const form = document.getElementById('addrForm');
+  form.reset();
+  document.querySelectorAll('.f-err').forEach(e => e.classList.remove('show'));
+  form.querySelectorAll('input').forEach(i => i.classList.remove('invalid'));
+  document.getElementById('addrModalTitle').textContent = editId ? 'Edit Address' : 'Add New Address';
+  document.getElementById('addrSaveBtn').innerHTML = '<i class="fa-solid fa-floppy-disk"></i> ' + (editId ? 'Update Address' : 'Save Address');
+
+  const a = editId ? addrById(editId) : null;
+  state.addrType = a ? a.type : 'Home';
+  document.querySelectorAll('.type-pick button').forEach(b => b.classList.toggle('active', b.dataset.type === state.addrType));
+  if(a){
+    document.getElementById('fLabel').value = a.label;
+    document.getElementById('fName').value = a.name;
+    document.getElementById('fPhone').value = a.phone;
+    document.getElementById('fPin').value = a.pincode;
+    document.getElementById('fLine1').value = a.line1;
+    document.getElementById('fLine2').value = a.line2 || '';
+    document.getElementById('fCity').value = a.city;
+    document.getElementById('fDefault').checked = !!a.is_default;
+  }else{
+    document.getElementById('fDefault').checked = getAddresses().length === 0;
+  }
+  addrModal.classList.add('open');
+  document.body.style.overflow = 'hidden';
+  setTimeout(() => document.getElementById('fLabel').focus(), 150);
+}
+function closeAddrModal(){ addrModal.classList.remove('open'); document.body.style.overflow=''; }
+document.getElementById('addrModalClose').addEventListener('click', closeAddrModal);
+document.getElementById('addrCancel').addEventListener('click', closeAddrModal);
+addrModal.addEventListener('click', e => { if(e.target.id==='addrModal') closeAddrModal(); });
+document.querySelectorAll('.type-pick button').forEach(b => b.addEventListener('click', () => {
+  state.addrType = b.dataset.type;
+  document.querySelectorAll('.type-pick button').forEach(x => x.classList.toggle('active', x===b));
+}));
+
+function validateAddrForm(){
+  let ok = true;
+  const check = (id, errId, cond) => {
+    const el = document.getElementById(id), err = document.getElementById(errId);
+    const bad = !cond(el.value.trim());
+    el.classList.toggle('invalid', bad);
+    err.classList.toggle('show', bad);
+    if(bad) ok = false;
+  };
+  check('fLabel','eLabel', v => v.length >= 2);
+  check('fName','eName', v => v.length >= 3);
+  check('fPhone','ePhone', v => /^[6-9]\d{9}$/.test(v));
+  check('fPin','ePin', v => /^\d{6}$/.test(v));
+  check('fLine1','eLine1', v => v.length >= 5);
+  check('fCity','eCity', v => v.length >= 2);
+  return ok;
+}
+
+document.getElementById('addrForm').addEventListener('submit', async e => {
+  e.preventDefault();
+  if(!validateAddrForm()){ toast('Please fix the highlighted fields', 'error', 'fa-circle-exclamation'); return; }
+  const btn = document.getElementById('addrSaveBtn');
+  btn.disabled = true;
+  const old = btn.innerHTML;
+  btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Saving...';
+
+  await apiFetch('/addresses' + (state.editingId ? '/' + state.editingId : ''), {
+    method: state.editingId ? 'PUT' : 'POST',
+    body: JSON.stringify({})
+  }) || await demo(true, 650); // demo latency → loading state
+
+  const addrs = getAddresses();
+  const data = {
+    type: state.addrType,
+    label: document.getElementById('fLabel').value.trim(),
+    name: document.getElementById('fName').value.trim(),
+    phone: document.getElementById('fPhone').value.trim(),
+    line1: document.getElementById('fLine1').value.trim(),
+    line2: document.getElementById('fLine2').value.trim(),
+    city: document.getElementById('fCity').value.trim(),
+    pincode: document.getElementById('fPin').value.trim(),
+    is_default: document.getElementById('fDefault').checked
+  };
+  if(state.editingId){
+    const idx = addrs.findIndex(a => a.id === state.editingId);
+    if(data.is_default) addrs.forEach(a => a.is_default = false);
+    addrs[idx] = {...addrs[idx], ...data};
+    saveAddresses(addrs);
+    toast('Address updated successfully', 'success', 'fa-circle-check');
+  }else{
+    if(data.is_default) addrs.forEach(a => a.is_default = false);
+    const na = {id:'a' + Date.now(), ...data};
+    addrs.push(na);
+    saveAddresses(addrs);
+    state.addressId = na.id;
+    store.set('foody_selected_address', na.id);
+    toast('New address added', 'success', 'fa-location-dot');
+  }
+  btn.disabled = false; btn.innerHTML = old;
+  closeAddrModal();
+  renderStepAddress();
+});
+
+/* ---------------- STEP 2: PAYMENT METHOD ---------------- */
+function renderStepPayment(){
+  const area = document.getElementById('stepArea');
+  area.innerHTML = `
+    <div class="panel">
+      <div class="panel-head"><h2><i class="fa-solid fa-credit-card"></i> Payment Method</h2></div>
+      <div class="pay-card ${state.method==='cod'?'selected':''}" data-method="cod" role="radio" aria-checked="${state.method==='cod'}" tabindex="0">
+        <span class="pay-radio"></span>
+        <span class="pay-ico"><i class="fa-solid fa-money-bill-wave"></i></span>
+        <div class="pay-info">
+          <h3>Cash on Delivery</h3>
+          <p>Pay in cash when your order arrives. You'll confirm the order on the payment page before it is placed.</p>
+        </div>
+      </div>
+      <div class="pay-card ${state.method==='online'?'selected':''}" data-method="online" role="radio" aria-checked="${state.method==='online'}" tabindex="0">
+        <span class="pay-radio"></span>
+        <span class="pay-ico"><i class="fa-solid fa-credit-card"></i></span>
+        <div class="pay-info">
+          <h3>Demo Online Payment <span class="sim-tag">SIMULATION ONLY</span></h3>
+          <p>Experience the full online payment flow without any real money. You can simulate success or failure on the next page.</p>
+        </div>
+      </div>
+      <div class="future-note"><i class="fa-solid fa-plug-circle-check"></i> Architecture is ready for real gateway integration (Razorpay / Stripe) — the demo flow mirrors the production flow end-to-end.</div>
+      <div class="step-nav">
+        <button class="btn btn-outline" id="backTo1"><i class="fa-solid fa-arrow-left"></i> Back to Address</button>
+        <button class="btn btn-primary" id="toStep3" ${state.method?'':'disabled'}>Review Order <i class="fa-solid fa-arrow-right"></i></button>
+      </div>
+    </div>`;
+  area.querySelectorAll('.pay-card').forEach(card => {
+    const pick = () => { state.method = card.dataset.method; renderStepPayment(); };
+    card.addEventListener('click', pick);
+    card.addEventListener('keydown', e => { if(e.key==='Enter' || e.key===' '){ e.preventDefault(); pick(); } });
+  });
+  document.getElementById('backTo1').addEventListener('click', () => { state.step = 1; render(); scrollToSteps(); });
+  document.getElementById('toStep3').addEventListener('click', () => { state.step = 3; render(); scrollToSteps(); });
+}
+
+/* ---------------- STEP 3: CONFIRM ---------------- */
+function renderStepConfirm(){
+  const a = addrById(state.addressId);
+  const s = computeSummary();
+  const methodName = state.method === 'cod' ? 'Cash on Delivery' : 'Demo Online Payment (Simulation Only)';
+  const area = document.getElementById('stepArea');
+  area.innerHTML = `
+    <div class="panel">
+      <div class="panel-head"><h2><i class="fa-solid fa-clipboard-check"></i> Review Your Order</h2></div>
+
+      <div class="review-block">
+        <span class="rb-label">Deliver To</span>
+        <button class="change-btn" id="chgAddr">Change</button>
+        <p><strong>${a ? a.label + ' — ' + a.name : 'No address selected'}</strong><br>
+        <span class="rb-sub">${a ? `${a.line1}${a.line2?', '+a.line2:''}, ${a.city} — ${a.pincode} · +91 ${a.phone}` : ''}</span></p>
+      </div>
+
+      <div class="review-block">
+        <span class="rb-label">Payment</span>
+        <button class="change-btn" id="chgPay">Change</button>
+        <p><strong><i class="fa-solid ${state.method==='cod'?'fa-money-bill-wave':'fa-credit-card'}" style="color:var(--color-orange);margin-right:6px"></i>${methodName}</strong></p>
+      </div>
+
+      <div class="review-block">
+        <span class="rb-label">Order Summary</span>
+        <ul class="review-items">
+          ${s.lines.map(l => `<li><span class="ri-name">${l.f.name} <span>× ${l.qty}</span></span><span><strong>₹${effPrice(l.f)*l.qty}</strong></span></li>`).join('')}
+        </ul>
+        <div class="sum-divider"></div>
+        <div class="sum-row"><span class="lbl">Subtotal</span><span>₹${s.subtotal}</span></div>
+        ${s.coupon ? `<div class="sum-row"><span class="lbl">Coupon (${s.coupon})</span><span style="color:var(--color-green);font-weight:700">− ₹${s.discount}</span></div>` : ''}
+        <div class="sum-row"><span class="lbl">Delivery Fee</span><span>${s.fee===0 && s.subtotal>0 ? '<span class="free" style="color:var(--color-green);font-weight:700">FREE</span>' : '₹'+s.fee}</span></div>
+        <div class="sum-total"><span>Total To Pay</span><span>₹${s.total}</span></div>
+      </div>
+
+      <div class="step-nav">
+        <button class="btn btn-outline" id="backTo2"><i class="fa-solid fa-arrow-left"></i> Back to Payment</button>
+        <button class="btn btn-primary" id="proceedPay" style="min-width:230px"><i class="fa-solid fa-lock"></i> Proceed to Payment · ₹${s.total}</button>
+      </div>
+    </div>`;
+  document.getElementById('chgAddr').addEventListener('click', () => { state.step = 1; render(); scrollToSteps(); });
+  document.getElementById('chgPay').addEventListener('click', () => { state.step = 2; render(); scrollToSteps(); });
+  document.getElementById('backTo2').addEventListener('click', () => { state.step = 2; render(); scrollToSteps(); });
+  document.getElementById('proceedPay').addEventListener('click', async function(){
+    this.disabled = true;
+    this.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Preparing secure payment...';
+    await apiFetch('/checkout/prepare', { method:'POST', body: JSON.stringify({ address_id: state.addressId, method: state.method }) }) || await demo(true, 700);
+    store.set('foody_checkout', { address_id: state.addressId, method: state.method, ts: Date.now() });
+    location.href = 'payment.html';
+  });
+}
+
+/* ---------------- EMPTY CART GUARD ---------------- */
+function renderEmptyCart(){
+  document.getElementById('checkoutMain').innerHTML = `
+    <div class="state-block" style="margin:40px 0 60px">
+      <div class="big-ico"><i class="fa-solid fa-cart-shopping"></i></div>
+      <h4>Your Cart is Empty</h4>
+      <p>Add some delicious items to your cart before checking out.</p>
+      <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
+        <a href="search.html" class="btn btn-primary"><i class="fa-solid fa-utensils"></i> Browse Foods</a>
+        <a href="index.html" class="btn btn-outline"><i class="fa-solid fa-house"></i> Go Home</a>
+      </div>
+    </div>`;
+}
+
+function scrollToSteps(){ document.getElementById('stepper').scrollIntoView({behavior:'smooth', block:'start'}); }
+
+function render(){
+  if(!cartLines().length){ renderEmptyCart(); return; }
+  renderStepper();
+  renderSummary();
+  if(state.step === 1) renderStepAddress();
+  else if(state.step === 2) renderStepPayment();
+  else renderStepConfirm();
+}
+
+/* ---------------- INIT ---------------- */
+async function init(){
+  renderSidebarUser(); renderCities(); renderNotifs(); updateCartBadge();
+  window.addEventListener('storage', () => { updateCartBadge(); render(); });
+
+  if(!requireAuth()) return;
+
+  /* skeleton first paint */
+  document.getElementById('stepArea').innerHTML = `
+    <div class="skel-block"><div class="skeleton s-line" style="width:40%"></div><div class="skeleton s-line" style="width:80%"></div><div class="skeleton s-line" style="width:65%"></div></div>
+    <div class="skel-block"><div class="skeleton s-line" style="width:50%"></div><div class="skeleton s-line" style="width:75%"></div></div>`;
+
+  try{
+    await apiFetch('/addresses') || await demo(true, 600); // simulated latency → visible loading state
+    seedAddresses();
+    const addrs = getAddresses();
+    const savedSel = store.get('foody_selected_address', null);
+    state.addressId = (savedSel && addrById(savedSel)) ? savedSel : ((addrs.find(a => a.is_default) || addrs[0]) || {id:null}).id;
+    render();
+  }catch(err){
+    document.getElementById('stepArea').innerHTML = `
+      <div class="state-block err">
+        <div class="big-ico"><i class="fa-solid fa-wifi"></i></div>
+        <h4>Something went wrong</h4>
+        <p>We couldn't load checkout right now. Please try again.</p>
+        <button class="btn btn-primary" onclick="location.reload()"><i class="fa-solid fa-rotate-right"></i> Retry</button>
+      </div>`;
+  }
+}
+document.addEventListener('DOMContentLoaded', init);
+// Call this function when the checkout is successful
+function awardTokens(orderTotal) {
+    let tokensEarned = 0;
+    
+    // Define price ranges
+    if (orderTotal >= 100 && orderTotal <= 200) tokensEarned = 2;
+    else if (orderTotal > 200 && orderTotal <= 300) tokensEarned = 3;
+    else if (orderTotal > 300 && orderTotal <= 400) tokensEarned = 4;
+    else if (orderTotal > 400) tokensEarned = Math.floor(orderTotal / 100);
+
+    // Update user tokens in LocalStorage
+    let currentTokens = parseInt(localStorage.getItem('gameTokens')) || 0;
+    localStorage.setItem('gameTokens', currentTokens + tokensEarned);
+    
+    alert(`Order Success! You earned ${tokensEarned} Game Tokens! 🪙`);
+}
+</script>
+</body>
+</html>

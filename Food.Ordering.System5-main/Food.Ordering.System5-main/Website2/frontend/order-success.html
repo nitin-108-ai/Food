@@ -1,0 +1,742 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Order Confirmed | Foody</title>
+<meta name="description" content="Your Foody order has been placed successfully.">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+/* ============ RESET & TOKENS ============ */
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --color-yellow:#FFC107; --color-orange:#FF9800; --color-green:#2E7D32; --color-red:#D32F2F;
+  --color-black:#111111; --color-dark:#181818; --color-white:#FFFFFF;
+  --color-background:#F7F7F7; --color-light-gray:#F1F1F1; --color-border:#E2E2E2;
+  --color-text:#222222; --color-muted:#777777;
+  --gradient-primary:linear-gradient(135deg,#FFC107 0%,#FF9800 100%);
+  --shadow-sm:0 2px 8px rgba(0,0,0,.06); --shadow-md:0 6px 20px rgba(0,0,0,.10); --shadow-lg:0 14px 40px rgba(0,0,0,.16);
+  --radius-sm:8px; --radius-md:14px; --radius-lg:20px;
+  --header-h:66px; --sidebar-w:280px;
+  --font:'Poppins',system-ui,-apple-system,Segoe UI,sans-serif;
+}
+html{scroll-behavior:smooth}
+body{font-family:var(--font);background:var(--color-background);color:var(--color-text);overflow-x:hidden;line-height:1.55;font-size:15px}
+img{display:block;max-width:100%}
+a{text-decoration:none;color:inherit}
+button{font-family:inherit;cursor:pointer;border:none;background:none}
+ul{list-style:none}
+::-webkit-scrollbar{height:8px;width:8px}
+::-webkit-scrollbar-thumb{background:#ccc;border-radius:8px}
+.container{width:min(1220px,92%);margin-inline:auto}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;font-weight:600;border-radius:var(--radius-sm);padding:12px 22px;font-size:.9rem;transition:.25s;white-space:nowrap}
+.btn-primary{background:var(--gradient-primary);color:var(--color-black);box-shadow:0 6px 16px rgba(255,152,0,.35)}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 10px 22px rgba(255,152,0,.45)}
+.btn-dark{background:var(--color-black);color:#fff}
+.btn-dark:hover{background:#000;transform:translateY(-2px)}
+.btn-outline{border:2px solid var(--color-border);color:var(--color-text);background:#fff}
+.btn-outline:hover{border-color:var(--color-orange);color:var(--color-orange)}
+.btn[disabled]{opacity:.55;cursor:not-allowed;transform:none!important}
+
+/* ============ HEADER ============ */
+.header{position:sticky;top:0;z-index:900;background:var(--color-black);color:#fff;box-shadow:0 2px 14px rgba(0,0,0,.35)}
+.header-inner{display:flex;align-items:center;gap:14px;height:var(--header-h)}
+.icon-btn{width:40px;height:40px;border-radius:10px;display:grid;place-items:center;color:#fff;font-size:1.05rem;position:relative;transition:.2s;background:rgba(255,255,255,.08)}
+.icon-btn:hover{background:var(--color-yellow);color:var(--color-black)}
+.logo{display:flex;align-items:center;gap:9px;font-size:1.4rem;font-weight:800;letter-spacing:.5px}
+.logo-badge{width:38px;height:38px;border-radius:12px;background:var(--gradient-primary);display:grid;place-items:center;color:var(--color-black);font-size:1.05rem;box-shadow:0 4px 12px rgba(255,193,7,.4)}
+.logo span{color:#fff}.logo b{color:var(--color-yellow);font-weight:800}
+.location-btn{display:flex;align-items:center;gap:7px;color:#eee;font-size:.82rem;padding:8px 10px;border-radius:10px;transition:.2s;max-width:150px}
+.location-btn:hover{background:rgba(255,255,255,.08)}
+.location-btn i.fa-location-dot{color:var(--color-yellow)}
+.location-btn .loc-name{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:600}
+.location-btn i.fa-chevron-down{font-size:.6rem;color:#999}
+.header-search{flex:1;max-width:430px;display:flex;align-items:center;background:#fff;border-radius:var(--radius-sm);overflow:hidden;border:2px solid transparent;transition:.2s}
+.header-search:focus-within{border-color:var(--color-yellow)}
+.header-search i{padding:0 4px 0 14px;color:var(--color-muted)}
+.header-search input{flex:1;border:none;outline:none;padding:10px;font-family:inherit;font-size:.87rem;min-width:0}
+.header-search button{background:var(--gradient-primary);color:var(--color-black);font-weight:700;font-size:.8rem;padding:10px 16px;height:100%}
+.top-nav{display:flex;gap:4px;margin-left:auto}
+.top-nav a{color:#ddd;font-size:.87rem;font-weight:600;padding:9px 13px;border-radius:9px;transition:.2s;display:flex;align-items:center;gap:7px}
+.top-nav a i{font-size:.85rem}
+.top-nav a:hover{color:var(--color-yellow);background:rgba(255,255,255,.07)}
+.header-actions{display:flex;align-items:center;gap:8px}
+.cart-link{position:relative}
+.cart-badge{position:absolute;top:-4px;right:-4px;min-width:19px;height:19px;padding:0 4px;border-radius:20px;background:var(--color-red);color:#fff;font-size:.68rem;font-weight:700;display:grid;place-items:center;border:2px solid var(--color-black)}
+.cart-badge.hidden{display:none}
+.badge-dot{position:absolute;top:2px;right:2px;width:9px;height:9px;border-radius:50%;background:var(--color-red);border:2px solid var(--color-black)}
+.badge-dot.hidden{display:none}
+.dropdown-wrap{position:relative}
+.dropdown-panel{position:absolute;top:calc(100% + 10px);right:0;background:#fff;color:var(--color-text);border-radius:var(--radius-md);box-shadow:var(--shadow-lg);width:300px;opacity:0;visibility:hidden;transform:translateY(8px);transition:.22s;z-index:950;overflow:hidden}
+.dropdown-panel.open{opacity:1;visibility:visible;transform:translateY(0)}
+.dd-head{display:flex;justify-content:space-between;align-items:center;padding:13px 16px;border-bottom:1px solid var(--color-border);font-weight:700;font-size:.9rem}
+.dd-head button{color:var(--color-orange);font-size:.75rem;font-weight:600}
+.notif-item{display:flex;gap:11px;padding:13px 16px;border-bottom:1px solid var(--color-light-gray);font-size:.8rem;transition:.15s}
+.notif-item:last-child{border-bottom:none}
+.notif-item:hover{background:var(--color-light-gray)}
+.notif-item .n-ico{width:34px;height:34px;flex:none;border-radius:10px;display:grid;place-items:center;font-size:.85rem}
+.n-ico.orange{background:#FFF3E0;color:var(--color-orange)}
+.n-ico.green{background:#E8F5E9;color:var(--color-green)}
+.n-ico.red{background:#FFEBEE;color:var(--color-red)}
+.notif-item .n-time{color:var(--color-muted);font-size:.7rem;margin-top:2px}
+.notif-empty{padding:26px;text-align:center;color:var(--color-muted);font-size:.83rem}
+.city-list{max-height:300px;overflow:auto;padding:6px}
+.city-list button{display:flex;align-items:center;gap:10px;width:100%;text-align:left;padding:10px 12px;border-radius:8px;font-size:.86rem;transition:.15s}
+.city-list button:hover{background:var(--color-light-gray)}
+.city-list button.active{background:#FFF8E1;color:#a56b00;font-weight:600}
+.city-list button i{color:var(--color-orange)}
+.subnav{display:none;background:var(--color-dark);border-top:1px solid rgba(255,255,255,.08);overflow-x:auto;scrollbar-width:none}
+.subnav::-webkit-scrollbar{display:none}
+.subnav a{flex:none;color:#ccc;font-size:.83rem;font-weight:600;padding:10px 16px;display:flex;align-items:center;gap:7px}
+
+/* ============ SIDEBAR ============ */
+.sidebar-overlay{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:980;opacity:0;visibility:hidden;transition:.3s;backdrop-filter:blur(2px)}
+.sidebar-overlay.open{opacity:1;visibility:visible}
+.sidebar{position:fixed;top:0;left:0;bottom:0;width:var(--sidebar-w);max-width:85vw;background:#fff;z-index:990;transform:translateX(-102%);transition:transform .32s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column;box-shadow:var(--shadow-lg)}
+.sidebar.open{transform:translateX(0)}
+.sidebar-head{display:flex;align-items:center;justify-content:space-between;padding:16px 18px;background:var(--color-black);color:#fff}
+.sidebar-head .logo{font-size:1.2rem}
+.sidebar-close{width:36px;height:36px;border-radius:9px;display:grid;place-items:center;color:#fff;background:rgba(255,255,255,.1);transition:.2s}
+.sidebar-close:hover{background:var(--color-red)}
+.sidebar-user{display:flex;align-items:center;gap:12px;padding:18px;border-bottom:1px solid var(--color-border);background:var(--color-light-gray)}
+.avatar{width:46px;height:46px;border-radius:50%;background:var(--gradient-primary);color:var(--color-black);display:grid;place-items:center;font-weight:800;font-size:1.1rem;flex:none}
+.sidebar-user .u-name{font-weight:700;font-size:.92rem;line-height:1.2}
+.sidebar-user .u-sub{font-size:.75rem;color:var(--color-muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:160px}
+.sidebar-nav{flex:1;overflow-y:auto;padding:12px}
+.sidebar-nav a{display:flex;align-items:center;gap:13px;padding:12px 14px;border-radius:var(--radius-sm);font-size:.9rem;font-weight:600;margin-bottom:3px;transition:.2s;position:relative}
+.sidebar-nav a i{width:22px;text-align:center;color:var(--color-muted);font-size:1rem;transition:.2s}
+.sidebar-nav a:hover{background:#FFF8E1;color:#b26a00;transform:translateX(3px)}
+.sidebar-nav a:hover i{color:var(--color-orange)}
+.sidebar-nav a.active{background:var(--gradient-primary);color:var(--color-black)}
+.sidebar-nav a.active i{color:var(--color-black)}
+.sidebar-nav a.active::before{content:'';position:absolute;left:-12px;top:20%;bottom:20%;width:4px;border-radius:4px;background:var(--color-orange)}
+.sidebar-divider{height:1px;background:var(--color-border);margin:10px 6px}
+.sidebar-foot{padding:14px;border-top:1px solid var(--color-border)}
+.logout-btn{width:100%;display:flex;align-items:center;gap:13px;padding:12px 14px;border-radius:var(--radius-sm);font-size:.9rem;font-weight:600;color:var(--color-red);transition:.2s}
+.logout-btn:hover{background:#FFEBEE}
+
+/* ============ SUCCESS HERO ============ */
+.success-hero{background:var(--color-dark);color:#fff;padding:52px 0 88px;position:relative;overflow:hidden;text-align:center}
+.success-hero::before{content:'';position:absolute;width:560px;height:560px;border-radius:50%;background:radial-gradient(circle,rgba(46,125,50,.25),transparent 65%);top:-220px;left:50%;transform:translateX(-50%);pointer-events:none}
+.check-wrap{position:relative;width:110px;height:110px;margin:0 auto 22px}
+.check-ring{position:absolute;inset:0;border-radius:50%;border:3px solid rgba(46,125,50,.5);animation:ripple 1.8s ease-out infinite}
+.check-ring.r2{animation-delay:.6s}
+@keyframes ripple{0%{transform:scale(.8);opacity:1}100%{transform:scale(1.6);opacity:0}}
+.check-circle{position:absolute;inset:0;border-radius:50%;background:linear-gradient(135deg,#43A047,#2E7D32);display:grid;place-items:center;font-size:2.6rem;color:#fff;box-shadow:0 14px 40px rgba(46,125,50,.5);animation:popIn .6s cubic-bezier(.2,1.4,.4,1) both}
+@keyframes popIn{0%{transform:scale(0);opacity:0}100%{transform:scale(1);opacity:1}}
+.success-hero h1{font-size:clamp(1.6rem,3.4vw,2.3rem);font-weight:800;animation:fadeUp .6s .2s both}
+.success-hero .sub{color:#b5b5b5;font-size:.92rem;margin-top:8px;animation:fadeUp .6s .3s both}
+.oid-pill{display:inline-flex;align-items:center;gap:10px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.16);padding:10px 18px;border-radius:30px;margin-top:20px;font-size:.88rem;animation:fadeUp .6s .4s both}
+.oid-pill b{color:var(--color-yellow);letter-spacing:1px;font-weight:800}
+.oid-pill button{color:#bbb;font-size:.85rem;padding:4px;transition:.2s}
+.oid-pill button:hover{color:var(--color-yellow);transform:scale(1.15)}
+.eta-pill{display:inline-flex;align-items:center;gap:9px;background:rgba(255,193,7,.12);border:1px solid rgba(255,193,7,.35);color:var(--color-yellow);padding:9px 18px;border-radius:30px;margin-top:12px;font-size:.82rem;font-weight:600;animation:fadeUp .6s .5s both}
+@keyframes fadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+
+/* confetti */
+.confetti-zone{position:fixed;inset:0;pointer-events:none;z-index:1500;overflow:hidden}
+.confetti{position:absolute;top:-12px;width:9px;height:14px;border-radius:2px;animation:fall linear forwards}
+@keyframes fall{
+  0%{transform:translateY(0) rotate(0) ;opacity:1}
+  85%{opacity:1}
+  100%{transform:translateY(105vh) rotate(720deg);opacity:0}
+}
+
+/* ============ LAYOUT ============ */
+.os-layout{display:grid;grid-template-columns:1fr 360px;gap:26px;padding:0 0 60px;align-items:start;margin-top:-56px;position:relative;z-index:3}
+.card{background:#fff;border:1px solid var(--color-border);border-radius:var(--radius-lg);padding:22px;box-shadow:var(--shadow-md);margin-bottom:20px;animation:fadeUp .5s both}
+.card h3{font-size:1.02rem;font-weight:700;display:flex;gap:9px;align-items:center;margin-bottom:15px}
+.card h3 i{color:var(--color-orange)}
+
+/* detail grid */
+.det-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:13px}
+.det-box{background:var(--color-background);border:1px solid var(--color-border);border-radius:var(--radius-md);padding:14px 15px;display:flex;gap:12px;align-items:flex-start;transition:.2s}
+.det-box:hover{border-color:#ffd782;box-shadow:var(--shadow-sm)}
+.det-box .d-ico{width:42px;height:42px;flex:none;border-radius:11px;display:grid;place-items:center;font-size:1rem;background:#FFF8E1;color:var(--color-orange)}
+.det-box.green .d-ico{background:#E8F5E9;color:var(--color-green)}
+.det-box .d-lbl{font-size:.68rem;font-weight:700;color:var(--color-muted);text-transform:uppercase;letter-spacing:.5px}
+.det-box .d-val{font-size:.9rem;font-weight:700;margin-top:2px;line-height:1.4;word-break:break-word}
+.det-box .d-val small{display:block;font-weight:500;color:var(--color-muted);font-size:.72rem;margin-top:2px}
+.status-pill{display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border-radius:20px;font-size:.72rem;font-weight:800;letter-spacing:.4px}
+.status-pill.confirmed{background:#E8F5E9;color:var(--color-green);border:1px solid #c8e6c9}
+.status-pill.pending{background:#FFF3E0;color:#b26a00;border:1px solid #ffe0b2}
+.status-pill.paid{background:#E8F5E9;color:var(--color-green);border:1px solid #c8e6c9}
+
+/* items */
+.item-row{display:flex;gap:13px;padding:13px 0;border-bottom:1px dashed var(--color-border);align-items:center}
+.item-row:first-of-type{padding-top:4px}
+.item-row:last-of-type{border-bottom:none}
+.item-row img{width:62px;height:62px;border-radius:12px;object-fit:cover;flex:none;background:var(--color-light-gray)}
+.item-row .it-body{flex:1;min-width:0}
+.item-row .it-name{font-size:.9rem;font-weight:700}
+.item-row .it-meta{font-size:.74rem;color:var(--color-muted);margin-top:2px}
+.item-row .it-total{font-size:.92rem;font-weight:800;flex:none}
+
+/* summary */
+.sum-row{display:flex;justify-content:space-between;align-items:center;font-size:.87rem;padding:7px 0}
+.sum-row .lbl{color:var(--color-muted);display:flex;gap:7px;align-items:center}
+.sum-row .lbl i{color:var(--color-orange);font-size:.78rem}
+.sum-row.discount .val{color:var(--color-green);font-weight:700}
+.sum-row .val.free{color:var(--color-green);font-weight:700}
+.sum-row .strike{text-decoration:line-through;color:var(--color-muted);font-size:.78rem;margin-right:6px}
+.sum-divider{height:1px;background:var(--color-border);margin:9px 0}
+.sum-total{display:flex;justify-content:space-between;align-items:center;font-size:1.15rem;font-weight:800;padding:6px 0 2px}
+.coupon-line{display:inline-flex;align-items:center;gap:6px;font-size:.78rem;color:var(--color-green);font-weight:700}
+.next-steps{font-size:.78rem;color:var(--color-muted);background:var(--color-light-gray);border-radius:var(--radius-sm);padding:12px 14px;margin-top:14px;line-height:1.6;display:flex;gap:9px;align-items:flex-start}
+.next-steps i{color:var(--color-orange);margin-top:3px}
+.help-row{display:flex;gap:10px;margin-top:14px;flex-wrap:wrap}
+.help-row a{font-size:.76rem;font-weight:700;color:var(--color-muted);display:inline-flex;gap:6px;align-items:center;transition:.2s}
+.help-row a:hover{color:var(--color-orange)}
+
+/* actions bar */
+.actions-bar{display:flex;gap:12px;flex-wrap:wrap;margin-top:4px}
+.actions-bar .btn{flex:1;min-width:160px;padding:14px;font-size:.92rem}
+
+/* skeleton / states */
+.skeleton{position:relative;overflow:hidden;background:#e8e8e8;border-radius:var(--radius-md)}
+.skeleton::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.65),transparent);animation:shimmer 1.3s infinite}
+@keyframes shimmer{from{transform:translateX(-100%)}to{transform:translateX(100%)}}
+.skel-card{background:#fff;border:1px solid var(--color-border);border-radius:var(--radius-lg);padding:22px;margin-bottom:20px;box-shadow:var(--shadow-md)}
+.skel-card .s-line{height:14px;margin-bottom:13px;border-radius:7px}
+.state-block{text-align:center;padding:70px 24px;background:#fff;border:1px dashed var(--color-border);border-radius:var(--radius-lg);margin:40px 0 60px}
+.state-block .big-ico{width:90px;height:90px;border-radius:50%;background:#FFEBEE;display:grid;place-items:center;margin:0 auto 18px;font-size:2.1rem;color:var(--color-red)}
+.state-block h4{font-size:1.2rem;margin-bottom:6px}
+.state-block p{color:var(--color-muted);font-size:.88rem;margin-bottom:20px;max-width:420px;margin-inline:auto}
+.auth-gate{text-align:center;padding:80px 24px;background:#fff;border:1px dashed var(--color-border);border-radius:var(--radius-lg);margin:40px 0 60px}
+.auth-gate .big-ico{width:86px;height:86px;border-radius:50%;background:#FFF8E1;display:grid;place-items:center;margin:0 auto 18px;font-size:2rem;color:var(--color-orange)}
+.auth-gate h4{font-size:1.2rem;margin-bottom:6px}
+.auth-gate p{color:var(--color-muted);font-size:.88rem;margin:0 auto 20px;max-width:420px}
+
+/* ============ FOOTER ============ */
+.footer{background:var(--color-black);color:#bbb}
+.footer-grid{display:grid;grid-template-columns:1.4fr 1fr 1fr 1.2fr;gap:34px;padding:54px 0 40px}
+.footer h4{color:#fff;font-size:.95rem;margin-bottom:16px;font-weight:700}
+.footer .about{font-size:.83rem;line-height:1.7;max-width:290px;margin-top:12px}
+.footer-links a{display:block;font-size:.85rem;padding:5px 0;transition:.2s}
+.footer-links a:hover{color:var(--color-yellow);padding-left:5px}
+.footer-contact li{display:flex;gap:11px;font-size:.84rem;margin-bottom:11px;align-items:flex-start}
+.footer-contact i{color:var(--color-yellow);margin-top:3px}
+.socials{display:flex;gap:10px;margin-top:18px}
+.socials a{width:38px;height:38px;border-radius:10px;background:rgba(255,255,255,.08);display:grid;place-items:center;color:#ddd;transition:.25s}
+.socials a:hover{background:var(--gradient-primary);color:var(--color-black);transform:translateY(-3px)}
+.footer-bottom{border-top:1px solid rgba(255,255,255,.1);padding:17px 0;display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;font-size:.78rem;color:#888}
+.footer-bottom b{color:var(--color-yellow)}
+
+/* ============ TOAST ============ */
+.toast-zone{position:fixed;bottom:22px;right:22px;z-index:1200;display:flex;flex-direction:column;gap:10px;max-width:min(360px,90vw)}
+.toast{background:#fff;border-radius:var(--radius-md);box-shadow:var(--shadow-lg);padding:13px 16px;display:flex;align-items:flex-start;gap:11px;font-size:.85rem;font-weight:500;min-width:270px;animation:toastIn .3s;border-left:4px solid var(--color-green)}
+.toast i{font-size:1rem;margin-top:2px}
+.toast.success{border-color:var(--color-green)}.toast.success i{color:var(--color-green)}
+.toast.error{border-color:var(--color-red)}.toast.error i{color:var(--color-red)}
+.toast.warning{border-color:var(--color-orange)}.toast.warning i{color:var(--color-orange)}
+.toast.info{border-color:#1976D2}.toast.info i{color:#1976D2}
+.toast .t-close{margin-left:auto;color:#bbb;font-size:.8rem;padding:2px}
+@keyframes toastIn{from{opacity:0;transform:translateX(30px)}to{opacity:1;transform:translateX(0)}}
+.toast.leaving{opacity:0;transform:translateX(30px);transition:.3s}
+
+/* ============ RESPONSIVE ============ */
+@media(max-width:1024px){
+  .os-layout{grid-template-columns:1fr}
+  .os-layout>aside{order:2}
+}
+@media(max-width:900px){
+  .top-nav{display:none}
+  .subnav{display:flex}
+  .footer-grid{grid-template-columns:1fr 1fr}
+}
+@media(max-width:768px){
+  .header-search{display:none}
+}
+@media(max-width:520px){
+  .actions-bar{flex-direction:column}
+  .actions-bar .btn{min-width:0;width:100%}
+  .det-grid{grid-template-columns:1fr 1fr}
+  .footer-grid{grid-template-columns:1fr;gap:26px;padding:40px 0 30px}
+  .toast-zone{left:14px;right:14px;bottom:14px}
+  .toast{min-width:0;width:100%}
+  .logo span{display:none}
+}
+@media(max-width:380px){
+  .det-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- ================= HEADER ================= -->
+<header class="header">
+  <div class="container header-inner">
+    <button class="icon-btn" id="menuBtn" aria-label="Open menu"><i class="fa-solid fa-bars"></i></button>
+    <a href="index.html" class="logo" aria-label="Foody Home">
+      <span class="logo-badge"><i class="fa-solid fa-utensils"></i></span>
+      <span>Foo<b>dy</b></span>
+    </a>
+    <div class="dropdown-wrap">
+      <button class="location-btn" id="locationBtn" aria-label="Change delivery location">
+        <i class="fa-solid fa-location-dot"></i>
+        <span class="loc-name" id="locationName">Mumbai</span>
+        <i class="fa-solid fa-chevron-down"></i>
+      </button>
+      <div class="dropdown-panel" id="locationPanel">
+        <div class="dd-head"><span><i class="fa-solid fa-location-dot" style="color:var(--color-orange)"></i> Select Location</span></div>
+        <div class="city-list" id="cityList"></div>
+      </div>
+    </div>
+    <form class="header-search" id="headerSearchForm" role="search">
+      <i class="fa-solid fa-magnifying-glass"></i>
+      <input type="search" id="headerSearchInput" placeholder="Search restaurants or dishes..." aria-label="Search">
+      <button type="submit">Search</button>
+    </form>
+    <nav class="top-nav" aria-label="Primary">
+      <a href="index.html"><i class="fa-solid fa-house"></i> Home</a>
+      <a href="restaurants.html"><i class="fa-solid fa-store"></i> Restaurants</a>
+      <a href="rewards.html"><i class="fa-solid fa-gift"></i> Rewards</a>
+      <a href="support.html"><i class="fa-solid fa-headset"></i> Support</a>
+      <a href="/games.html">🎮 Play Arcade Games</a>
+    </nav>
+    <div class="header-actions">
+      <div class="dropdown-wrap">
+        <button class="icon-btn" id="notifBtn" aria-label="Notifications">
+          <i class="fa-regular fa-bell"></i>
+          <span class="badge-dot" id="notifDot"></span>
+        </button>
+        <div class="dropdown-panel" id="notifPanel">
+          <div class="dd-head"><span>Notifications</span><button id="markReadBtn">Mark all read</button></div>
+          <div id="notifList"></div>
+        </div>
+      </div>
+      <a href="cart.html" class="icon-btn cart-link" aria-label="Cart">
+        <i class="fa-solid fa-cart-shopping"></i>
+        <span class="cart-badge hidden" id="cartBadge">0</span>
+      </a>
+    </div>
+  </div>
+  <nav class="subnav" aria-label="Primary mobile">
+    <a href="index.html"><i class="fa-solid fa-house"></i> Home</a>
+    <a href="restaurants.html"><i class="fa-solid fa-store"></i> Restaurants</a>
+    <a href="rewards.html"><i class="fa-solid fa-gift"></i> Rewards</a>
+    <a href="support.html"><i class="fa-solid fa-headset"></i> Support</a>
+  </nav>
+</header>
+
+<!-- ================= SIDEBAR ================= -->
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+<aside class="sidebar" id="sidebar" aria-label="User menu">
+  <div class="sidebar-head">
+    <a href="index.html" class="logo"><span class="logo-badge"><i class="fa-solid fa-utensils"></i></span><span>Foo<b>dy</b></span></a>
+    <button class="sidebar-close" id="sidebarClose" aria-label="Close menu"><i class="fa-solid fa-xmark"></i></button>
+  </div>
+  <div class="sidebar-user" id="sidebarUser"></div>
+  <nav class="sidebar-nav">
+    <a href="profile.html"><i class="fa-solid fa-user"></i> Profile</a>
+    <a href="orders.html"><i class="fa-solid fa-bag-shopping"></i> Orders</a>
+    <a href="food-preferences.html"><i class="fa-solid fa-sliders"></i> Food Preferences</a>
+    <a href="food-allergies.html"><i class="fa-solid fa-shield-halved"></i> Food Allergies</a>
+    <a href="wishlist.html"><i class="fa-solid fa-heart"></i> Wishlist</a>
+    <a href="rewards.html"><i class="fa-solid fa-gift"></i> Rewards</a>
+    <a href="support.html"><i class="fa-solid fa-headset"></i> Support</a>
+    <div class="sidebar-divider"></div>
+    <a href="index.html"><i class="fa-solid fa-house"></i> Home</a>
+    <a href="restaurants.html"><i class="fa-solid fa-store"></i> Restaurants</a>
+    <a href="/games.html">🎮 Play Arcade Games</a>
+  </nav>
+  <div class="sidebar-foot">
+    <button class="logout-btn" id="logoutBtn"><i class="fa-solid fa-right-from-bracket"></i> Logout</button>
+  </div>
+</aside>
+
+<main>
+  <!-- ================= SUCCESS HERO (injected) ================= -->
+  <section id="heroArea"></section>
+
+  <!-- ================= ORDER DETAILS ================= -->
+  <div class="container">
+    <div id="osMain">
+      <div class="os-layout">
+        <section id="detailsArea" aria-label="Order details"></section>
+        <aside id="summaryArea" aria-label="Payment summary"></aside>
+      </div>
+    </div>
+  </div>
+</main>
+
+<div class="confetti-zone" id="confettiZone" aria-hidden="true"></div>
+
+<!-- ================= FOOTER ================= -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <a href="index.html" class="logo"><span class="logo-badge"><i class="fa-solid fa-utensils"></i></span><span>Foo<b>dy</b></span></a>
+        <p class="about">Foody connects you with the best restaurants around you. Order your favourite meals and get them delivered hot, fresh and fast.</p>
+        <div class="socials">
+          <a href="#" aria-label="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
+          <a href="#" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+          <a href="#" aria-label="Twitter"><i class="fa-brands fa-twitter"></i></a>
+          <a href="#" aria-label="YouTube"><i class="fa-brands fa-youtube"></i></a>
+        </div>
+      </div>
+      <div>
+        <h4>Quick Links</h4>
+        <div class="footer-links">
+          <a href="restaurants.html">Restaurants</a>
+          <a href="search.html">Search Food</a>
+          <a href="orders.html">My Orders</a>
+          <a href="wishlist.html">Wishlist</a>
+          <a href="rewards.html">Rewards</a>
+        </div>
+      </div>
+      <div>
+        <h4>Top Categories</h4>
+        <div class="footer-links">
+          <a href="search.html?category=Biryani">Biryani</a>
+          <a href="search.html?category=Fast%20Food">Fast Food</a>
+          <a href="search.html?category=South%20Indian">South Indian</a>
+          <a href="search.html?category=Dessert">Desserts</a>
+          <a href="search.html?category=Drinks">Drinks</a>
+        </div>
+      </div>
+      <div>
+        <h4>Contact Us</h4>
+        <ul class="footer-contact">
+          <li><i class="fa-solid fa-location-dot"></i> Foody HQ, Bandra Kurla Complex, Mumbai 400051</li>
+          <li><i class="fa-solid fa-phone"></i> +91 98765 43210</li>
+          <li><i class="fa-solid fa-envelope"></i> support@foody.in</li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 <b>Foody</b>. All rights reserved.</span>
+      <span>Made with <i class="fa-solid fa-heart" style="color:var(--color-red)"></i> for food lovers</span>
+    </div>
+  </div>
+</footer>
+
+<div class="toast-zone" id="toastZone" aria-live="polite"></div>
+
+<script>
+/* ============================================================
+   FOODY — ORDER SUCCESS
+   Success • Order ID • Status • Items • ETA • Actions
+============================================================ */
+'use strict';
+const API_BASE_URL = "http://localhost:5000/api/v1";
+const FALLBACK_IMG = "https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=200&q=70";
+function imgErr(el){ el.onerror=null; el.src=FALLBACK_IMG; }
+const ORDER_ID = new URLSearchParams(location.search).get('id') || '';
+
+/* ---------------- STORAGE ---------------- */
+const store = {
+  get(k,d){ try{ const v=localStorage.getItem(k); return v===null?d:JSON.parse(v);}catch(e){return d;} },
+  set(k,v){ localStorage.setItem(k, JSON.stringify(v)); },
+  del(k){ localStorage.removeItem(k); }
+};
+const getUser = () => store.get('foody_user', null);
+const getCart = () => store.get('foody_cart', []);
+const getOrders = () => store.get('foody_orders', []);
+const orderById = id => getOrders().find(o => o.id === id);
+function updateCartBadge(){
+  const count = getCart().reduce((s,i) => s + i.qty, 0);
+  const b = document.getElementById('cartBadge');
+  b.textContent = count; b.classList.toggle('hidden', count===0);
+}
+
+/* ---------------- API HELPER ---------------- */
+async function apiFetch(endpoint, options = {}){
+  const ctrl = new AbortController();
+  const timer = setTimeout(() => ctrl.abort(), 2500);
+  try{
+    const user = getUser();
+    const res = await fetch(API_BASE_URL + endpoint, {
+      ...options,
+      headers:{ 'Content-Type':'application/json', ...(user && user.token ? {'Authorization':'Bearer '+user.token} : {}), ...(options.headers||{}) },
+      signal: ctrl.signal
+    });
+    clearTimeout(timer);
+    if(res.status === 401){ store.del('foody_user'); location.href='login.html'; throw new Error('Session expired'); }
+    if(!res.ok) throw new Error('Request failed');
+    return await res.json();
+  }catch(e){ clearTimeout(timer); return null; }
+}
+const demo = (val, ms=550) => new Promise(r => setTimeout(() => r(val), ms));
+
+/* ---------------- UI HELPERS ---------------- */
+const CITIES = ['Mumbai','Delhi','Bengaluru','Hyderabad','Chennai','Kolkata','Pune','Goa','Lucknow','Amritsar'];
+function toast(msg, type='success', icon){
+  const icons = { success:'fa-circle-check', error:'fa-circle-xmark', warning:'fa-triangle-exclamation', info:'fa-circle-info' };
+  const zone = document.getElementById('toastZone');
+  const t = document.createElement('div');
+  t.className = `toast ${type}`;
+  t.innerHTML = `<i class="fa-solid ${icon || icons[type]}"></i><span>${msg}</span><button class="t-close" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>`;
+  zone.appendChild(t);
+  const kill = () => { t.classList.add('leaving'); setTimeout(() => t.remove(), 320); };
+  t.querySelector('.t-close').addEventListener('click', kill);
+  setTimeout(kill, 3400);
+}
+
+/* ---------------- AUTH GATE ---------------- */
+function requireAuth(){
+  const usr = getUser();
+  if(usr && usr.name) return true;
+  document.getElementById('osMain').innerHTML = `
+    <div class="auth-gate">
+      <div class="big-ico"><i class="fa-solid fa-lock"></i></div>
+      <h4>Login Required</h4>
+      <p>Please login to view your order details. Redirecting you to login...</p>
+      <a href="login.html" class="btn btn-primary"><i class="fa-solid fa-right-to-bracket"></i> Go to Login</a>
+    </div>`;
+  setTimeout(() => { location.href = 'login.html'; }, 1400);
+  return false;
+}
+
+/* ---------------- HEADER / SIDEBAR ---------------- */
+const sidebar = document.getElementById('sidebar'), sidebarOverlay = document.getElementById('sidebarOverlay');
+document.getElementById('menuBtn').addEventListener('click', () => { sidebar.classList.add('open'); sidebarOverlay.classList.add('open'); document.body.style.overflow='hidden'; });
+document.getElementById('sidebarClose').addEventListener('click', closeSidebar);
+sidebarOverlay.addEventListener('click', closeSidebar);
+function closeSidebar(){ sidebar.classList.remove('open'); sidebarOverlay.classList.remove('open'); document.body.style.overflow=''; }
+function renderSidebarUser(){
+  const usr = getUser(), box = document.getElementById('sidebarUser');
+  if(usr && usr.name){
+    box.innerHTML = `<div class="avatar">${usr.name.trim().charAt(0).toUpperCase()}</div>
+      <div><div class="u-name">${usr.name}</div><div class="u-sub">${usr.email || usr.phone || ''}</div></div>`;
+  }else{
+    box.innerHTML = `<div class="avatar"><i class="fa-solid fa-user"></i></div>
+      <div><div class="u-name">Welcome, Guest</div><div class="u-sub">Login for the full experience</div></div>`;
+  }
+}
+document.getElementById('logoutBtn').addEventListener('click', () => { store.del('foody_user'); location.href='login.html'; });
+function renderCities(){
+  const cur = store.get('foody_location','Mumbai');
+  document.getElementById('locationName').textContent = cur;
+  document.getElementById('cityList').innerHTML = CITIES.map(c =>
+    `<button type="button" data-city="${c}" class="${c===cur?'active':''}"><i class="fa-solid fa-location-dot"></i> ${c}</button>`).join('');
+  document.querySelectorAll('#cityList button').forEach(b => b.addEventListener('click', () => {
+    store.set('foody_location', b.dataset.city);
+    document.getElementById('locationName').textContent = b.dataset.city;
+    togglePanel(document.getElementById('locationPanel'), false);
+  }));
+}
+function togglePanel(p, force){ p.classList.toggle('open', force===undefined ? !p.classList.contains('open') : force); }
+document.getElementById('locationBtn').addEventListener('click', e => { e.stopPropagation(); togglePanel(document.getElementById('locationPanel')); togglePanel(document.getElementById('notifPanel'), false); });
+function renderNotifs(){
+  const items = store.get('foody_notifications', []);
+  const read = store.get('foody_notifs_read', false);
+  document.getElementById('notifDot').classList.toggle('hidden', read || items.length===0);
+  document.getElementById('notifList').innerHTML = items.length
+    ? items.map(n => `<div class="notif-item"><div class="n-ico ${n.cls}"><i class="fa-solid ${n.ico}"></i></div><div>${n.text}<div class="n-time">${n.time}</div></div></div>`).join('')
+    : `<div class="notif-empty"><i class="fa-regular fa-bell-slash"></i><br>No notifications yet.</div>`;
+}
+document.getElementById('notifBtn').addEventListener('click', e => { e.stopPropagation(); togglePanel(document.getElementById('notifPanel')); togglePanel(document.getElementById('locationPanel'), false); });
+document.getElementById('markReadBtn').addEventListener('click', () => { store.set('foody_notifs_read', true); renderNotifs(); });
+document.addEventListener('click', () => { togglePanel(document.getElementById('locationPanel'), false); togglePanel(document.getElementById('notifPanel'), false); });
+document.querySelectorAll('.dropdown-panel').forEach(p => p.addEventListener('click', e => e.stopPropagation()));
+document.getElementById('headerSearchForm').addEventListener('submit', e => {
+  e.preventDefault();
+  const q = document.getElementById('headerSearchInput').value.trim();
+  location.href = 'search.html' + (q ? '?q=' + encodeURIComponent(q) : '');
+});
+
+/* ---------------- CONFETTI ---------------- */
+function launchConfetti(){
+  const zone = document.getElementById('confettiZone');
+  const colors = ['#FFC107','#FF9800','#2E7D32','#D32F2F','#1976D2','#fff'];
+  for(let i=0; i<44; i++){
+    const c = document.createElement('span');
+    c.className = 'confetti';
+    c.style.left = Math.random()*100 + 'vw';
+    c.style.background = colors[Math.floor(Math.random()*colors.length)];
+    c.style.animationDuration = (2.4 + Math.random()*1.8) + 's';
+    c.style.animationDelay = (Math.random()*0.7) + 's';
+    c.style.transform = `rotate(${Math.random()*360}deg)`;
+    c.style.width = (6 + Math.random()*6) + 'px';
+    c.style.height = (10 + Math.random()*8) + 'px';
+    zone.appendChild(c);
+  }
+  setTimeout(() => { zone.innerHTML = ''; }, 5200);
+}
+
+/* ---------------- HELPERS ---------------- */
+function fmtDate(iso){
+  const d = new Date(iso);
+  return d.toLocaleDateString('en-IN', { day:'numeric', month:'short', year:'numeric' }) + ', ' +
+         d.toLocaleTimeString('en-IN', { hour:'numeric', minute:'2-digit' });
+}
+function etaRange(iso){
+  const start = new Date(iso);
+  const s = new Date(start.getTime() + 32*60000);
+  const e = new Date(start.getTime() + 45*60000);
+  const f = d => d.toLocaleTimeString('en-IN', { hour:'numeric', minute:'2-digit' });
+  return `${f(s)} – ${f(e)}`;
+}
+function payMethodLabel(m){ return m === 'cod' ? 'Cash on Delivery' : 'Demo Online Payment (Simulation)'; }
+function payStatusHTML(st, method){
+  if(method === 'cod') return `<span class="status-pill pending"><i class="fa-solid fa-money-bill-wave"></i> Pay on Delivery</span>`;
+  return st === 'PAID'
+    ? `<span class="status-pill paid"><i class="fa-solid fa-circle-check"></i> PAID</span>`
+    : `<span class="status-pill pending"><i class="fa-regular fa-clock"></i> ${st}</span>`;
+}
+
+/* ---------------- RENDER ---------------- */
+function renderHero(o){
+  document.getElementById('heroArea').innerHTML = `
+  <section class="success-hero">
+    <div class="container">
+      <div class="check-wrap" aria-hidden="true">
+        <span class="check-ring"></span>
+        <span class="check-ring r2"></span>
+        <div class="check-circle"><i class="fa-solid fa-check"></i></div>
+      </div>
+      <h1>Order Placed Successfully!</h1>
+      <p class="sub">Thank you for ordering with Foody. Your food is being prepared with love.</p>
+      <div class="oid-pill">
+        <span>Order ID:</span> <b id="orderIdText">${o.id}</b>
+        <button type="button" id="copyOidBtn" aria-label="Copy order ID"><i class="fa-regular fa-copy"></i></button>
+      </div>
+      <br>
+      <span class="eta-pill"><i class="fa-solid fa-motorcycle"></i> Estimated Delivery: ${etaRange(o.date)}</span>
+    </div>
+  </section>`;
+  document.getElementById('copyOidBtn').addEventListener('click', async function(){
+    try{ await navigator.clipboard.writeText(o.id); }
+    catch(e){ const ta=document.createElement('textarea'); ta.value=o.id; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); ta.remove(); }
+    this.innerHTML = '<i class="fa-solid fa-check"></i>';
+    setTimeout(() => this.innerHTML = '<i class="fa-regular fa-copy"></i>', 1600);
+    toast('Order ID copied to clipboard', 'info', 'fa-copy');
+  });
+}
+
+function renderDetails(o){
+  const a = o.address || {};
+  const addrText = a.line1
+    ? `${a.line1}${a.line2 ? ', ' + a.line2 : ''}, ${a.city || ''} — ${a.pincode || ''}`
+    : 'Address not available';
+  document.getElementById('detailsArea').innerHTML = `
+    <div class="card">
+      <h3><i class="fa-solid fa-circle-info"></i> Order Information</h3>
+      <div class="det-grid">
+        <div class="det-box green">
+          <span class="d-ico"><i class="fa-solid fa-flag-checkered"></i></span>
+          <div><div class="d-lbl">Status</div><div class="d-val"><span class="status-pill confirmed"><i class="fa-solid fa-circle-check"></i> ${o.status || 'CONFIRMED'}</span></div></div>
+        </div>
+        <div class="det-box green">
+          <span class="d-ico"><i class="fa-solid fa-credit-card"></i></span>
+          <div><div class="d-lbl">Payment Method</div><div class="d-val">${payMethodLabel(o.payment_method)}<small>${payStatusHTML(o.payment_status, o.payment_method)}</small></div></div>
+        </div>
+        <div class="det-box">
+          <span class="d-ico"><i class="fa-solid fa-store"></i></span>
+          <div><div class="d-lbl">Restaurant</div><div class="d-val">${o.restaurant_name || 'Foody Partner'}</div></div>
+        </div>
+        <div class="det-box">
+          <span class="d-ico"><i class="fa-regular fa-calendar"></i></span>
+          <div><div class="d-lbl">Order Date</div><div class="d-val">${fmtDate(o.date)}</div></div>
+        </div>
+        <div class="det-box" style="grid-column:1/-1">
+          <span class="d-ico"><i class="fa-solid fa-location-dot"></i></span>
+          <div><div class="d-lbl">Delivery Address ${a.label ? '('+a.label+')' : ''}</div>
+          <div class="d-val">${a.name || 'Customer'} · +91 ${a.phone || '—'}<small>${addrText}</small></div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" style="animation-delay:.1s">
+      <h3><i class="fa-solid fa-bowl-food"></i> Ordered Items (${o.items.reduce((s,i)=>s+i.qty,0)})</h3>
+      ${o.items.map(it => `
+        <div class="item-row">
+          <img src="${it.image}" alt="${it.name}" loading="lazy" onerror="imgErr(this)">
+          <div class="it-body">
+            <div class="it-name">${it.name}</div>
+            <div class="it-meta">Qty ${it.qty} × ₹${it.price}</div>
+          </div>
+          <span class="it-total">₹${it.qty * it.price}</span>
+        </div>`).join('')}
+      <div class="next-steps"><i class="fa-solid fa-route"></i><span><strong>What happens next?</strong> The restaurant confirms your order, prepares it fresh, and our delivery partner brings it hot to your doorstep. Track every step in <a href="orders.html" style="color:var(--color-orange);font-weight:700">My Orders</a>.</span></div>
+      <div class="help-row">
+        <a href="support.html"><i class="fa-solid fa-headset"></i> Need help?</a>
+        <a href="invoice.html?id=${o.id}"><i class="fa-solid fa-file-invoice"></i> Download invoice</a>
+        <a href="restaurants.html"><i class="fa-solid fa-store"></i> Order more</a>
+      </div>
+    </div>
+
+    <div class="actions-bar" style="animation:fadeUp .5s .2s both">
+      <a href="orders.html" class="btn btn-dark"><i class="fa-solid fa-bag-shopping"></i> View Order</a>
+      <a href="invoice.html?id=${o.id}" class="btn btn-outline"><i class="fa-solid fa-file-invoice"></i> View Invoice</a>
+      <a href="index.html" class="btn btn-primary"><i class="fa-solid fa-utensils"></i> Continue Shopping</a>
+    </div>`;
+}
+
+function renderSummary(o){
+  document.getElementById('summaryArea').innerHTML = `
+    <div class="card" style="position:sticky;top:calc(var(--header-h) + 16px)">
+      <h3><i class="fa-solid fa-receipt"></i> Payment Summary</h3>
+      <div class="sum-row"><span class="lbl"><i class="fa-solid fa-basket-shopping"></i> Subtotal</span><span class="val">₹${o.subtotal}</span></div>
+      ${o.coupon ? `<div class="sum-row"><span class="lbl"><i class="fa-solid fa-tag"></i> Coupon</span><span class="coupon-line"><i class="fa-solid fa-circle-check"></i> ${o.coupon}</span></div>` : ''}
+      <div class="sum-row discount"><span class="lbl"><i class="fa-solid fa-percent"></i> Discount</span><span class="val">− ₹${o.discount || 0}</span></div>
+      <div class="sum-row"><span class="lbl"><i class="fa-solid fa-motorcycle"></i> Delivery Fee</span>
+        <span class="val">${o.delivery_fee === 0 ? '<span class="strike">₹29</span><span class="free">FREE</span>' : '₹'+o.delivery_fee}</span></div>
+      <div class="sum-divider"></div>
+      <div class="sum-total"><span>Total Paid${o.payment_method==='cod'?' (Due)':''}</span><span>₹${o.total}</span></div>
+      <div class="next-steps" style="margin-top:16px"><i class="fa-solid fa-shield-halved"></i><span>Final totals are verified by the server. This summary reflects your confirmed order.</span></div>
+    </div>`;
+}
+
+/* ---------------- STATES ---------------- */
+function renderNotFound(){
+  document.getElementById('heroArea').innerHTML = '';
+  document.getElementById('osMain').innerHTML = `
+    <div class="state-block">
+      <div class="big-ico"><i class="fa-solid fa-receipt"></i></div>
+      <h4>Order Not Found</h4>
+      <p>We couldn't find the order you're looking for. It may have been removed or the link is incorrect.</p>
+      <a href="orders.html" class="btn btn-primary"><i class="fa-solid fa-bag-shopping"></i> View My Orders</a>
+    </div>`;
+}
+function renderSkeleton(){
+  document.getElementById('heroArea').innerHTML = `
+    <section class="success-hero" style="padding-bottom:60px">
+      <div class="container">
+        <div class="skeleton" style="width:110px;height:110px;border-radius:50%;margin:0 auto 20px"></div>
+        <div class="skeleton" style="width:280px;height:22px;margin:0 auto 12px"></div>
+        <div class="skeleton" style="width:200px;height:14px;margin:0 auto"></div>
+      </div>
+    </section>`;
+  document.getElementById('detailsArea').innerHTML = `
+    <div class="skel-card"><div class="skeleton s-line" style="width:35%"></div><div class="skeleton s-line" style="width:85%"></div><div class="skeleton s-line" style="width:70%"></div><div class="skeleton s-line" style="width:55%"></div></div>
+    <div class="skel-card"><div class="skeleton s-line" style="width:40%"></div><div class="skeleton s-line" style="width:90%"></div><div class="skeleton s-line" style="width:80%"></div></div>`;
+  document.getElementById('summaryArea').innerHTML = `
+    <div class="skel-card"><div class="skeleton s-line" style="width:45%"></div><div class="skeleton s-line" style="width:75%"></div><div class="skeleton s-line" style="width:60%"></div><div class="skeleton s-line" style="width:50%"></div></div>`;
+}
+
+/* ---------------- INIT ---------------- */
+async function init(){
+  renderSidebarUser(); renderCities(); renderNotifs(); updateCartBadge();
+  window.addEventListener('storage', updateCartBadge);
+
+  if(!requireAuth()) return;
+
+  renderSkeleton();
+  try{
+    const remote = await apiFetch('/orders/' + encodeURIComponent(ORDER_ID));
+    const order = (remote && remote.id) ? remote : await demo(orderById(ORDER_ID) || null, 650);
+    if(!order){ renderNotFound(); return; }
+    renderHero(order);
+    renderDetails(order);
+    renderSummary(order);
+    document.title = `Order ${order.id} Confirmed | Foody`;
+    if(Math.random() > 0.15) launchConfetti(); // celebrate (almost always)
+  }catch(err){
+    document.getElementById('osMain').innerHTML = `
+      <div class="state-block">
+        <div class="big-ico"><i class="fa-solid fa-wifi"></i></div>
+        <h4>Something went wrong</h4>
+        <p>We couldn't load your order right now. Please try again.</p>
+        <button class="btn btn-primary" onclick="location.reload()"><i class="fa-solid fa-rotate-right"></i> Retry</button>
+      </div>`;
+  }
+}
+document.addEventListener('DOMContentLoaded', init);
+</script>
+</body>
+</html>
