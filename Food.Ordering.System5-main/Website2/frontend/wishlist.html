@@ -1,0 +1,1044 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Wishlist | Foody</title>
+<meta name="description" content="Your saved food and restaurants on Foody.">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+/* ============ RESET & TOKENS ============ */
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --color-yellow:#FFC107; --color-orange:#FF9800; --color-green:#2E7D32; --color-red:#D32F2F;
+  --color-black:#111111; --color-dark:#181818; --color-white:#FFFFFF;
+  --color-background:#F7F7F7; --color-light-gray:#F1F1F1; --color-border:#E2E2E2;
+  --color-text:#222222; --color-muted:#777777;
+  --gradient-primary:linear-gradient(135deg,#FFC107 0%,#FF9800 100%);
+  --shadow-sm:0 2px 8px rgba(0,0,0,.06); --shadow-md:0 6px 20px rgba(0,0,0,.10); --shadow-lg:0 14px 40px rgba(0,0,0,.16);
+  --radius-sm:8px; --radius-md:14px; --radius-lg:20px;
+  --header-h:66px; --sidebar-w:280px;
+  --font:'Poppins',system-ui,-apple-system,Segoe UI,sans-serif;
+}
+html{scroll-behavior:smooth}
+body{font-family:var(--font);background:var(--color-background);color:var(--color-text);overflow-x:hidden;line-height:1.55;font-size:15px}
+img{display:block;max-width:100%}
+a{text-decoration:none;color:inherit}
+button{font-family:inherit;cursor:pointer;border:none;background:none}
+ul{list-style:none}
+::-webkit-scrollbar{height:8px;width:8px}
+::-webkit-scrollbar-thumb{background:#ccc;border-radius:8px}
+.container{width:min(1220px,92%);margin-inline:auto}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;font-weight:600;border-radius:var(--radius-sm);padding:11px 20px;font-size:.87rem;transition:.25s;white-space:nowrap}
+.btn-primary{background:var(--gradient-primary);color:var(--color-black);box-shadow:0 6px 16px rgba(255,152,0,.35)}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 10px 22px rgba(255,152,0,.45)}
+.btn-dark{background:var(--color-black);color:#fff}
+.btn-dark:hover{background:#000;transform:translateY(-2px)}
+.btn-outline{border:2px solid var(--color-border);color:var(--color-text);background:#fff}
+.btn-outline:hover{border-color:var(--color-orange);color:var(--color-orange)}
+.btn-danger-outline{border:2px solid #ffcdd2;color:var(--color-red);background:#fff}
+.btn-danger-outline:hover{background:#FFEBEE;border-color:var(--color-red)}
+.btn[disabled]{opacity:.55;cursor:not-allowed;transform:none!important}
+.btn.added{background:var(--color-green)!important;color:#fff!important;box-shadow:0 6px 16px rgba(46,125,50,.35)!important}
+
+/* ============ HEADER ============ */
+.header{position:sticky;top:0;z-index:900;background:var(--color-black);color:#fff;box-shadow:0 2px 14px rgba(0,0,0,.35)}
+.header-inner{display:flex;align-items:center;gap:14px;height:var(--header-h)}
+.icon-btn{width:40px;height:40px;border-radius:10px;display:grid;place-items:center;color:#fff;font-size:1.05rem;position:relative;transition:.2s;background:rgba(255,255,255,.08)}
+.icon-btn:hover{background:var(--color-yellow);color:var(--color-black)}
+.logo{display:flex;align-items:center;gap:9px;font-size:1.4rem;font-weight:800;letter-spacing:.5px}
+.logo-badge{width:38px;height:38px;border-radius:12px;background:var(--gradient-primary);display:grid;place-items:center;color:var(--color-black);font-size:1.05rem;box-shadow:0 4px 12px rgba(255,193,7,.4)}
+.logo span{color:#fff}.logo b{color:var(--color-yellow);font-weight:800}
+.location-btn{display:flex;align-items:center;gap:7px;color:#eee;font-size:.82rem;padding:8px 10px;border-radius:10px;transition:.2s;max-width:150px}
+.location-btn:hover{background:rgba(255,255,255,.08)}
+.location-btn i.fa-location-dot{color:var(--color-yellow)}
+.location-btn .loc-name{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:600}
+.location-btn i.fa-chevron-down{font-size:.6rem;color:#999}
+.header-search{flex:1;max-width:430px;display:flex;align-items:center;background:#fff;border-radius:var(--radius-sm);overflow:hidden;border:2px solid transparent;transition:.2s}
+.header-search:focus-within{border-color:var(--color-yellow)}
+.header-search i{padding:0 4px 0 14px;color:var(--color-muted)}
+.header-search input{flex:1;border:none;outline:none;padding:10px;font-family:inherit;font-size:.87rem;min-width:0}
+.header-search button{background:var(--gradient-primary);color:var(--color-black);font-weight:700;font-size:.8rem;padding:10px 16px;height:100%}
+.top-nav{display:flex;gap:4px;margin-left:auto}
+.top-nav a{color:#ddd;font-size:.87rem;font-weight:600;padding:9px 13px;border-radius:9px;transition:.2s;display:flex;align-items:center;gap:7px}
+.top-nav a i{font-size:.85rem}
+.top-nav a:hover{color:var(--color-yellow);background:rgba(255,255,255,.07)}
+.header-actions{display:flex;align-items:center;gap:8px}
+.cart-link{position:relative}
+.cart-badge{position:absolute;top:-4px;right:-4px;min-width:19px;height:19px;padding:0 4px;border-radius:20px;background:var(--color-red);color:#fff;font-size:.68rem;font-weight:700;display:grid;place-items:center;border:2px solid var(--color-black)}
+.cart-badge.hidden{display:none}
+.badge-dot{position:absolute;top:2px;right:2px;width:9px;height:9px;border-radius:50%;background:var(--color-red);border:2px solid var(--color-black)}
+.badge-dot.hidden{display:none}
+.dropdown-wrap{position:relative}
+.dropdown-panel{position:absolute;top:calc(100% + 10px);right:0;background:#fff;color:var(--color-text);border-radius:var(--radius-md);box-shadow:var(--shadow-lg);width:300px;opacity:0;visibility:hidden;transform:translateY(8px);transition:.22s;z-index:950;overflow:hidden}
+.dropdown-panel.open{opacity:1;visibility:visible;transform:translateY(0)}
+.dd-head{display:flex;justify-content:space-between;align-items:center;padding:13px 16px;border-bottom:1px solid var(--color-border);font-weight:700;font-size:.9rem}
+.dd-head button{color:var(--color-orange);font-size:.75rem;font-weight:600}
+.notif-item{display:flex;gap:11px;padding:13px 16px;border-bottom:1px solid var(--color-light-gray);font-size:.8rem;transition:.15s}
+.notif-item:last-child{border-bottom:none}
+.notif-item:hover{background:var(--color-light-gray)}
+.notif-item .n-ico{width:34px;height:34px;flex:none;border-radius:10px;display:grid;place-items:center;font-size:.85rem}
+.n-ico.orange{background:#FFF3E0;color:var(--color-orange)}
+.n-ico.green{background:#E8F5E9;color:var(--color-green)}
+.n-ico.red{background:#FFEBEE;color:var(--color-red)}
+.notif-item .n-time{color:var(--color-muted);font-size:.7rem;margin-top:2px}
+.notif-empty{padding:26px;text-align:center;color:var(--color-muted);font-size:.83rem}
+.city-list{max-height:300px;overflow:auto;padding:6px}
+.city-list button{display:flex;align-items:center;gap:10px;width:100%;text-align:left;padding:10px 12px;border-radius:8px;font-size:.86rem;transition:.15s}
+.city-list button:hover{background:var(--color-light-gray)}
+.city-list button.active{background:#FFF8E1;color:#a56b00;font-weight:600}
+.city-list button i{color:var(--color-orange)}
+.subnav{display:none;background:var(--color-dark);border-top:1px solid rgba(255,255,255,.08);overflow-x:auto;scrollbar-width:none}
+.subnav::-webkit-scrollbar{display:none}
+.subnav a{flex:none;color:#ccc;font-size:.83rem;font-weight:600;padding:10px 16px;display:flex;align-items:center;gap:7px}
+
+/* ============ SIDEBAR ============ */
+.sidebar-overlay{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:980;opacity:0;visibility:hidden;transition:.3s;backdrop-filter:blur(2px)}
+.sidebar-overlay.open{opacity:1;visibility:visible}
+.sidebar{position:fixed;top:0;left:0;bottom:0;width:var(--sidebar-w);max-width:85vw;background:#fff;z-index:990;transform:translateX(-102%);transition:transform .32s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column;box-shadow:var(--shadow-lg)}
+.sidebar.open{transform:translateX(0)}
+.sidebar-head{display:flex;align-items:center;justify-content:space-between;padding:16px 18px;background:var(--color-black);color:#fff}
+.sidebar-head .logo{font-size:1.2rem}
+.sidebar-close{width:36px;height:36px;border-radius:9px;display:grid;place-items:center;color:#fff;background:rgba(255,255,255,.1);transition:.2s}
+.sidebar-close:hover{background:var(--color-red)}
+.sidebar-user{display:flex;align-items:center;gap:12px;padding:18px;border-bottom:1px solid var(--color-border);background:var(--color-light-gray)}
+.avatar{width:46px;height:46px;border-radius:50%;background:var(--gradient-primary);color:var(--color-black);display:grid;place-items:center;font-weight:800;font-size:1.1rem;flex:none}
+.sidebar-user .u-name{font-weight:700;font-size:.92rem;line-height:1.2}
+.sidebar-user .u-sub{font-size:.75rem;color:var(--color-muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:160px}
+.sidebar-nav{flex:1;overflow-y:auto;padding:12px}
+.sidebar-nav a{display:flex;align-items:center;gap:13px;padding:12px 14px;border-radius:var(--radius-sm);font-size:.9rem;font-weight:600;margin-bottom:3px;transition:.2s;position:relative}
+.sidebar-nav a i{width:22px;text-align:center;color:var(--color-muted);font-size:1rem;transition:.2s}
+.sidebar-nav a:hover{background:#FFF8E1;color:#b26a00;transform:translateX(3px)}
+.sidebar-nav a:hover i{color:var(--color-orange)}
+.sidebar-nav a.active{background:var(--gradient-primary);color:var(--color-black)}
+.sidebar-nav a.active i{color:var(--color-black)}
+.sidebar-nav a.active::before{content:'';position:absolute;left:-12px;top:20%;bottom:20%;width:4px;border-radius:4px;background:var(--color-orange)}
+.sidebar-divider{height:1px;background:var(--color-border);margin:10px 6px}
+.sidebar-foot{padding:14px;border-top:1px solid var(--color-border)}
+.logout-btn{width:100%;display:flex;align-items:center;gap:13px;padding:12px 14px;border-radius:var(--radius-sm);font-size:.9rem;font-weight:600;color:var(--color-red);transition:.2s}
+.logout-btn:hover{background:#FFEBEE}
+
+/* ============ PAGE HEAD ============ */
+.page-head{background:var(--color-dark);color:#fff;padding:36px 0;position:relative;overflow:hidden}
+.page-head::before{content:'';position:absolute;width:460px;height:460px;border-radius:50%;background:radial-gradient(circle,rgba(255,152,0,.2),transparent 65%);top:-190px;right:-90px;pointer-events:none}
+.page-head h1{font-size:clamp(1.5rem,3vw,2.1rem);font-weight:800;display:flex;align-items:center;gap:12px;position:relative}
+.page-head h1 i{color:var(--color-red);font-size:.9em}
+.page-head p{color:#b5b5b5;font-size:.9rem;margin-top:6px;position:relative}
+
+/* ============ WISHLIST LAYOUT ============ */
+.wish-layout{display:grid;grid-template-columns:280px 1fr;gap:26px;padding:32px 0 60px;align-items:start}
+.wish-select{position:sticky;top:calc(var(--header-h) + 16px);display:flex;flex-direction:column;gap:12px}
+.sel-card{display:flex;align-items:center;gap:14px;background:#fff;border:2px solid var(--color-border);border-radius:var(--radius-md);padding:16px;cursor:pointer;transition:.25s;text-align:left;width:100%}
+.sel-card:hover{border-color:#ffd782;box-shadow:var(--shadow-sm);transform:translateY(-2px)}
+.sel-card.active{background:var(--gradient-primary);border-color:transparent;box-shadow:0 10px 24px rgba(255,152,0,.35)}
+.sel-card .s-ico{width:46px;height:46px;flex:none;border-radius:12px;background:#FFF8E1;color:var(--color-orange);display:grid;place-items:center;font-size:1.15rem;transition:.25s}
+.sel-card.active .s-ico{background:rgba(0,0,0,.14);color:var(--color-black)}
+.sel-card .s-t{font-weight:700;font-size:.93rem;color:var(--color-text)}
+.sel-card.active .s-t{color:var(--color-black)}
+.sel-card .s-sub{font-size:.74rem;color:var(--color-muted);margin-top:2px}
+.sel-card.active .s-sub{color:rgba(0,0,0,.6)}
+.sel-card .s-cnt{margin-left:auto;background:var(--color-light-gray);color:var(--color-muted);font-size:.75rem;font-weight:700;min-width:26px;height:26px;border-radius:20px;display:grid;place-items:center;padding:0 7px;transition:.25s}
+.sel-card.active .s-cnt{background:rgba(0,0,0,.16);color:var(--color-black)}
+.wish-tip{background:#fff;border:1px dashed var(--color-border);border-radius:var(--radius-md);padding:14px 16px;font-size:.76rem;color:var(--color-muted);display:flex;gap:10px;align-items:flex-start;line-height:1.5}
+.wish-tip i{color:var(--color-orange);margin-top:2px}
+
+/* ============ CONTENT AREA ============ */
+.wish-content{min-width:0;animation:fadeSlide .35s both}
+@keyframes fadeSlide{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+.content-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:18px;flex-wrap:wrap}
+.content-head h2{font-size:1.15rem;font-weight:700;display:flex;gap:9px;align-items:center}
+.content-head h2 i{color:var(--color-orange)}
+.content-head .c-count{font-size:.8rem;color:var(--color-muted);font-weight:500}
+
+/* ---- horizontal food card ---- */
+.h-card{display:flex;background:#fff;border:1px solid var(--color-border);border-radius:var(--radius-lg);overflow:hidden;transition:.28s;margin-bottom:18px;position:relative}
+.h-card:hover{transform:translateY(-4px);box-shadow:var(--shadow-lg);border-color:#ffd782}
+.h-card-img{flex:none;width:242px;position:relative;background:var(--color-light-gray);min-height:210px}
+.h-card-img img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:.5s}
+.h-card:hover .h-card-img img{transform:scale(1.06)}
+.h-discount{position:absolute;top:12px;left:12px;background:var(--color-red);color:#fff;font-size:.7rem;font-weight:700;padding:5px 10px;border-radius:7px;box-shadow:var(--shadow-sm);z-index:2}
+.h-mark{position:absolute;bottom:12px;left:12px;z-index:2}
+.soldout-tag{position:absolute;inset:0;background:rgba(0,0,0,.55);display:grid;place-items:center;color:#fff;font-weight:700;font-size:.85rem;letter-spacing:1px;z-index:2}
+.h-card-body{flex:1;padding:18px 20px 16px;display:flex;flex-direction:column;min-width:0}
+.h-top-row{display:flex;align-items:flex-start;gap:12px;flex-wrap:wrap}
+.h-card-body h3{font-size:1.12rem;font-weight:700;flex:1;min-width:180px}
+.h-card-body h3 a:hover{color:var(--color-orange)}
+.h-rating{background:#E8F5E9;color:var(--color-green);border:1px solid #c8e6c9;font-weight:700;font-size:.78rem;padding:5px 11px;border-radius:9px;display:inline-flex;gap:5px;align-items:center;flex:none}
+.h-rating i{font-size:.68rem;color:var(--color-green)}
+.h-rest{font-size:.8rem;color:var(--color-muted);display:flex;gap:7px;align-items:center;margin-top:5px}
+.h-rest i{color:var(--color-orange)}
+.h-rest a:hover{color:var(--color-orange)}
+.h-desc{font-size:.82rem;color:var(--color-muted);margin-top:8px;display:-webkit-box;-webkit-line-clamp:2;line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.h-meta{display:flex;gap:14px;flex-wrap:wrap;margin-top:11px;font-size:.78rem;color:var(--color-muted)}
+.h-meta span{display:inline-flex;gap:6px;align-items:center}
+.h-meta i{color:var(--color-orange)}
+.h-price-row{display:flex;align-items:center;gap:12px;margin-top:13px;flex-wrap:wrap}
+.h-price-row .now{font-size:1.3rem;font-weight:800}
+.h-price-row .old{font-size:.85rem;color:var(--color-muted);text-decoration:line-through}
+.h-price-row .save{background:#E8F5E9;color:var(--color-green);font-size:.7rem;font-weight:700;padding:4px 9px;border-radius:7px}
+.allergy-warning{display:flex;align-items:flex-start;gap:8px;background:#FFF3E0;border:1px solid #FFB74D;color:#8a4500;border-radius:var(--radius-sm);padding:9px 11px;font-size:.76rem;font-weight:600;margin-top:12px}
+.allergy-warning i{color:#E65100;margin-top:2px;flex:none}
+.h-actions{display:flex;gap:10px;margin-top:auto;padding-top:15px;flex-wrap:wrap}
+.h-actions .btn{padding:10px 18px;font-size:.83rem}
+
+/* ---- horizontal restaurant card ---- */
+.hr-card{display:flex;background:#fff;border:1px solid var(--color-border);border-radius:var(--radius-lg);overflow:hidden;transition:.28s;margin-bottom:18px}
+.hr-card:hover{transform:translateY(-4px);box-shadow:var(--shadow-lg);border-color:#ffd782}
+.hr-img{flex:none;width:220px;position:relative;background:var(--color-light-gray);min-height:185px}
+.hr-img img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:.5s}
+.hr-card:hover .hr-img img{transform:scale(1.06)}
+.hr-img .open-badge{position:absolute;top:12px;left:12px;font-size:.68rem;font-weight:700;padding:4px 10px;border-radius:20px;color:#fff;letter-spacing:.4px;z-index:2}
+.open-badge.open{background:var(--color-green)}
+.open-badge.closed{background:var(--color-red)}
+.hr-img .r-rating{position:absolute;bottom:12px;left:12px;background:var(--color-green);color:#fff;font-size:.75rem;font-weight:700;padding:4px 9px;border-radius:7px;display:flex;gap:4px;align-items:center;z-index:2;box-shadow:var(--shadow-sm)}
+.hr-img.closed-img img{filter:grayscale(.5) brightness(.85)}
+.hr-body{flex:1;padding:18px 20px 16px;display:flex;flex-direction:column;min-width:0}
+.hr-body h3{font-size:1.08rem;font-weight:700}
+.hr-body h3 a:hover{color:var(--color-orange)}
+.hr-cuisine{font-size:.79rem;color:var(--color-muted);margin-top:3px}
+.hr-meta{display:flex;gap:14px;flex-wrap:wrap;margin-top:10px;font-size:.77rem;color:var(--color-muted)}
+.hr-meta span{display:inline-flex;gap:6px;align-items:center}
+.hr-meta i{color:var(--color-orange)}
+.hr-meta .free{color:var(--color-green);font-weight:700}
+.hr-addr{font-size:.77rem;color:var(--color-muted);display:flex;gap:7px;align-items:flex-start;margin-top:9px}
+.hr-addr i{color:#bbb;margin-top:3px}
+.hr-actions{display:flex;gap:9px;margin-top:auto;padding-top:14px;flex-wrap:wrap}
+.hr-actions .btn{padding:9px 15px;font-size:.8rem}
+
+/* ---- skeletons / states ---- */
+.skeleton{position:relative;overflow:hidden;background:#e8e8e8;border-radius:var(--radius-md)}
+.skeleton::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.65),transparent);animation:shimmer 1.3s infinite}
+@keyframes shimmer{from{transform:translateX(-100%)}to{transform:translateX(100%)}}
+.skel-h{display:flex;border-radius:var(--radius-lg);overflow:hidden;background:#fff;border:1px solid var(--color-border);margin-bottom:18px}
+.skel-h .s-img{width:242px;flex:none;min-height:210px;border-radius:0}
+.skel-h .s-lines{flex:1;padding:20px}
+.skel-h .s-line{height:13px;margin-bottom:13px;border-radius:7px}
+.state-block{text-align:center;padding:64px 24px;background:#fff;border:1px dashed var(--color-border);border-radius:var(--radius-lg)}
+.state-block .big-ico{width:86px;height:86px;border-radius:50%;background:#FFF8E1;display:grid;place-items:center;margin:0 auto 18px;font-size:2rem;color:var(--color-orange)}
+.state-block h4{font-size:1.2rem;margin-bottom:6px}
+.state-block p{color:var(--color-muted);font-size:.88rem;margin-bottom:20px;max-width:400px;margin-inline:auto}
+.auth-gate{text-align:center;padding:80px 24px;background:#fff;border:1px dashed var(--color-border);border-radius:var(--radius-lg);margin:40px 0 60px}
+.auth-gate .big-ico{width:86px;height:86px;border-radius:50%;background:#FFF8E1;display:grid;place-items:center;margin:0 auto 18px;font-size:2rem;color:var(--color-orange)}
+.auth-gate h4{font-size:1.2rem;margin-bottom:6px}
+.auth-gate p{color:var(--color-muted);font-size:.88rem;margin:0 auto 20px;max-width:420px}
+
+/* ============ FOOTER ============ */
+.footer{background:var(--color-black);color:#bbb}
+.footer-grid{display:grid;grid-template-columns:1.4fr 1fr 1fr 1.2fr;gap:34px;padding:54px 0 40px}
+.footer h4{color:#fff;font-size:.95rem;margin-bottom:16px;font-weight:700}
+.footer .about{font-size:.83rem;line-height:1.7;max-width:290px;margin-top:12px}
+.footer-links a{display:block;font-size:.85rem;padding:5px 0;transition:.2s}
+.footer-links a:hover{color:var(--color-yellow);padding-left:5px}
+.footer-contact li{display:flex;gap:11px;font-size:.84rem;margin-bottom:11px;align-items:flex-start}
+.footer-contact i{color:var(--color-yellow);margin-top:3px}
+.socials{display:flex;gap:10px;margin-top:18px}
+.socials a{width:38px;height:38px;border-radius:10px;background:rgba(255,255,255,.08);display:grid;place-items:center;color:#ddd;transition:.25s}
+.socials a:hover{background:var(--gradient-primary);color:var(--color-black);transform:translateY(-3px)}
+.footer-bottom{border-top:1px solid rgba(255,255,255,.1);padding:17px 0;display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;font-size:.78rem;color:#888}
+.footer-bottom b{color:var(--color-yellow)}
+
+/* ============ TOAST + MODAL ============ */
+.toast-zone{position:fixed;bottom:22px;right:22px;z-index:1200;display:flex;flex-direction:column;gap:10px;max-width:min(360px,90vw)}
+.toast{background:#fff;border-radius:var(--radius-md);box-shadow:var(--shadow-lg);padding:13px 16px;display:flex;align-items:flex-start;gap:11px;font-size:.85rem;font-weight:500;min-width:270px;animation:toastIn .3s;border-left:4px solid var(--color-green)}
+.toast i{font-size:1rem;margin-top:2px}
+.toast.success{border-color:var(--color-green)}.toast.success i{color:var(--color-green)}
+.toast.error{border-color:var(--color-red)}.toast.error i{color:var(--color-red)}
+.toast.warning{border-color:var(--color-orange)}.toast.warning i{color:var(--color-orange)}
+.toast.info{border-color:#1976D2}.toast.info i{color:#1976D2}
+.toast .t-close{margin-left:auto;color:#bbb;font-size:.8rem;padding:2px}
+@keyframes toastIn{from{opacity:0;transform:translateX(30px)}to{opacity:1;transform:translateX(0)}}
+.toast.leaving{opacity:0;transform:translateX(30px);transition:.3s}
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:1100;display:grid;place-items:center;padding:18px;opacity:0;visibility:hidden;transition:.25s}
+.modal-overlay.open{opacity:1;visibility:visible}
+.modal{background:#fff;border-radius:var(--radius-lg);max-width:400px;width:100%;padding:30px 26px 24px;text-align:center;transform:scale(.9);transition:.25s;box-shadow:var(--shadow-lg)}
+.modal-overlay.open .modal{transform:scale(1)}
+.modal .m-icon{width:64px;height:64px;border-radius:50%;display:grid;place-items:center;font-size:1.6rem;margin:0 auto 16px}
+.m-icon.warn{background:#FFF3E0;color:#E65100}
+.m-icon.danger{background:#FFEBEE;color:var(--color-red)}
+.modal h3{font-size:1.12rem;margin-bottom:8px}
+.modal p{color:var(--color-muted);font-size:.87rem;margin-bottom:20px}
+.modal .m-actions{display:flex;gap:10px;justify-content:center}
+.modal .m-actions .btn{flex:1}
+
+/* ============ RESPONSIVE ============ */
+@media(max-width:1024px){
+  .wish-layout{grid-template-columns:1fr}
+  .wish-select{position:static;flex-direction:row}
+  .sel-card{flex:1}
+  .wish-tip{display:none}
+  .h-card-img{width:200px}
+}
+@media(max-width:900px){
+  .top-nav{display:none}
+  .subnav{display:flex}
+  .footer-grid{grid-template-columns:1fr 1fr}
+}
+@media(max-width:768px){
+  .header-search{display:none}
+}
+@media(max-width:640px){
+  .wish-select{flex-direction:column}
+  .h-card{flex-direction:row}
+  .h-card-img{width:122px;min-height:190px}
+  .h-discount{top:8px;left:8px;font-size:.62rem;padding:4px 7px}
+  .h-mark{bottom:8px;left:8px;transform:scale(.9);transform-origin:bottom left}
+  .h-card-body{padding:13px 13px 12px}
+  .h-card-body h3{font-size:.96rem;min-width:0}
+  .h-desc{-webkit-line-clamp:2;line-clamp:2}
+  .h-price-row .now{font-size:1.1rem}
+  .h-actions{gap:7px}
+  .h-actions .btn{flex:1;padding:9px 8px;font-size:.76rem;min-width:0}
+  .hr-card{flex-direction:row}
+  .hr-img{width:118px;min-height:170px}
+  .hr-img .open-badge{top:8px;left:8px;font-size:.6rem;padding:3px 7px}
+  .hr-img .r-rating{bottom:8px;left:8px;font-size:.66rem;padding:3px 6px}
+  .hr-body{padding:13px}
+  .hr-actions .btn{flex:1;padding:8px 6px;font-size:.74rem;min-width:0}
+  .skel-h .s-img{width:122px;min-height:190px}
+}
+@media(max-width:520px){
+  .footer-grid{grid-template-columns:1fr;gap:26px;padding:40px 0 30px}
+  .toast-zone{left:14px;right:14px;bottom:14px}
+  .toast{min-width:0;width:100%}
+  .logo span{display:none}
+}
+</style>
+</head>
+<body>
+
+<!-- ================= HEADER ================= -->
+<header class="header">
+  <div class="container header-inner">
+    <button class="icon-btn" id="menuBtn" aria-label="Open menu"><i class="fa-solid fa-bars"></i></button>
+    <a href="index.html" class="logo" aria-label="Foody Home">
+      <span class="logo-badge"><i class="fa-solid fa-utensils"></i></span>
+      <span>Foo<b>dy</b></span>
+    </a>
+    <div class="dropdown-wrap">
+      <button class="location-btn" id="locationBtn" aria-label="Change delivery location">
+        <i class="fa-solid fa-location-dot"></i>
+        <span class="loc-name" id="locationName">Mumbai</span>
+        <i class="fa-solid fa-chevron-down"></i>
+      </button>
+      <div class="dropdown-panel" id="locationPanel">
+        <div class="dd-head"><span><i class="fa-solid fa-location-dot" style="color:var(--color-orange)"></i> Select Location</span></div>
+        <div class="city-list" id="cityList"></div>
+      </div>
+    </div>
+    <form class="header-search" id="headerSearchForm" role="search">
+      <i class="fa-solid fa-magnifying-glass"></i>
+      <input type="search" id="headerSearchInput" placeholder="Search restaurants or dishes..." aria-label="Search">
+      <button type="submit">Search</button>
+    </form>
+    <nav class="top-nav" aria-label="Primary">
+      <a href="index.html"><i class="fa-solid fa-house"></i> Home</a>
+      <a href="restaurants.html"><i class="fa-solid fa-store"></i> Restaurants</a>
+      <a href="rewards.html"><i class="fa-solid fa-gift"></i> Rewards</a>
+      <a href="support.html"><i class="fa-solid fa-headset"></i> Support</a>
+    </nav>
+    <div class="header-actions">
+      <div class="dropdown-wrap">
+        <button class="icon-btn" id="notifBtn" aria-label="Notifications">
+          <i class="fa-regular fa-bell"></i>
+          <span class="badge-dot" id="notifDot"></span>
+        </button>
+        <div class="dropdown-panel" id="notifPanel">
+          <div class="dd-head"><span>Notifications</span><button id="markReadBtn">Mark all read</button></div>
+          <div id="notifList"></div>
+        </div>
+      </div>
+      <a href="cart.html" class="icon-btn cart-link" aria-label="Cart">
+        <i class="fa-solid fa-cart-shopping"></i>
+        <span class="cart-badge hidden" id="cartBadge">0</span>
+      </a>
+    </div>
+  </div>
+  <nav class="subnav" aria-label="Primary mobile">
+    <a href="index.html"><i class="fa-solid fa-house"></i> Home</a>
+    <a href="restaurants.html"><i class="fa-solid fa-store"></i> Restaurants</a>
+    <a href="rewards.html"><i class="fa-solid fa-gift"></i> Rewards</a>
+    <a href="support.html"><i class="fa-solid fa-headset"></i> Support</a>
+  </nav>
+</header>
+
+<!-- ================= SIDEBAR ================= -->
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+<aside class="sidebar" id="sidebar" aria-label="User menu">
+  <div class="sidebar-head">
+    <a href="index.html" class="logo"><span class="logo-badge"><i class="fa-solid fa-utensils"></i></span><span>Foo<b>dy</b></span></a>
+    <button class="sidebar-close" id="sidebarClose" aria-label="Close menu"><i class="fa-solid fa-xmark"></i></button>
+  </div>
+  <div class="sidebar-user" id="sidebarUser"></div>
+  <nav class="sidebar-nav">
+    <a href="profile.html"><i class="fa-solid fa-user"></i> Profile</a>
+    <a href="orders.html"><i class="fa-solid fa-bag-shopping"></i> Orders</a>
+    <a href="food-preferences.html"><i class="fa-solid fa-sliders"></i> Food Preferences</a>
+    <a href="food-allergies.html"><i class="fa-solid fa-shield-halved"></i> Food Allergies</a>
+    <a href="wishlist.html" class="active"><i class="fa-solid fa-heart"></i> Wishlist</a>
+    <a href="rewards.html"><i class="fa-solid fa-gift"></i> Rewards</a>
+    <a href="support.html"><i class="fa-solid fa-headset"></i> Support</a>
+    <div class="sidebar-divider"></div>
+    <a href="index.html"><i class="fa-solid fa-house"></i> Home</a>
+    <a href="restaurants.html"><i class="fa-solid fa-store"></i> Restaurants</a>
+    <a href="/games.html">🎮 Play Arcade Games</a>
+  </nav>
+  <div class="sidebar-foot">
+    <button class="logout-btn" id="logoutBtn"><i class="fa-solid fa-right-from-bracket"></i> Logout</button>
+  </div>
+</aside>
+
+<main>
+  <!-- ================= PAGE HEAD ================= -->
+  <section class="page-head">
+    <div class="container">
+      <h1><i class="fa-solid fa-heart"></i> My Wishlist</h1>
+      <p>All the dishes and restaurants you've saved — ready when you are.</p>
+    </div>
+  </section>
+
+  <!-- ================= WISHLIST ================= -->
+  <div class="container">
+    <div id="wishMain">
+      <div class="wish-layout">
+        <aside class="wish-select" aria-label="Wishlist sections">
+          <button class="sel-card active" id="selFood" type="button">
+            <span class="s-ico"><i class="fa-solid fa-bowl-food"></i></span>
+            <span><span class="s-t">Food Wishlist</span><span class="s-sub" style="display:block">Saved dishes</span></span>
+            <span class="s-cnt" id="foodCnt">0</span>
+          </button>
+          <button class="sel-card" id="selRest" type="button">
+            <span class="s-ico"><i class="fa-solid fa-store"></i></span>
+            <span><span class="s-t">Restaurant Wishlist</span><span class="s-sub" style="display:block">Saved restaurants</span></span>
+            <span class="s-cnt" id="restCnt">0</span>
+          </button>
+          <div class="wish-tip"><i class="fa-solid fa-circle-info"></i> Allergy warnings are shown here based on your saved allergies and each dish's listed ingredients.</div>
+        </aside>
+        <section class="wish-content" id="wishContent" aria-live="polite"></section>
+      </div>
+    </div>
+  </div>
+</main>
+
+<!-- ================= FOOTER ================= -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <a href="index.html" class="logo"><span class="logo-badge"><i class="fa-solid fa-utensils"></i></span><span>Foo<b>dy</b></span></a>
+        <p class="about">Foody connects you with the best restaurants around you. Order your favourite meals and get them delivered hot, fresh and fast.</p>
+        <div class="socials">
+          <a href="#" aria-label="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
+          <a href="#" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+          <a href="#" aria-label="Twitter"><i class="fa-brands fa-twitter"></i></a>
+          <a href="#" aria-label="YouTube"><i class="fa-brands fa-youtube"></i></a>
+        </div>
+      </div>
+      <div>
+        <h4>Quick Links</h4>
+        <div class="footer-links">
+          <a href="restaurants.html">Restaurants</a>
+          <a href="search.html">Search Food</a>
+          <a href="orders.html">My Orders</a>
+          <a href="wishlist.html">Wishlist</a>
+          <a href="rewards.html">Rewards</a>
+        </div>
+      </div>
+      <div>
+        <h4>Top Categories</h4>
+        <div class="footer-links">
+          <a href="search.html?category=Biryani">Biryani</a>
+          <a href="search.html?category=Fast%20Food">Fast Food</a>
+          <a href="search.html?category=South%20Indian">South Indian</a>
+          <a href="search.html?category=Dessert">Desserts</a>
+          <a href="search.html?category=Drinks">Drinks</a>
+        </div>
+      </div>
+      <div>
+        <h4>Contact Us</h4>
+        <ul class="footer-contact">
+          <li><i class="fa-solid fa-location-dot"></i> Foody HQ, Bandra Kurla Complex, Mumbai 400051</li>
+          <li><i class="fa-solid fa-phone"></i> +91 98765 43210</li>
+          <li><i class="fa-solid fa-envelope"></i> support@foody.in</li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 <b>Foody</b>. All rights reserved.</span>
+      <span>Made with <i class="fa-solid fa-heart" style="color:var(--color-red)"></i> for food lovers</span>
+    </div>
+  </div>
+</footer>
+
+<div class="toast-zone" id="toastZone" aria-live="polite"></div>
+<div class="modal-overlay" id="confirmModal" role="dialog" aria-modal="true">
+  <div class="modal">
+    <div class="m-icon warn" id="confirmIcon"><i class="fa-solid fa-triangle-exclamation"></i></div>
+    <h3 id="confirmTitle">Are you sure?</h3>
+    <p id="confirmText"></p>
+    <div class="m-actions">
+      <button class="btn btn-outline" id="confirmCancel">Cancel</button>
+      <button class="btn btn-primary" id="confirmOk">Confirm</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ============================================================
+   FOODY — WISHLIST (protected)
+   Food Wishlist (horizontal cards) + Restaurant Wishlist
+============================================================ */
+'use strict';
+const API_BASE_URL = "http://localhost:5000/api/v1";
+const FALLBACK_IMG = "https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=600&q=70";
+function imgErr(el){ el.onerror=null; el.src=FALLBACK_IMG; }
+const u = (id,w=600) => `https://images.unsplash.com/${id}?auto=format&fit=crop&w=${w}&q=72`;
+
+/* ---------------- DEMO DATA ---------------- */
+const CITIES = ['Mumbai','Delhi','Bengaluru','Hyderabad','Chennai','Kolkata','Pune','Goa','Lucknow','Amritsar'];
+const R = (id,name,cuisine,address,image,rating,delivery_time,delivery_fee,is_active) =>
+  ({id,name,cuisine,address,image,rating,delivery_time,delivery_fee,is_active});
+const RESTAURANTS = [
+ R('r1','Spice Symphony','North Indian, Mughlai','Connaught Place, New Delhi',u('photo-1517248135467-4c7edcad34c4'),4.5,'25-30 min',29,true),
+ R('r2','Dosa Junction','South Indian','T. Nagar, Chennai',u('photo-1552566626-52f8b828add9'),4.6,'20-25 min',19,true),
+ R('r3','Biryani Blues','Biryani, Mughlai','Jubilee Hills, Hyderabad',u('photo-1414235077428-338989a2e8c0'),4.8,'30-35 min',0,true),
+ R('r4','Pizza Roma','Italian, Pizza','Koramangala, Bengaluru',u('photo-1555396273-367ea4eb4db5'),4.4,'25-30 min',25,true),
+ R('r5','Tokyo Bites','Japanese, Asian','Indiranagar, Bengaluru',u('photo-1554118811-1e0d58224f24'),4.7,'30-40 min',49,true),
+ R('r6','Burger Barn','Fast Food, American','Bandra West, Mumbai',u('photo-1466978913421-dad2ebd01d17'),4.3,'15-20 min',15,true),
+ R('r7','Coastal Catch','Seafood, Goan','Panjim, Goa',u('photo-1559329007-40df8a9345d8'),4.6,'30-35 min',35,true),
+ R('r8','Sweet Treats','Desserts, Bengali Sweets','Park Street, Kolkata',u('photo-1517248135467-4c7edcad34c4'),4.5,'20-25 min',20,true),
+ R('r9','Kolkata Biryani House','Biryani, Bengali','Alipore, Kolkata',u('photo-1590846406792-0adc7f938f1d'),4.7,'35-40 min',25,true),
+ R('r10','Dragon Wok','Chinese, Asian','Sector 18, Noida',u('photo-1537047902294-62a40c20a6ae'),4.2,'25-30 min',20,true),
+ R('r11','Kebab Factory','Kebab, Mughlai','Hazratganj, Lucknow',u('photo-1583394838336-acd977736f90'),4.6,'30-35 min',30,true),
+ R('r12','Choco Loco','Chocolate, Desserts','Lower Parel, Mumbai',u('photo-1600093463592-8e36ae95ef56'),4.4,'20-25 min',25,true),
+ R('r13','The Spanish Fork','Spanish, European','Cyber City, Gurugram',u('photo-1560624052-449f5ddf0c31'),4.3,'35-45 min',40,false),
+ R('r14','Donut Delight','Donuts, Bakery','Banjara Hills, Hyderabad',u('photo-1607627289024-67271e24cbb8'),4.5,'15-20 min',15,true),
+ R('r15','Punjab Grill','North Indian, Punjabi','Golden Temple Rd, Amritsar',u('photo-1590846406792-0adc7f938f1d'),4.4,'25-30 min',22,true),
+ R('r16','Roll Revolution','Fast Food, Street Food','FC Road, Pune',u('photo-1466978913421-dad2ebd01d17'),4.1,'15-20 min',10,true),
+ R('r17','Madras Meals','South Indian','Besant Nagar, Chennai',u('photo-1552566626-52f8b828add9'),4.4,'20-25 min',15,true),
+ R('r18','Oven Stories','Bakery, Desserts, Pizza','Hauz Khas, New Delhi',u('photo-1555396273-367ea4eb4db5'),4.2,'25-30 min',20,true)
+];
+const F = (id,restaurant_id,name,price,discount_price,food_type,rating,preparation_time,img,ingredients,description,is_available=true) =>
+  ({id,restaurant_id,name,price,discount_price,food_type,rating,preparation_time,image:u(img),ingredients,description,is_available});
+const FOODS = [
+ F('f1','r4','Margherita Pizza',299,249,'VEG',4.5,'25 min','photo-1565299624946-b28f40a0ae38',['wheat flour','mozzarella cheese','tomato','basil','olive oil'],'Classic pizza with mozzarella, fresh tomato & basil on a hand-tossed base.'),
+ F('f2','r4','Farmhouse Supreme Pizza',429,349,'VEG',4.3,'30 min','photo-1513104890138-7c749659a591',['wheat flour','cheese','capsicum','onion','corn','mushroom'],'Loaded with capsicum, onion, corn, mushroom & extra cheese.'),
+ F('f3','r4','Chicken Tikka Pizza',469,399,'NON_VEG',4.6,'30 min','photo-1574071318508-1cdbab80d002',['wheat flour','chicken','cheese','onion','tikka sauce'],'Smoky chicken tikka chunks with onion & tikka drizzle.'),
+ F('f4','r2','Masala Dosa',149,119,'VEG',4.7,'15 min','photo-1668236543090-82eba5ee5976',['rice','urad dal','potato','onion','spices'],'Golden crispy dosa with spiced potato filling, sambar & chutneys.'),
+ F('f5','r2','Idli Sambar (4 pcs)',119,99,'VEG',4.4,'15 min','photo-1589301760014-d929f3979dbc',['rice','urad dal','vegetables','tamarind'],'Soft steamed idlis dunked in piping hot sambar.'),
+ F('f6','r2','Filter Coffee',79,null,'VEG',4.6,'10 min','photo-1495474472287-4d71bcdd2085',['coffee','milk','sugar'],'Strong South Indian filter coffee with frothy milk.'),
+ F('f7','r1','Paneer Butter Masala',289,239,'VEG',4.6,'25 min','photo-1631452180519-c014fe946bc7',['paneer','butter','cream','tomato','cashew paste'],'Cottage cheese simmered in silky tomato-cashew gravy.'),
+ F('f8','r1','Butter Chicken',349,299,'NON_VEG',4.7,'30 min','photo-1565557623262-b51c2513a641',['chicken','butter','cream','tomato','cashew paste'],'Tandoori chicken in rich buttery tomato gravy.'),
+ F('f9','r1','Dal Makhani',229,199,'VEG',4.4,'30 min','photo-1547592180-85f173990554',['black lentils','butter','cream','tomato'],'Slow-cooked black lentils finished with butter & cream.'),
+ F('f10','r1','Butter Naan (2 pcs)',59,49,'VEG',4.5,'15 min','photo-1585937421612-70a008356fbe',['wheat flour','milk','butter','yeast'],'Soft tandoor naans brushed with butter.'),
+ F('f11','r3','Hyderabadi Chicken Biryani',329,279,'NON_VEG',4.8,'35 min','photo-1563379091339-03b21ab4a4f8',['basmati rice','chicken','yogurt','saffron','cashew','onion'],'Fragrant dum biryani with saffron, mint & fried onion.'),
+ F('f12','r3','Veg Dum Biryani',259,219,'VEG',4.3,'30 min','photo-1589302168068-964664d93dc0',['basmati rice','vegetables','yogurt','cashew','saffron'],'Garden vegetables layered with aromatic basmati rice.'),
+ F('f13','r9','Kolkata Mutton Biryani',399,349,'NON_VEG',4.7,'40 min','photo-1596797038530-2c107229654b',['basmati rice','mutton','potato','yogurt','boiled egg'],'Signature Kolkata biryani with potato & boiled egg.'),
+ F('f14','r5','Sushi Platter (8 pcs)',549,479,'NON_VEG',4.6,'25 min','photo-1579584425555-c3ce17fd4351',['sushi rice','salmon','tuna','sesame seeds','soy sauce','nori'],'Chef\'s selection of salmon & tuna nigiri and rolls.'),
+ F('f15','r5','Chicken Ramen',419,null,'NON_VEG',4.5,'25 min','photo-1569718212165-3a8278d5f624',['wheat noodles','chicken broth','egg','soy sauce','scallion'],'Rich broth, wheat noodles, soft egg & scallions.'),
+ F('f16','r6','Classic Chicken Burger',219,179,'NON_VEG',4.4,'20 min','photo-1568901346375-23c9450c58cd',['chicken patty','wheat bun','cheese','lettuce','sesame seeds','egg mayonnaise'],'Crispy chicken patty, cheese, lettuce & house sauce.'),
+ F('f17','r6','Crispy Veg Burger',149,129,'VEG',4.2,'15 min','photo-1550547660-d9450f859349',['veggie patty','wheat bun','cheese','lettuce','egg mayonnaise'],'Golden veggie patty with tangy sauce & crunchy slaw.'),
+ F('f18','r6','Peri Peri Fries',119,99,'VEG',4.3,'15 min','photo-1573080496219-bb080dd4f877',['potato','oil','peri peri spice'],'Crackly fries dusted with fiery peri peri spice.'),
+ F('f19','r7','Prawn Ghee Roast',459,389,'NON_VEG',4.7,'30 min','photo-1565680018434-b513d5e5fd47',['prawns','ghee','tomato','onion','spices'],'Juicy prawns tossed in spicy ghee-roasted masala.'),
+ F('f20','r7','Goan Fish Curry',389,329,'NON_VEG',4.6,'35 min','photo-1559742811-822873691df8',['fish','coconut','kokum','spices','rice'],'Fresh fish simmered in tangy coconut-based curry.'),
+ F('f21','r9','Machher Jhol (Bengali Fish Curry)',369,319,'NON_VEG',4.5,'35 min','photo-1519708227418-c8fd9a32b7a2',['rohu fish','mustard oil','potato','tomato'],'Classic Bengali fish curry with potato & mustard notes.'),
+ F('f22','r8','Rasgulla (2 pcs)',99,79,'VEG',4.5,'10 min','photo-1606491956689-2ea866880c84',['chenna','sugar','cardamom'],'Spongy chenna dumplings soaked in light syrup.'),
+ F('f23','r10','Chilli Chicken',279,239,'NON_VEG',4.4,'25 min','photo-1603133872878-684f208fb84b',['chicken','soy sauce','capsicum','corn starch','chilli'],'Crispy chicken tossed with peppers in spicy soy glaze.'),
+ F('f24','r10','Veg Hakka Noodles',189,159,'VEG',4.2,'20 min','photo-1585032226651-759b368d7246',['wheat noodles','cabbage','carrot','soy sauce'],'Wok-tossed noodles with crunchy vegetables.'),
+ F('f25','r11','Mutton Seekh Kebab',319,269,'NON_VEG',4.6,'25 min','photo-1599487488170-d11ec9c172f0',['mutton','onion','spices','mint'],'Charcoal-grilled minced mutton skewers with mint.'),
+ F('f26','r11','Paneer Tikka',259,219,'VEG',4.5,'25 min','photo-1529193591184-b1d58069ecdd',['paneer','yogurt','spices','capsicum'],'Smoky grilled cottage cheese cubes with peppers.'),
+ F('f27','r13','Spanish Seafood Paella',629,549,'NON_VEG',4.7,'40 min','photo-1534080564583-6be75777b70a',['arborio rice','prawns','mussels','saffron','olive oil'],'Saffron rice with prawns, mussels & olive oil.'),
+ F('f28','r13','Patatas Bravas',199,null,'VEG',4.1,'20 min','photo-1512621776951-a57141f2eefd',['potato','tomato sauce','olive oil','paprika'],'Crispy potato bites with smoky tomato sauce.',false),
+ F('f29','r8','Chocolate Brownie Sundae',239,199,'VEG',4.7,'15 min','photo-1563805042-7684c019e1cb',['chocolate','flour','butter','egg','vanilla ice cream','almonds'],'Warm brownie, ice cream, hot fudge & roasted nuts.'),
+ F('f30','r12','Chocolate Truffle Pastry',189,149,'VEG',4.6,'10 min','photo-1578985545062-69928b1d9587',['dark chocolate','cream','flour','egg','butter'],'Decadent layered pastry with dark chocolate ganache.'),
+ F('f31','r14','Assorted Glazed Donuts (6 pcs)',249,199,'VEG',4.5,'15 min','photo-1551024601-bec78aea704b',['flour','sugar','milk','egg','butter','chocolate glaze'],'Box of six freshly glazed assorted donuts.'),
+ F('f32','r14','Chocolate Fudge Donut',99,79,'VEG',4.4,'10 min','photo-1551024506-0bccd828d307',['flour','chocolate','milk','egg','sugar'],'Soft donut drenched in rich chocolate fudge.'),
+ F('f33','r7','Fresh Lime Soda',89,69,'VEG',4.2,'10 min','photo-1513558161293-cdaf765ed2fd',['lime','soda','sugar','mint'],'Zesty lime with fizzy soda — sweet, salted or mixed.'),
+ F('f34','r15','Amritsari Chole Kulche',199,169,'VEG',4.6,'25 min','photo-1601050690597-df0568f70950',['wheat flour','chickpeas','butter','onion','spices'],'Buttery kulche with spicy chickpea curry.'),
+ F('f35','r15','Tandoori Chicken',339,289,'NON_VEG',4.5,'30 min','photo-1544025162-d76694265947',['chicken','yogurt','spices','lemon'],'Yogurt-spice marinated chicken grilled in the tandoor.'),
+ F('m1','r1','Paneer Tikka Angara',269,229,'VEG',4.5,'25 min','photo-1631452180519-c014fe946bc7',['paneer','yogurt','spices'],'Char-grilled paneer in smoky red marinade.'),
+ F('m2','r1','Tandoori Chicken Wings',299,259,'NON_VEG',4.4,'30 min','photo-1544025162-d76694265947',['chicken','yogurt','spices'],'Juicy wings charred in the clay oven.'),
+ F('m3','r1','Jeera Rice',149,null,'VEG',4.2,'20 min','photo-1596797038530-2c107229654b',['basmati rice','cumin','ghee'],'Basmati rice tempered with cumin & ghee.'),
+ F('m4','r1','Garlic Naan',79,69,'VEG',4.6,'15 min','photo-1585937421612-70a008356fbe',['wheat flour','milk','butter','garlic'],'Naan topped with garlic & coriander.'),
+ F('m6','r1','Sweet Lassi',99,79,'VEG',4.5,'10 min','photo-1546173159-315724a31696',['yogurt','milk','sugar'],'Chilled creamy lassi topped with malai.'),
+ F('m8','r1','Gulab Jamun (2 pcs)',119,99,'VEG',4.6,'10 min','photo-1606491956689-2ea866880c84',['milk solids','sugar','wheat flour'],'Warm khoya dumplings in rose syrup.'),
+ F('m9','r2','Medu Vada (2 pcs)',89,null,'VEG',4.4,'15 min','photo-1589301760014-d929f3979dbc',['urad dal','onion','spices'],'Crispy lentil donuts with sambar & chutney.'),
+ F('m11','r2','Curd Rice',129,null,'VEG',4.3,'15 min','photo-1504674900247-0877df9cc836',['rice','yogurt','mustard seeds'],'Tempered yogurt rice with mustard & curry leaves.'),
+ F('m13','r2','Pal Payasam',129,null,'VEG',4.5,'15 min','photo-1563805042-7684c019e1cb',['milk','rice','sugar','cashew'],'Creamy milk kheer with rice & cashew.'),
+ F('m14','r3','Chicken 65',249,219,'NON_VEG',4.6,'20 min','photo-1603133872878-684f208fb84b',['chicken','yogurt','egg','spices'],'Fiery deep-fried chicken with curry leaves.'),
+ F('m15','r3','Double Ka Meetha',139,null,'VEG',4.4,'15 min','photo-1578985545062-69928b1d9587',['bread','milk','sugar','cashew'],'Hyderabadi bread pudding with saffron & nuts.'),
+ F('m17','r4','Garlic Bread',149,null,'VEG',4.3,'15 min','photo-1573080496219-bb080dd4f877',['wheat flour','butter','garlic'],'Toasted garlic butter bread with herbs.'),
+ F('m19','r4','Tiramisu',229,null,'VEG',4.7,'10 min','photo-1578985545062-69928b1d9587',['mascarpone cheese','egg','wheat flour','coffee'],'Classic Italian coffee-soaked layered dessert.'),
+ F('m20','r5','Chicken Gyoza (6 pcs)',199,null,'NON_VEG',4.5,'20 min','photo-1496116218417-1a781b1c41a3',['wheat flour','chicken','soy sauce','cabbage'],'Pan-seared Japanese dumplings with dip.'),
+ F('m22','r5','Mochi Ice Cream',179,null,'VEG',4.4,'10 min','photo-1563805042-7684c019e1cb',['rice flour','ice cream','mango'],'Soft mochi filled with mango ice cream.'),
+ F('m23','r6','Chocolate Shake',129,null,'VEG',4.4,'10 min','photo-1549007994-cb92caebd54b',['milk','chocolate','ice cream'],'Thick shake with chocolate & ice cream.'),
+ F('m24','r6','Choco Lava Cake',119,99,'VEG',4.6,'15 min','photo-1578985545062-69928b1d9587',['wheat flour','chocolate','butter','egg'],'Molten-centre cake with vanilla scoop.'),
+ F('m25','r7','Calamari Fritti',329,null,'NON_VEG',4.5,'25 min','photo-1565680018434-b513d5e5fd47',['squid','wheat flour','egg'],'Crispy golden-fried squid rings.'),
+ F('m27','r7','Bebinca',159,null,'VEG',4.6,'10 min','photo-1587668178277-295251f900ce',['wheat flour','egg','coconut','jaggery'],'Traditional Goan layered dessert.'),
+ F('m29','r8','Kesar Kulfi',99,null,'VEG',4.4,'10 min','photo-1563805042-7684c019e1cb',['milk','saffron','pistachio'],'Saffron kulfi with pistachio crunch.'),
+ F('m30','r9','Bengali Fish Fry',299,259,'NON_VEG',4.5,'25 min','photo-1519708227418-c8fd9a32b7a2',['fish','mustard oil','spices'],'Crispy fried fish with mustard notes.'),
+ F('m31','r9','Mishti Doi',99,null,'VEG',4.6,'10 min','photo-1606491956689-2ea866880c84',['milk','jaggery'],'Sweet caramelised yogurt, Kolkata style.'),
+ F('m32','r10','Veg Spring Rolls',149,null,'VEG',4.2,'20 min','photo-1601050690597-df0568f70950',['wheat flour','cabbage','carrot'],'Crispy rolls stuffed with vegetables.'),
+ F('m33','r10','Veg Fried Rice',179,null,'VEG',4.3,'20 min','photo-1603133872878-684f208fb84b',['rice','soy sauce','vegetables'],'Wok-fried rice with veggies & soy.'),
+ F('m35','r11','Sheermal',89,null,'VEG',4.3,'15 min','photo-1585937421612-70a008356fbe',['wheat flour','milk','saffron'],'Saffron-scented Mughlai flatbread.'),
+ F('m36','r11','Zafrani Pulao',199,null,'VEG',4.4,'25 min','photo-1589302168068-964664d93dc0',['basmati rice','saffron','cashew'],'Fragrant saffron pulao with cashews.'),
+ F('m37','r11','Shahi Tukda',149,null,'VEG',4.6,'15 min','photo-1578985545062-69928b1d9587',['bread','milk','sugar','pistachio'],'Royal bread pudding with pistachio.'),
+ F('m38','r12','Hot Chocolate',149,null,'VEG',4.6,'10 min','photo-1549007994-cb92caebd54b',['milk','dark chocolate','cream'],'Rich Belgian hot chocolate with cream.'),
+ F('m39','r12','Belgian Chocolate Mousse',199,null,'VEG',4.7,'10 min','photo-1549007994-cb92caebd54b',['dark chocolate','cream','egg'],'Airy mousse in a jar with cocoa dust.'),
+ F('m40','r13','Virgin Sangria',199,null,'VEG',4.3,'10 min','photo-1551538827-9c037cb4f32a',['grape juice','orange','apple'],'Fruit-loaded mocktail sangria.'),
+ F('m41','r13','Churros with Chocolate',189,null,'VEG',4.5,'15 min','photo-1551024506-0bccd828d307',['wheat flour','chocolate','cream'],'Golden churros with warm chocolate dip.'),
+ F('m42','r14','Iced Coffee',119,null,'VEG',4.3,'10 min','photo-1495474472287-4d71bcdd2085',['coffee','milk','ice'],'Cold coffee blended with milk & ice.'),
+ F('m43','r14','Classic Cheesecake Slice',179,null,'VEG',4.5,'10 min','photo-1578985545062-69928b1d9587',['cream cheese','egg','wheat flour','berries'],'Baked cheesecake with berry coulis.'),
+ F('m44','r15','Punjabi Lassi',119,null,'VEG',4.5,'10 min','photo-1546173159-315724a31696',['yogurt','milk','sugar'],'Thick creamy lassi, sweet or salted.'),
+ F('m45','r15','Gajar Ka Halwa',139,null,'VEG',4.6,'15 min','photo-1606491956689-2ea866880c84',['carrots','milk','ghee','cashew'],'Slow-cooked carrot halwa with ghee & nuts.'),
+ F('m46','r16','Chicken Kathi Roll',179,null,'NON_VEG',4.3,'20 min','photo-1626700051175-6818013e1d4f',['wheat flour','chicken','egg','onion'],'Juicy chicken wrapped in flaky paratha.'),
+ F('m47','r16','Paneer Kathi Roll',149,null,'VEG',4.2,'20 min','photo-1626700051175-6818013e1d4f',['wheat flour','paneer','onion'],'Spiced paneer with onions in a roll.'),
+ F('m49','r17','South Indian Thali',199,169,'VEG',4.5,'25 min','photo-1585937421612-70a008356fbe',['rice','dal','vegetables','yogurt'],'Rice, dal, veggies, curd & papad platter.'),
+ F('m50','r17','Rava Dosa',139,null,'VEG',4.3,'20 min','photo-1668236543090-82eba5ee5976',['semolina','rice flour','onion'],'Lacy semolina dosa with onion & pepper.'),
+ F('m52','r17','Kesar Payasam',119,null,'VEG',4.4,'15 min','photo-1563805042-7684c019e1cb',['milk','vermicelli','saffron','cashew'],'Saffron vermicelli kheer with cashews.'),
+ F('m54','r18','Sourdough Margherita',399,null,'VEG',4.4,'30 min','photo-1565299624946-b28f40a0ae38',['sourdough wheat','mozzarella cheese','tomato'],'Slow-fermented sourdough with mozzarella.'),
+ F('m55','r18','BBQ Chicken Pizza',449,null,'NON_VEG',4.5,'30 min','photo-1574071318508-1cdbab80d002',['wheat flour','chicken','cheese','bbq sauce'],'Smoky BBQ chicken with caramelised onion.'),
+ F('m56','r18','Cheesy Garlic Toast',159,null,'VEG',4.2,'15 min','photo-1528735602780-2552fd46c7af',['bread','cheese','butter','garlic'],'Sourdough toast loaded with cheese.'),
+ F('m57','r18','Berry Cheesecake',219,null,'VEG',4.6,'10 min','photo-1578985545062-69928b1d9587',['cream cheese','egg','wheat flour','berries'],'Baked cheesecake with fresh berries.')
+];
+const restById = id => RESTAURANTS.find(r => r.id === id);
+const foodById = id => FOODS.find(f => f.id === id);
+const effPrice = f => f.discount_price ?? f.price;
+
+/* ---------------- STORAGE ---------------- */
+const store = {
+  get(k,d){ try{ const v=localStorage.getItem(k); return v===null?d:JSON.parse(v);}catch(e){return d;} },
+  set(k,v){ localStorage.setItem(k, JSON.stringify(v)); },
+  del(k){ localStorage.removeItem(k); }
+};
+const getUser = () => store.get('foody_user', null);
+const getCart = () => store.get('foody_cart', []);
+const saveCart = c => { store.set('foody_cart', c); updateCartBadge(); };
+const getWishlist = () => store.get('foody_wishlist', {foods:[], restaurants:[]});
+const saveWishlist = w => store.set('foody_wishlist', w);
+const getUserAllergies = () => store.get('foody_allergies', []);
+
+/* ---------------- API HELPER ---------------- */
+async function apiFetch(endpoint, options = {}){
+  const ctrl = new AbortController();
+  const timer = setTimeout(() => ctrl.abort(), 2200);
+  try{
+    const user = getUser();
+    const res = await fetch(API_BASE_URL + endpoint, {
+      ...options,
+      headers:{ 'Content-Type':'application/json', ...(user && user.token ? {'Authorization':'Bearer '+user.token} : {}), ...(options.headers||{}) },
+      signal: ctrl.signal
+    });
+    clearTimeout(timer);
+    if(res.status === 401){ store.del('foody_user'); location.href='login.html'; throw new Error('Session expired'); }
+    if(!res.ok) throw new Error('Request failed');
+    return await res.json();
+  }catch(e){ clearTimeout(timer); return null; }
+}
+const demo = (val, ms=550) => new Promise(r => setTimeout(() => r(val), ms));
+
+/* ---------------- ALLERGY ENGINE ---------------- */
+const ALLERGY_KEYWORDS = {
+  'Peanuts':['peanut'],
+  'Tree Nuts':['cashew','almond','walnut','pistachio','pecan','hazelnut'],
+  'Milk/Dairy':['milk','cheese','cream','butter','paneer','yogurt','curd','ghee','chenna','buttermilk','mascarpone'],
+  'Gluten':['wheat','gluten','flour','maida','semolina','sooji','noodle','pasta','bun','bread','vermicelli','sourdough'],
+  'Wheat':['wheat','flour','maida','semolina','sooji','noodle','bun','bread'],
+  'Soy':['soy','soya'],
+  'Eggs':['egg'],
+  'Seafood':['fish','prawn','shrimp','crab','mussel','seafood','salmon','tuna','rohu','squid'],
+  'Shellfish':['prawn','shrimp','crab','mussel','lobster','shellfish'],
+  'Sesame':['sesame','til'],
+  'Mustard':['mustard']
+};
+function getAllergyWarnings(food){
+  const mine = getUserAllergies();
+  if(!mine.length || !food.ingredients) return [];
+  const hits = new Set();
+  mine.forEach(a => {
+    const kws = ALLERGY_KEYWORDS[a] || [a.toLowerCase()];
+    if(food.ingredients.some(ing => {
+      const s = ing.toLowerCase();
+      if(s.includes('coconut')) return false;
+      return kws.some(k => s.includes(k));
+    })) hits.add(a);
+  });
+  return [...hits];
+}
+
+/* ---------------- UI HELPERS ---------------- */
+function toast(msg, type='success', icon){
+  const icons = { success:'fa-circle-check', error:'fa-circle-xmark', warning:'fa-triangle-exclamation', info:'fa-circle-info' };
+  const zone = document.getElementById('toastZone');
+  const t = document.createElement('div');
+  t.className = `toast ${type}`;
+  t.innerHTML = `<i class="fa-solid ${icon || icons[type]}"></i><span>${msg}</span><button class="t-close" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>`;
+  zone.appendChild(t);
+  const kill = () => { t.classList.add('leaving'); setTimeout(() => t.remove(), 320); };
+  t.querySelector('.t-close').addEventListener('click', kill);
+  setTimeout(kill, 3400);
+}
+let confirmCb = null;
+function showConfirm({title, text, okLabel='Confirm', okClass='btn-primary', icon='warn', onOk}){
+  document.getElementById('confirmTitle').textContent = title;
+  document.getElementById('confirmText').innerHTML = text;
+  const ok = document.getElementById('confirmOk');
+  ok.textContent = okLabel; ok.className = 'btn ' + okClass;
+  const ic = document.getElementById('confirmIcon');
+  ic.className = 'm-icon ' + icon;
+  ic.innerHTML = icon==='danger' ? '<i class="fa-solid fa-trash-can"></i>' : '<i class="fa-solid fa-triangle-exclamation"></i>';
+  confirmCb = onOk;
+  document.getElementById('confirmModal').classList.add('open');
+}
+document.getElementById('confirmCancel').addEventListener('click', () => document.getElementById('confirmModal').classList.remove('open'));
+document.getElementById('confirmOk').addEventListener('click', () => { document.getElementById('confirmModal').classList.remove('open'); if(confirmCb) confirmCb(); });
+document.getElementById('confirmModal').addEventListener('click', e => { if(e.target.id==='confirmModal') e.currentTarget.classList.remove('open'); });
+function updateCartBadge(){
+  const count = getCart().reduce((s,i) => s + i.qty, 0);
+  const b = document.getElementById('cartBadge');
+  b.textContent = count; b.classList.toggle('hidden', count===0);
+}
+
+/* ---------------- AUTH GATE (protected page) ---------------- */
+function requireAuth(){
+  const usr = getUser();
+  if(usr && usr.name) return true;
+  document.getElementById('wishMain').innerHTML = `
+    <div class="auth-gate">
+      <div class="big-ico"><i class="fa-solid fa-lock"></i></div>
+      <h4>Login Required</h4>
+      <p>Your wishlist is a protected space. Please login to view and manage your saved food and restaurants. Redirecting you to login...</p>
+      <a href="login.html" class="btn btn-primary"><i class="fa-solid fa-right-to-bracket"></i> Go to Login</a>
+    </div>`;
+  setTimeout(() => { location.href = 'login.html'; }, 1400);
+  return false;
+}
+
+/* ---------------- HEADER / SIDEBAR ---------------- */
+const sidebar = document.getElementById('sidebar'), sidebarOverlay = document.getElementById('sidebarOverlay');
+document.getElementById('menuBtn').addEventListener('click', () => { sidebar.classList.add('open'); sidebarOverlay.classList.add('open'); document.body.style.overflow='hidden'; });
+document.getElementById('sidebarClose').addEventListener('click', closeSidebar);
+sidebarOverlay.addEventListener('click', closeSidebar);
+function closeSidebar(){ sidebar.classList.remove('open'); sidebarOverlay.classList.remove('open'); document.body.style.overflow=''; }
+function renderSidebarUser(){
+  const usr = getUser(), box = document.getElementById('sidebarUser');
+  if(usr && usr.name){
+    box.innerHTML = `<div class="avatar">${usr.name.trim().charAt(0).toUpperCase()}</div>
+      <div><div class="u-name">${usr.name}</div><div class="u-sub">${usr.email || usr.phone || ''}</div></div>`;
+  }else{
+    box.innerHTML = `<div class="avatar"><i class="fa-solid fa-user"></i></div>
+      <div><div class="u-name">Welcome, Guest</div><div class="u-sub">Login for the full experience</div></div>`;
+  }
+}
+document.getElementById('logoutBtn').addEventListener('click', () => showConfirm({
+  title:'Logout?', text:'Your session will be cleared and you will be redirected to login.',
+  okLabel:'Logout', okClass:'btn-danger', icon:'danger',
+  onOk(){ store.del('foody_user'); location.href='login.html'; }
+}));
+function renderCities(){
+  const cur = store.get('foody_location','Mumbai');
+  document.getElementById('locationName').textContent = cur;
+  document.getElementById('cityList').innerHTML = CITIES.map(c =>
+    `<button type="button" data-city="${c}" class="${c===cur?'active':''}"><i class="fa-solid fa-location-dot"></i> ${c}</button>`).join('');
+  document.querySelectorAll('#cityList button').forEach(b => b.addEventListener('click', () => {
+    store.set('foody_location', b.dataset.city);
+    document.getElementById('locationName').textContent = b.dataset.city;
+    togglePanel(document.getElementById('locationPanel'), false);
+    toast(`Delivery location set to ${b.dataset.city}`, 'info', 'fa-location-dot');
+  }));
+}
+function togglePanel(p, force){ p.classList.toggle('open', force===undefined ? !p.classList.contains('open') : force); }
+document.getElementById('locationBtn').addEventListener('click', e => { e.stopPropagation(); togglePanel(document.getElementById('locationPanel')); togglePanel(document.getElementById('notifPanel'), false); });
+function renderNotifs(){
+  const items = store.get('foody_notifications', [
+    {ico:'fa-motorcycle', cls:'green',  text:'Your order #FD1042 is out for delivery.', time:'2 min ago'},
+    {ico:'fa-percent',    cls:'orange', text:'50% OFF weekend offer is live! Use code FOODY50.', time:'1 hr ago'},
+    {ico:'fa-gift',       cls:'red',    text:'You have a free reward spin waiting this week.', time:'Yesterday'}
+  ]);
+  const read = store.get('foody_notifs_read', false);
+  document.getElementById('notifDot').classList.toggle('hidden', read || items.length===0);
+  document.getElementById('notifList').innerHTML = items.length
+    ? items.map(n => `<div class="notif-item"><div class="n-ico ${n.cls}"><i class="fa-solid ${n.ico}"></i></div><div>${n.text}<div class="n-time">${n.time}</div></div></div>`).join('')
+    : `<div class="notif-empty"><i class="fa-regular fa-bell-slash"></i><br>No notifications yet.</div>`;
+}
+document.getElementById('notifBtn').addEventListener('click', e => { e.stopPropagation(); togglePanel(document.getElementById('notifPanel')); togglePanel(document.getElementById('locationPanel'), false); });
+document.getElementById('markReadBtn').addEventListener('click', () => { store.set('foody_notifs_read', true); renderNotifs(); });
+document.addEventListener('click', () => { togglePanel(document.getElementById('locationPanel'), false); togglePanel(document.getElementById('notifPanel'), false); });
+document.querySelectorAll('.dropdown-panel').forEach(p => p.addEventListener('click', e => e.stopPropagation()));
+document.getElementById('headerSearchForm').addEventListener('submit', e => {
+  e.preventDefault();
+  const q = document.getElementById('headerSearchInput').value.trim();
+  location.href = 'search.html' + (q ? '?q=' + encodeURIComponent(q) : '');
+});
+
+/* ---------------- WISHLIST RENDER ---------------- */
+let activeSection = 'food';
+
+function vegMark(t){ return `<span class="h-mark type-badge ${t==='VEG'?'veg':'nonveg'}"><span class="food-mark ${t==='VEG'?'':'nonveg'}" style="width:13px;height:13px"></span> ${t==='VEG'?'VEG':'NON-VEG'}</span>`; }
+function markCSS(){ return ''; }
+
+function renderCounts(){
+  const w = getWishlist();
+  document.getElementById('foodCnt').textContent = w.foods.length;
+  document.getElementById('restCnt').textContent = w.restaurants.length;
+}
+
+function foodCardHTML(f){
+  const r = restById(f.restaurant_id);
+  const warnings = getAllergyWarnings(f);
+  const disc = f.discount_price ? Math.round((1 - f.discount_price/f.price)*100) : 0;
+  const avail = f.is_available !== false;
+  return `
+  <article class="h-card">
+    <div class="h-card-img">
+      ${disc > 0 ? `<span class="h-discount">${disc}% OFF</span>` : ''}
+      <img src="${f.image}" alt="${f.name} from ${r ? r.name : 'Foody'}" loading="lazy" onerror="imgErr(this)">
+      ${vegMark(f.food_type)}
+      ${!avail ? '<span class="soldout-tag">SOLD OUT</span>' : ''}
+    </div>
+    <div class="h-card-body">
+      <div class="h-top-row">
+        <h3><a href="food.html?id=${f.id}">${f.name}</a></h3>
+        <span class="h-rating"><i class="fa-solid fa-star"></i> ${f.rating}</span>
+      </div>
+      <p class="h-rest"><i class="fa-solid fa-store"></i> <a href="restaurant.html?id=${f.restaurant_id}">${r ? r.name : 'Restaurant'}</a></p>
+      <p class="h-desc">${f.description}</p>
+      <div class="h-meta">
+        <span><i class="fa-regular fa-clock"></i> ${f.preparation_time}</span>
+        <span><i class="fa-solid fa-layer-group"></i> ${r ? r.cuisine.split(',')[0] : 'Food'}</span>
+      </div>
+      <div class="h-price-row">
+        <span class="now">₹${effPrice(f)}</span>
+        ${disc > 0 ? `<span class="old">₹${f.price}</span><span class="save">Save ₹${f.price - f.discount_price}</span>` : ''}
+      </div>
+      ${warnings.length ? `<div class="allergy-warning" role="alert"><i class="fa-solid fa-triangle-exclamation"></i><span><strong>Allergy warning:</strong> contains ${warnings.join(', ')}. Foody does not claim any dish is allergen-free.</span></div>` : ''}
+      <div class="h-actions">
+        <button class="btn btn-primary" data-add="${f.id}" ${!avail?'disabled':''}><i class="fa-solid fa-cart-plus"></i> Add to Cart</button>
+        <button class="btn btn-dark" data-order="${f.id}" ${!avail?'disabled':''}><i class="fa-solid fa-bolt"></i> Order Now</button>
+        <button class="btn btn-danger-outline" data-remove="${f.id}"><i class="fa-solid fa-trash-can"></i> Remove</button>
+      </div>
+    </div>
+  </article>`;
+}
+
+function restCardHTML(r){
+  return `
+  <article class="hr-card">
+    <div class="hr-img ${r.is_active?'':'closed-img'}">
+      <img src="${r.image}" alt="${r.name} restaurant interior" loading="lazy" onerror="imgErr(this)">
+      <span class="open-badge ${r.is_active?'open':'closed'}">${r.is_active?'Open':'Closed'}</span>
+      <span class="r-rating"><i class="fa-solid fa-star"></i> ${r.rating}</span>
+    </div>
+    <div class="hr-body">
+      <h3><a href="restaurant.html?id=${r.id}">${r.name}</a></h3>
+      <p class="hr-cuisine">${r.cuisine}</p>
+      <div class="hr-meta">
+        <span><i class="fa-regular fa-clock"></i> ${r.delivery_time}</span>
+        <span><i class="fa-solid fa-motorcycle"></i> ${r.delivery_fee===0 ? '<b class="free">Free Delivery</b>' : '₹'+r.delivery_fee}</span>
+      </div>
+      <p class="hr-addr"><i class="fa-solid fa-location-dot"></i> ${r.address}</p>
+      <div class="hr-actions">
+        <a class="btn btn-primary" href="restaurant.html?id=${r.id}"><i class="fa-solid fa-store"></i> View Restaurant</a>
+        <a class="btn btn-dark" href="restaurant.html?id=${r.id}"><i class="fa-solid fa-utensils"></i> View Menu</a>
+        <a class="btn btn-outline" href="restaurant.html?id=${r.id}"><i class="fa-solid fa-bowl-food"></i> Order Food</a>
+        <button class="btn btn-danger-outline" data-removerest="${r.id}"><i class="fa-solid fa-trash-can"></i> Remove</button>
+      </div>
+    </div>
+  </article>`;
+}
+
+function skeletonsH(n){
+  return Array.from({length:n}).map(() => `
+    <div class="skel-h">
+      <div class="skeleton s-img"></div>
+      <div class="s-lines">
+        <div class="skeleton s-line" style="width:45%"></div>
+        <div class="skeleton s-line" style="width:70%"></div>
+        <div class="skeleton s-line" style="width:88%"></div>
+        <div class="skeleton s-line" style="width:30%"></div>
+      </div>
+    </div>`).join('');
+}
+
+function renderContent(withSkeleton = false){
+  const area = document.getElementById('wishContent');
+  const w = getWishlist();
+  const isFood = activeSection === 'food';
+
+  document.getElementById('selFood').classList.toggle('active', isFood);
+  document.getElementById('selRest').classList.toggle('active', !isFood);
+
+  const headHTML = isFood
+    ? `<div class="content-head"><h2><i class="fa-solid fa-bowl-food"></i> Food Wishlist</h2><span class="c-count">${w.foods.length} saved dish${w.foods.length===1?'':'es'}</span></div>`
+    : `<div class="content-head"><h2><i class="fa-solid fa-store"></i> Restaurant Wishlist</h2><span class="c-count">${w.restaurants.length} saved restaurant${w.restaurants.length===1?'':'s'}</span></div>`;
+
+  if(withSkeleton){
+    area.innerHTML = headHTML + skeletonsH(3);
+    return;
+  }
+
+  if(isFood){
+    const items = w.foods.map(id => foodById(id)).filter(Boolean);
+    if(!items.length){
+      area.innerHTML = headHTML + `
+        <div class="state-block">
+          <div class="big-ico"><i class="fa-regular fa-heart"></i></div>
+          <h4>Your Wishlist is Empty</h4>
+          <p>Save your favourite dishes by tapping the heart icon on any food card, and they'll appear here.</p>
+          <a href="search.html" class="btn btn-primary"><i class="fa-solid fa-utensils"></i> Browse Foods</a>
+        </div>`;
+      return;
+    }
+    area.innerHTML = headHTML + items.map(foodCardHTML).join('');
+    bindFoodActions(area);
+  }else{
+    const items = w.restaurants.map(id => restById(id)).filter(Boolean);
+    if(!items.length){
+      area.innerHTML = headHTML + `
+        <div class="state-block">
+          <div class="big-ico"><i class="fa-solid fa-store-slash"></i></div>
+          <h4>Your Wishlist is Empty</h4>
+          <p>Save restaurants you love and find them right here, ready to order from.</p>
+          <a href="restaurants.html" class="btn btn-primary"><i class="fa-solid fa-store"></i> Browse Restaurants</a>
+        </div>`;
+      return;
+    }
+    area.innerHTML = headHTML + items.map(restCardHTML).join('');
+    area.querySelectorAll('[data-removerest]').forEach(b => b.addEventListener('click', () => confirmRemoveRest(b.dataset.removerest)));
+  }
+  /* retrigger entrance animation */
+  area.style.animation = 'none'; void area.offsetWidth; area.style.animation = '';
+}
+
+function bindFoodActions(scope){
+  scope.querySelectorAll('[data-add]').forEach(b => b.addEventListener('click', () => addToCart(b.dataset.add, b)));
+  scope.querySelectorAll('[data-order]').forEach(b => b.addEventListener('click', () => orderNow(b.dataset.order)));
+  scope.querySelectorAll('[data-remove]').forEach(b => b.addEventListener('click', () => confirmRemoveFood(b.dataset.remove)));
+}
+
+/* ---------------- CART / ORDER NOW / REMOVE ---------------- */
+function commitAdd(f, btn){
+  const cart = getCart();
+  const line = cart.find(i => i.id === f.id);
+  if(line) line.qty += 1; else cart.push({ id:f.id, qty:1 });
+  saveCart(cart);
+  toast(`${f.name} added to cart`, 'success', 'fa-cart-shopping');
+  if(btn){
+    btn.classList.add('added');
+    const old = btn.innerHTML;
+    btn.innerHTML = '<i class="fa-solid fa-check"></i> Added';
+    setTimeout(() => { btn.classList.remove('added'); btn.innerHTML = old; }, 1300);
+  }
+}
+function addToCart(foodId, btn){
+  const f = foodById(foodId);
+  if(!f || f.is_available === false) return;
+  const warnings = getAllergyWarnings(f);
+  if(warnings.length){
+    showConfirm({
+      title:'Allergy Warning',
+      text:`<strong>${f.name}</strong> contains <strong>${warnings.join(', ')}</strong> based on its listed ingredients. Add it to your cart anyway?`,
+      okLabel:'Add Anyway',
+      onOk(){ commitAdd(f, btn); }
+    });
+  }else commitAdd(f, btn);
+}
+function orderNow(foodId){
+  const f = foodById(foodId);
+  if(!f || f.is_available === false) return;
+  const proceed = () => {
+    const cart = getCart();
+    if(!cart.find(i => i.id === f.id)) cart.push({ id:f.id, qty:1 });
+    saveCart(cart);
+    store.set('foody_buynow', f.id);
+    toast(`Taking you to checkout for ${f.name}`, 'info', 'fa-bolt');
+    setTimeout(() => { location.href = 'checkout.html'; }, 500);
+  };
+  const warnings = getAllergyWarnings(f);
+  if(warnings.length){
+    showConfirm({
+      title:'Allergy Warning',
+      text:`<strong>${f.name}</strong> contains <strong>${warnings.join(', ')}</strong> based on its listed ingredients. Continue to checkout anyway?`,
+      okLabel:'Continue Anyway',
+      onOk: proceed
+    });
+  }else proceed();
+}
+function confirmRemoveFood(id){
+  const f = foodById(id);
+  showConfirm({
+    title:'Remove from Wishlist?',
+    text:`Remove <strong>${f ? f.name : 'this dish'}</strong> from your food wishlist? You can always add it back later.`,
+    okLabel:'Remove', okClass:'btn-danger', icon:'danger',
+    onOk(){
+      const w = getWishlist();
+      w.foods = w.foods.filter(x => x !== id);
+      saveWishlist(w);
+      toast(`${f ? f.name : 'Item'} removed from wishlist`, 'info', 'fa-heart-crack');
+      renderCounts(); renderContent(false);
+    }
+  });
+}
+function confirmRemoveRest(id){
+  const r = restById(id);
+  showConfirm({
+    title:'Remove from Wishlist?',
+    text:`Remove <strong>${r ? r.name : 'this restaurant'}</strong> from your restaurant wishlist?`,
+    okLabel:'Remove', okClass:'btn-danger', icon:'danger',
+    onOk(){
+      const w = getWishlist();
+      w.restaurants = w.restaurants.filter(x => x !== id);
+      saveWishlist(w);
+      toast(`${r ? r.name : 'Restaurant'} removed from wishlist`, 'info', 'fa-heart-crack');
+      renderCounts(); renderContent(false);
+    }
+  });
+}
+
+/* ---------------- SECTION SWITCH ---------------- */
+document.getElementById('selFood').addEventListener('click', () => {
+  if(activeSection === 'food') return;
+  activeSection = 'food';
+  renderContent(true);
+  setTimeout(() => renderContent(false), 380);
+});
+document.getElementById('selRest').addEventListener('click', () => {
+  if(activeSection === 'restaurants') return;
+  activeSection = 'restaurants';
+  renderContent(true);
+  setTimeout(() => renderContent(false), 380);
+});
+
+/* ---------------- INIT ---------------- */
+async function init(){
+  renderSidebarUser(); renderCities(); renderNotifs(); updateCartBadge();
+  window.addEventListener('storage', () => { updateCartBadge(); renderCounts(); renderContent(false); });
+
+  if(!requireAuth()) return;
+
+  renderCounts();
+  renderContent(true);
+  try{
+    const remote = await apiFetch('/wishlist');
+    if(remote && Array.isArray(remote.foods) && Array.isArray(remote.restaurants)){
+      saveWishlist(remote); // backend authoritative when available
+    }else{
+      await demo(true, 500); // simulated latency for visible loading state
+    }
+    renderCounts();
+    renderContent(false);
+  }catch(err){
+    document.getElementById('wishContent').innerHTML = `
+      <div class="state-block">
+        <div class="big-ico" style="background:#FFEBEE;color:var(--color-red)"><i class="fa-solid fa-wifi"></i></div>
+        <h4>Something went wrong</h4>
+        <p>We couldn't load your wishlist right now. Please try again.</p>
+        <button class="btn btn-primary" onclick="location.reload()"><i class="fa-solid fa-rotate-right"></i> Retry</button>
+      </div>`;
+  }
+}
+document.addEventListener('DOMContentLoaded', init);
+</script>
+</body>
+</html>

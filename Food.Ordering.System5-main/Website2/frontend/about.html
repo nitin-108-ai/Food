@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us | Foody</title>
+    <meta name="description" content="Meet the talented team of developers behind Foody.">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        /* ============ RESET & TOKENS (Matching Foody Theme) ============ */
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --color-yellow: #FFC107; 
+            --color-orange: #FF9800; 
+            --color-green: #2E7D32; 
+            --color-blue: #1976D2; 
+            --color-purple: #7B1FA2;
+            --color-black: #111111; 
+            --color-dark: #181818; 
+            --color-white: #FFFFFF;
+            --color-background: #F7F7F7; 
+            --color-light-gray: #F1F1F1; 
+            --color-border: #E2E2E2;
+            --color-text: #222222; 
+            --color-muted: #777777;
+            --gradient-primary: linear-gradient(135deg, #FFC107 0%, #FF9800 100%);
+            --shadow-sm: 0 2px 8px rgba(0,0,0,.06); 
+            --shadow-md: 0 6px 20px rgba(0,0,0,.10); 
+            --shadow-lg: 0 14px 40px rgba(0,0,0,.16);
+            --radius-sm: 8px; 
+            --radius-md: 14px; 
+            --radius-lg: 20px;
+            --font: 'Poppins', system-ui, -apple-system, Segoe UI, sans-serif;
+        }
+        html { scroll-behavior: smooth; }
+        body { 
+            font-family: var(--font); 
+            background: var(--color-background); 
+            color: var(--color-text); 
+            line-height: 1.6; 
+            overflow-x: hidden; 
+        }
+        a { text-decoration: none; color: inherit; }
+        img { display: block; max-width: 100%; }
+
+        /* ============ HEADER ============ */
+        .header { 
+            background: var(--color-black); 
+            color: #fff; 
+            padding: 16px 0; 
+            position: sticky; 
+            top: 0; 
+            z-index: 100; 
+            box-shadow: var(--shadow-md); 
+        }
+        .header-inner { 
+            width: min(1200px, 92%); 
+            margin-inline: auto; 
+            display: flex; 
+            align-items: center; 
+            justify-content: space-between; 
+        }
+        .logo { 
+            display: flex; 
+            align-items: center; 
+            gap: 10px; 
+            font-size: 1.5rem; 
+            font-weight: 800; 
+            letter-spacing: .5px; 
+        }
+        .logo-badge { 
+            width: 40px; 
+            height: 40px; 
+            border-radius: 12px; 
+            background: var(--gradient-primary); 
+            display: grid; 
+            place-items: center; 
+            color: var(--color-black); 
+            font-size: 1.1rem; 
+        }
+        .logo span { color: #fff; }
+        .logo b { color: var(--color-yellow); }
+        .back-link { 
+            display: inline-flex; 
+            align-items: center; 
+            gap: 8px; 
+            color: #ccc; 
+            font-size: .9rem; 
+            font-weight: 600; 
+            padding: 8px 16px; 
+            border-radius: 30px; 
+            background: rgba(255,255,255,.08); 
+            transition: .2s; 
+        }
+        .back-link:hover { background: var(--color-yellow); color: var(--color-black); }
+
+        /* ============ HERO SECTION ============ */
+        .hero { 
+            text-align: center; 
+            padding: 60px 20px 40px; 
+            background: var(--color-dark); 
+            color: #fff; 
+            position: relative; 
+            overflow: hidden; 
+        }
+        .hero::before { 
+            content: ''; 
+            position: absolute; 
+            inset: 0; 
+            background: radial-gradient(circle at 20% 50%, rgba(255, 193, 7, 0.15) 0%, transparent 50%), 
+                        radial-gradient(circle at 80% 50%, rgba(255, 152, 0, 0.15) 0%, transparent 50%); 
+        }
+        .hero-content { position: relative; z-index: 2; max-width: 700px; margin: 0 auto; }
+        .hero h1 { font-size: clamp(2rem, 5vw, 3rem); font-weight: 800; margin-bottom: 16px; line-height: 1.2; }
+        .hero h1 .hl { color: var(--color-yellow); }
+        .hero p { font-size: 1.05rem; color: #c9c9c9; max-width: 600px; margin: 0 auto; }
+
+        /* ============ TEAM SECTION ============ */
+        .team-section { padding: 60px 20px 80px; }
+        .section-title { 
+            text-align: center; 
+            font-size: 1.8rem; 
+            font-weight: 800; 
+            margin-bottom: 40px; 
+            color: var(--color-black); 
+        }
+        .team-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
+            gap: 28px; 
+            width: min(1200px, 92%); 
+            margin: 0 auto; 
+        }
+
+        /* ============ TEAM CARD ============ */
+        .team-card {
+            background: #fff;
+            border-radius: var(--radius-lg);
+            padding: 32px 24px;
+            text-align: center;
+            border: 1px solid var(--color-border);
+            box-shadow: var(--shadow-sm);
+            transition: transform .3s ease, box-shadow .3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .team-card:hover {
+            transform: translateY(-6px);
+            box-shadow: var(--shadow-lg);
+        }
+        .team-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 4px;
+            background: var(--gradient-primary);
+        }
+        .team-card.frontend::before { background: linear-gradient(135deg, #1976D2, #42A5F5); }
+        .team-card.backend::before { background: linear-gradient(135deg, #FFC107, #FF9800); }
+        .team-card.database::before { background: linear-gradient(135deg, #2E7D32, #66BB6A); }
+
+        .avatar {
+            width: 90px; height: 90px;
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            display: grid; place-items: center;
+            font-size: 2rem; font-weight: 800;
+            color: #fff;
+            box-shadow: var(--shadow-md);
+        }
+        .frontend .avatar { background: linear-gradient(135deg, #1976D2, #42A5F5); }
+        .backend .avatar { background: linear-gradient(135deg, #FFC107, #FF9800); color: var(--color-black); }
+        .database .avatar { background: linear-gradient(135deg, #2E7D32, #66BB6A); }
+
+        .team-card h3 { font-size: 1.3rem; font-weight: 700; margin-bottom: 6px; color: var(--color-black); }
+        
+        .role-badge {
+            display: inline-flex; 
+            align-items: center; 
+            gap: 6px;
+            padding: 5px 14px; 
+            border-radius: 20px;
+            font-size: .75rem; 
+            font-weight: 700; 
+            letter-spacing: .5px; 
+            text-transform: uppercase;
+            margin-bottom: 16px;
+        }
+        .frontend .role-badge { background: #E3F2FD; color: #1565C0; }
+        .backend .role-badge { background: #FFF3E0; color: #E65100; }
+        .database .role-badge { background: #E8F5E9; color: #1B5E20; }
+
+        .team-card p { font-size: .9rem; color: var(--color-muted); line-height: 1.6; margin-bottom: 20px; }
+
+        .social-links { display: flex; justify-content: center; gap: 12px; }
+        .social-links a {
+            width: 36px; height: 36px; border-radius: 50%;
+            background: var(--color-light-gray); color: var(--color-muted);
+            display: grid; place-items: center; font-size: .9rem;
+            transition: .2s;
+        }
+        .social-links a:hover { background: var(--color-black); color: #fff; transform: scale(1.1); }
+
+        /* ============ MAP SECTION (NEW) ============ */
+        .map-section {
+            padding: 60px 20px 80px;
+            background: #fff;
+            border-top: 1px solid var(--color-border);
+            border-bottom: 1px solid var(--color-border);
+        }
+        .map-section .section-title { margin-bottom: 12px; }
+        .map-subtitle {
+            text-align: center;
+            color: var(--color-muted);
+            font-size: .95rem;
+            margin-bottom: 36px;
+        }
+        .map-wrapper {
+            width: min(1100px, 94%);
+            margin: 0 auto;
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            box-shadow: var(--shadow-md);
+            border: 3px solid var(--color-border);
+            position: relative;
+        }
+        .map-wrapper::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 4px;
+            background: var(--gradient-primary);
+            z-index: 2;
+        }
+        .map-wrapper iframe {
+            display: block;
+            width: 100%;
+            height: 480px;
+            border: 0;
+        }
+        .map-info {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 20px;
+            color: var(--color-muted);
+            font-size: .88rem;
+            font-weight: 500;
+        }
+        .map-info i { color: var(--color-orange); }
+
+        /* ============ FOOTER ============ */
+        .footer { 
+            text-align: center; 
+            padding: 36px 20px; 
+            background: var(--color-dark); 
+            color: #aaa; 
+            font-size: .85rem;
+            line-height: 1.6;
+        }
+        .footer p { max-width: 600px; margin: 0 auto; }
+        .footer span { color: var(--color-yellow); font-weight: 700; }
+        .footer .heart { color: var(--color-red); }
+
+        /* ============ RESPONSIVE ============ */
+        @media (max-width: 768px) {
+            .team-grid { grid-template-columns: 1fr; }
+            .hero { padding: 40px 20px 30px; }
+            .section-title { font-size: 1.5rem; }
+            .map-wrapper iframe { height: 380px; }
+            .map-section { padding: 40px 16px 60px; }
+            .logo { font-size: 1.3rem; }
+            .back-link { font-size: .8rem; padding: 6px 12px; }
+        }
+        @media (max-width: 480px) {
+            .map-wrapper iframe { height: 300px; }
+            .hero h1 { font-size: 1.6rem; }
+            .hero p { font-size: .95rem; }
+        }
+        .nav-links a {
+         color: #ddd;
+         font-size: .87rem;
+        font-weight: 600;
+        padding: 9px 15px;
+        border-radius: 9px;
+        transition: .2s;
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        }
+        .nav-links a:hover {
+        color: var(--color-yellow);
+        background: rgba(255,255,255,.07);
+        }
+        .nav-links a.active {
+        color: var(--color-yellow);
+        background: rgba(255,193,7,.12);
+    }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="header-inner">
+            <a href="index.html" class="logo">
+                <span class="logo-badge"><i class="fa-solid fa-utensils"></i></span>
+                <span>Foo<b>dy</b></span>
+            </a>
+            <a href="index.html" class="back-link">
+                <i class="fa-solid fa-arrow-left"></i> Back to Home
+            </a>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Meet the Minds Behind <span class="hl">Foody</span></h1>
+            <p>We are a passionate team of 6 developers dedicated to revolutionizing the food ordering experience with seamless design, robust architecture, and lightning-fast performance.</p>
+        </div>
+    </section>
+
+    <!-- Team Section -->
+    <section class="team-section">
+        <h2 class="section-title">Our Development Team</h2>
+        
+        <div class="team-grid">
+            <!-- Frontend Developer 1 -->
+            <div class="team-card frontend">
+                <div class="avatar">N</div>
+                <h3>Nirmal Sahu</h3>
+                <span class="role-badge"><i class="fa-solid fa-code"></i> Frontend Developer</span>
+                <p>Crafted the responsive, user-friendly interfaces and ensured a seamless, allergy-aware browsing experience across all devices.</p>
+                <div class="social-links">
+                    <a href="#" aria-label="GitHub"><i class="fa-brands fa-github"></i></a>
+                    <a href="#" aria-label="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
+                    <a href="#" aria-label="Email"><i class="fa-solid fa-envelope"></i></a>
+                </div>
+            </div>
+
+            <!-- Frontend Developer 2 -->
+            <div class="team-card frontend">
+                <div class="avatar">A</div>
+                <h3>Aman Rayen</h3>
+                <span class="role-badge"><i class="fa-solid fa-code"></i> Frontend Developer</span>
+                <p>Brought the UI to life with smooth animations, intuitive cart interactions, and pixel-perfect implementation of the design system.</p>
+                <div class="social-links">
+                    <a href="#" aria-label="GitHub"><i class="fa-brands fa-github"></i></a>
+                    <a href="#" aria-label="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
+                    <a href="#" aria-label="Email"><i class="fa-solid fa-envelope"></i></a>
+                </div>
+            </div>
+
+            <!-- Backend Developer 1 -->
+            <div class="team-card backend">
+                <div class="avatar">A</div>
+                <h3>Ankit Pal</h3>
+                <span class="role-badge"><i class="fa-solid fa-server"></i> Backend Developer</span>
+                <p>Architected the core RESTful APIs, authentication flows, and business logic that power the Foody platform securely.</p>
+                <div class="social-links">
+                    <a href="#" aria-label="GitHub"><i class="fa-brands fa-github"></i></a>
+                    <a href="#" aria-label="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
+                    <a href="#" aria-label="Email"><i class="fa-solid fa-envelope"></i></a>
+                </div>
+            </div>
+
+            <!-- Backend Developer 2 -->
+            <div class="team-card backend">
+                <div class="avatar">K</div>
+                <h3>Karan Panday</h3>
+                <span class="role-badge"><i class="fa-solid fa-server"></i> Backend Developer</span>
+                <p>Optimized server performance, integrated payment gateway logic, and ensured robust error handling for a reliable user experience.</p>
+                <div class="social-links">
+                    <a href="#" aria-label="GitHub"><i class="fa-brands fa-github"></i></a>
+                    <a href="#" aria-label="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
+                    <a href="#" aria-label="Email"><i class="fa-solid fa-envelope"></i></a>
+                </div>
+            </div>
+
+            <!-- Database Developer 1 -->
+            <div class="team-card database">
+                <div class="avatar">R</div>
+                <h3>Raj Singh</h3>
+                <span class="role-badge"><i class="fa-solid fa-database"></i> Database Engineer</span>
+                <p>Designed the normalized MySQL schema, ensuring data integrity, efficient indexing, and scalable relationships for users, orders, and menus.</p>
+                <div class="social-links">
+                    <a href="#" aria-label="GitHub"><i class="fa-brands fa-github"></i></a>
+                    <a href="#" aria-label="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
+                    <a href="#" aria-label="Email"><i class="fa-solid fa-envelope"></i></a>
+                </div>
+            </div>
+
+            <!-- Database Developer 2 -->
+            <div class="team-card database">
+                <div class="avatar">A</div>
+                <h3>Athrava Salvi</h3>
+                <span class="role-badge"><i class="fa-solid fa-database"></i> Database Engineer</span>
+                <p>Implemented complex queries, managed database migrations, and optimized data retrieval speeds for real-time cart and allergy warnings.</p>
+                <div class="social-links">
+                    <a href="#" aria-label="GitHub"><i class="fa-brands fa-github"></i></a>
+                    <a href="#" aria-label="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
+                    <a href="#" aria-label="Email"><i class="fa-solid fa-envelope"></i></a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Map Section -->
+    <section class="map-section">
+        <h2 class="section-title">Our Campus</h2>
+        <p class="map-subtitle">Where the magic of Foody was born — Guru Nanak College of Arts, Science and Commerce</p>
+        
+        <div class="map-wrapper">
+            <iframe 
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3771.6478018600133!2d72.86210927520426!3d19.035235182160964!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3be7c8d2bfff0ff7%3A0x2e47356db48b7b8b!2sGuru%20Nanak%20College%20of%20Arts%2C%20Science%20and%20Commerce%20(Autonomous)!5e0!3m2!1sen!2sin!4v1788679199582!5m2!1sen!2sin" 
+                allowfullscreen="" 
+                loading="lazy" 
+                referrerpolicy="no-referrer-when-downgrade"
+                title="Guru Nanak College Location">
+            </iframe>
+        </div>
+        <div class="map-info">
+            <i class="fa-solid fa-location-dot"></i>
+            <span>Guru Nanak College of Arts, Science and Commerce (Autonomous), Mumbai</span>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>&copy; 2026 <span>Foody</span>. Built with <i class="fa-solid fa-heart heart"></i> by Nirmal, Aman, Ankit, Karan, Raj, and Athrava.</p>
+    </footer>
+    
+
+</body>
+</html>
