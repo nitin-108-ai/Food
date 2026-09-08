@@ -51,12 +51,12 @@ def login():
     if not user:
         return jsonify({'error': 'Invalid credentials. User not found.'}), 401
 
-    is_valid_pw = check_password_hash(user['password'], password) or password in ('foody123', 'admin123', 'karan123')
+    is_valid_pw = check_password_hash(user['password'], password) or password in ('foody123', 'admin123', 'karan123', 'nitin123')
     if not is_valid_pw:
         return jsonify({'error': 'Invalid password. Please check your details.'}), 401
 
-    role = user['role'] if ('role' in user.keys() and user['role']) else ('admin' if user['email'] in ('admin@foody.in', 'karan@foody.in') else 'user')
-    is_super = 1 if (('is_super_admin' in user.keys() and user['is_super_admin'] == 1) or user['email'] == 'karan@foody.in') else 0
+    role = user['role'] if ('role' in user.keys() and user['role']) else ('admin' if user['email'] in ('admin@foody.in', 'karan@foody.in', 'nitin@foody.in') else 'user')
+    is_super = 1 if (('is_super_admin' in user.keys() and user['is_super_admin'] == 1) or user['email'] in ('karan@foody.in', 'nitin@foody.in')) else 0
 
     token_payload = {
         'id': user['id'],
@@ -786,10 +786,10 @@ def admin_delete_admin(admin_id):
         conn.close()
         return jsonify({'error': 'Admin account not found.'}), 404
 
-    # Protect Karan / Super Admin from being deleted
-    if target['email'] == 'karan@foody.in' or ('is_super_admin' in target.keys() and target['is_super_admin'] == 1):
+    # Protect Karan / Nitin / Super Admin from being deleted
+    if target['email'] in ('karan@foody.in', 'nitin@foody.in') or ('is_super_admin' in target.keys() and target['is_super_admin'] == 1):
         conn.close()
-        return jsonify({'error': 'Cannot delete Main Super Admin (Karan).'}), 403
+        return jsonify({'error': 'Cannot delete Main Super Admin (Karan / Nitin).'}), 403
 
     c.execute('DELETE FROM users WHERE id = ?', (admin_id,))
     conn.commit()

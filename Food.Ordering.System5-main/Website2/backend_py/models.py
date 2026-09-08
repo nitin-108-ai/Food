@@ -4,7 +4,7 @@ import os
 import uuid
 import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
-from seed_data import RESTAURANTS, FOODS, COUPONS, DEMO_USER, ADMIN_USER
+from seed_data import RESTAURANTS, FOODS, COUPONS, DEMO_USER, ADMIN_USER, NITIN_ADMIN_USER
 
 DB_FILE = os.path.join(os.path.dirname(__file__), 'foody.db')
 
@@ -195,6 +195,18 @@ def init_db():
     else:
         # Ensure role is admin and is_super_admin = 1
         c.execute("UPDATE users SET name = ?, role = 'admin', is_super_admin = 1, password = ? WHERE email = ?", (ADMIN_USER['name'], hashed_admin, ADMIN_USER['email']))
+
+    # Seed Main Admin User (Nitin) if not exists
+    c.execute('SELECT id FROM users WHERE email = ?', (NITIN_ADMIN_USER['email'],))
+    hashed_nitin = generate_password_hash(NITIN_ADMIN_USER['password'])
+    if not c.fetchone():
+        c.execute('''
+            INSERT INTO users (id, name, email, phone, password, avatar, role, is_super_admin)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+        ''', (NITIN_ADMIN_USER['id'], NITIN_ADMIN_USER['name'], NITIN_ADMIN_USER['email'], NITIN_ADMIN_USER['phone'], hashed_nitin, NITIN_ADMIN_USER['avatar'], 'admin', 1))
+    else:
+        # Ensure role is admin and is_super_admin = 1
+        c.execute("UPDATE users SET name = ?, role = 'admin', is_super_admin = 1, password = ? WHERE email = ?", (NITIN_ADMIN_USER['name'], hashed_nitin, NITIN_ADMIN_USER['email']))
 
     conn.commit()
     conn.close()

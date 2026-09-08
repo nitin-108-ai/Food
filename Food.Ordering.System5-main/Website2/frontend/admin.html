@@ -1029,15 +1029,19 @@
     }
 
     /* ---------------- Admin Team Management ---------------- */
-    function renderAdmins(admins){
+    function renderAdmins(admins) {
       const tb = document.getElementById('adminsTableBody');
-      if(!tb) return;
-      if(!admins.length){
+      if (!tb) return;
+      if (!admins.length) {
         tb.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:26px;color:#888">No admin accounts found.</td></tr>';
         return;
       }
       tb.innerHTML = admins.map(a => {
-        const isMain = (a.is_super_admin === 1 || a.email === 'karan@foody.in');
+        const isMain = (
+          a.is_super_admin === 1 ||
+          a.email === 'karan@foody.in' ||
+          a.email === 'nitin@foody.in'
+        );
         return `
           <tr>
             <td><small style="color:#888">${a.id}</small></td>
@@ -1055,55 +1059,55 @@
       }).join('');
     }
 
-    function openAddAdminModal(){
+    function openAddAdminModal() {
       document.getElementById('addAdminModal').classList.add('open');
     }
 
-    function closeAddAdminModal(){
+    function closeAddAdminModal() {
       document.getElementById('addAdminModal').classList.remove('open');
       document.getElementById('addAdminForm').reset();
     }
 
-    async function submitNewAdmin(e){
+    async function submitNewAdmin(e) {
       e.preventDefault();
       const name = document.getElementById('adminNewName').value.trim();
       const email = document.getElementById('adminNewEmail').value.trim().toLowerCase();
       const phone = document.getElementById('adminNewPhone').value.trim();
       const password = document.getElementById('adminNewPassword').value.trim();
 
-      try{
+      try {
         const res = await fetch(API_BASE + '/admin/admins', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ name, email, phone, password })
         });
         const result = await res.json();
-        if(!res.ok){
+        if (!res.ok) {
           toast(result.error || 'Failed to create admin', '#f44336');
           return;
         }
         closeAddAdminModal();
         toast(`Admin account for ${name} created!`);
         loadData();
-      }catch(err){
+      } catch (err) {
         toast('Error connecting to backend API', '#f44336');
       }
     }
 
-    async function deleteAdmin(adminId, name){
-      if(!confirm(`Are you sure you want to remove admin access for ${name}?`)) return;
-      try{
+    async function deleteAdmin(adminId, name) {
+      if (!confirm(`Are you sure you want to remove admin access for ${name}?`)) return;
+      try {
         const res = await fetch(`${API_BASE}/admin/admins/${adminId}`, {
           method: 'DELETE'
         });
         const result = await res.json();
-        if(!res.ok){
+        if (!res.ok) {
           toast(result.error || 'Failed to delete admin', '#f44336');
           return;
         }
         toast(`Admin ${name} removed`);
         loadData();
-      }catch(e){
+      } catch (e) {
         toast('Failed to delete admin', '#f44336');
       }
     }

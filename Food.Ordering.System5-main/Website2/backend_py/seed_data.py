@@ -87,3 +87,14 @@ ADMIN_USER = {
     "role": "admin",
     "is_super_admin": 1
 }
+
+NITIN_ADMIN_USER = {
+    "id": "u_admin_nitin",
+    "name": "Nitin",
+    "email": "nitin@foody.in",
+    "phone": "9876543212",
+    "password": "nitin123",
+    "avatar": "fa-user-shield",
+    "role": "admin",
+    "is_super_admin": 1
+}

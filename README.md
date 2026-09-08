@@ -45,12 +45,11 @@ Once the server is running on localhost, open your browser to:
 ## 🔑 Default Login Credentials
 
 ### 🛡️ Admin Accounts
-- **Main Super Admin:**
-  - Email: `karan@foody.in`
-  - Password: `karan123`
+- **Main Super Admins:**
+  - Email: `nitin@foody.in` | Password: `nitin123`
+  - Email: `karan@foody.in` | Password: `karan123`
 - **Standard Admin:**
-  - Email: `admin@foody.in`
-  - Password: `admin123`
+  - Email: `admin@foody.in` | Password: `admin123`
 
 ### 👤 Demo User Account
 - Email: `demo@foody.in`
